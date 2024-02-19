@@ -5,6 +5,11 @@ struct TimeManager
 {
 	TimeManager();
 
+	TimeManager(const TimeManager& other)				= default;
+	TimeManager(TimeManager&& other)					= default;
+	TimeManager& operator=(const TimeManager& other)	= default;
+	TimeManager& operator=(TimeManager&& other)			= default;
+
 	float GetTotalTime() const;
 
 	float deltaTime{};

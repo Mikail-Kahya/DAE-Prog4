@@ -14,6 +14,7 @@ namespace dae
 		
 		void FixedUpdate();
 		void Update();
+		void LateUpdate();
 		void Render() const;
 
 		~Scene();
@@ -26,7 +27,7 @@ namespace dae
 		explicit Scene(const std::string& name);
 
 		std::string m_name;
-		std::vector < std::shared_ptr<GameObject>> m_objects{};
+		std::vector <std::shared_ptr<GameObject>> m_objects{};
 
 		static unsigned int m_idCounter; 
 	};
