@@ -110,7 +110,21 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 void dae::Minigin::RunOneFrame()
 {
+	constexpr int fps{ 60 };
+	constexpr float timeStep{ 1 / fps };
+
+	using namespace std::chrono;
 	m_quit = !InputManager::GetInstance().ProcessInput();
+	
+	const float deltaTime{ duration<float>(steady_clock::now() - m_OldTime).count() };
+	m_Lag += deltaTime;
+	if (m_Lag > timeStep)
+	{
+		SceneManager::GetInstance().FixedUpdate();
+	}
+
 	SceneManager::GetInstance().Update();
 	Renderer::GetInstance().Render();
+
+	m_OldTime = steady_clock::now();
 }
