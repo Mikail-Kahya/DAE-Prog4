@@ -125,7 +125,6 @@ void dae::Minigin::RunOneFrame()
 	m_LastTime = currentTime;
 	m_Lag += deltaTime;
 
-
 	// Update global time
 	TimeManager& timeManager{ SceneManager::GetInstance().m_TimeManager };
 	timeManager.deltaTime = deltaTime;

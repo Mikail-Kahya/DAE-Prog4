@@ -1,4 +1,4 @@
-#include "Structs.h"
+#include "TimeManager.h"
 
 TimeManager::TimeManager()
 	: start{ std::chrono::steady_clock::now() }

@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 #include "Singleton.h"
-#include "Structs.h"
+#include "TimeManager.h"
 
 
 namespace dae

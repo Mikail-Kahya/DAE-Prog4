@@ -1,11 +1,13 @@
 #include "SceneManager.h"
+
+#include <windows.h> // OutputDebugString
 #include "Scene.h"
 
 void dae::SceneManager::FixedUpdate()
 {
 	for (auto& scene : m_scenes)
 	{
-		scene->Update();
+		scene->FixedUpdate();
 	}
 }
 
