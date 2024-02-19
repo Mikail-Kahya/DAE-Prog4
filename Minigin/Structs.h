@@ -1,13 +1,14 @@
 #pragma once
+#include <chrono>
 
-struct Time
+struct TimeManager
 {
-	Time();
+	TimeManager();
 
-	float GetTotalTime();
+	float GetTotalTime() const;
 
 	float deltaTime{};
-	float fixedTime{};
+	float fixedDeltaTime{ 0.2f };
 
 private:
 	std::chrono::steady_clock::time_point start{};

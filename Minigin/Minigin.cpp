@@ -100,6 +100,10 @@ dae::Minigin::~Minigin()
 void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
+
+	using namespace std::chrono;
+	m_LastTime = high_resolution_clock::now();
+
 #ifndef __EMSCRIPTEN__
 	while (!m_quit)
 		RunOneFrame();
@@ -110,21 +114,33 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 void dae::Minigin::RunOneFrame()
 {
-	constexpr int fps{ 60 };
-	constexpr float timeStep{ 1 / fps };
-
 	using namespace std::chrono;
+	constexpr int msPerFrame{ static_cast<int>((1.f / FPS) * 1000.f) };
+	//constexpr float timeTransform{ 1.f / (1000 * 1000) };
+
 	m_quit = !InputManager::GetInstance().ProcessInput();
-	
-	const float deltaTime{ duration<float>(steady_clock::now() - m_OldTime).count() };
+
+	const auto currentTime{ high_resolution_clock::now() };
+	const float deltaTime{ duration<float>(currentTime - m_LastTime).count()};
+	m_LastTime = currentTime;
 	m_Lag += deltaTime;
-	if (m_Lag > timeStep)
+
+
+	// Update global time
+	TimeManager& timeManager{ SceneManager::GetInstance().m_TimeManager };
+	timeManager.deltaTime = deltaTime;
+
+	while (m_Lag >= FIXED_TIME_STEP)
 	{
 		SceneManager::GetInstance().FixedUpdate();
+		m_Lag -= FIXED_TIME_STEP;
 	}
 
 	SceneManager::GetInstance().Update();
 	Renderer::GetInstance().Render();
 
-	m_OldTime = steady_clock::now();
+	//const auto sleepTime{ currentTime + milliseconds(msPerFrame) - high_resolution_clock::now() };
+	//Sleep(static_cast<DWORD>(sleepTime.count() * timeTransform));
+	const auto sleepTime{ duration<float>(currentTime + milliseconds(msPerFrame) - high_resolution_clock::now()).count() };
+	Sleep(static_cast<DWORD>(sleepTime * 1000));
 }

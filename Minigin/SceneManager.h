@@ -3,6 +3,8 @@
 #include <string>
 #include <memory>
 #include "Singleton.h"
+#include "Structs.h"
+
 
 namespace dae
 {
@@ -16,9 +18,19 @@ namespace dae
 		void Update();
 		void Render();
 
+		const TimeManager& GetTimeManager();
+
 	private:
 		friend class Singleton<SceneManager>;
+		friend class Minigin;
 		SceneManager() = default;
 		std::vector<std::shared_ptr<Scene>> m_scenes;
+
+		TimeManager m_TimeManager{};
 	};
+}
+
+inline const TimeManager& Time()
+{
+	return dae::SceneManager::GetInstance().GetTimeManager();
 }
