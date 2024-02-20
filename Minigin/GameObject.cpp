@@ -1,9 +1,27 @@
 #include <string>
+#include <algorithm>
+
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
 
 dae::GameObject::~GameObject() = default;
+
+void dae::GameObject::RemoveComponent(std::unique_ptr<Component> component)
+{
+	component->Destroy();
+	//m_Components.erase(std::ranges::find(m_Components, component));
+}
+
+void dae::GameObject::RemoveComponents()
+{
+	auto eraseIt = std::stable_partition(m_Components.begin(), m_Components.end(), [](const std::unique_ptr<Component>& component)
+	{
+			return !component->DestroyFlagged();
+	} );
+
+	m_Components.erase(eraseIt, m_Components.end());
+}
 
 void dae::GameObject::FixedUpdate(){}
 
