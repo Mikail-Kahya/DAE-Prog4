@@ -9,7 +9,7 @@
 namespace dae
 {
 	class Texture2D;
-	class GameObject 
+	class GameObject
 	{
 		Transform m_transform{};
 		std::shared_ptr<Texture2D> m_texture{};
@@ -18,6 +18,11 @@ namespace dae
 		virtual void Update();
 		virtual void LateUpdate();
 		virtual void Render() const;
+
+		void Destroy();
+		void ClearDestroy();
+		bool DestroyFlagged() const;
+
 
 		void SetTexture(const std::string& filename);
 		void SetPosition(float x, float y);
@@ -40,6 +45,7 @@ namespace dae
 		void RemoveComponents();
 
 		std::vector<std::unique_ptr<Component>> m_Components{};
+		bool m_Destroy{};
 	};
 
 	template <typename ComponentType, typename... Args>

@@ -35,6 +35,21 @@ void dae::GameObject::Render() const
 	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
 }
 
+void dae::GameObject::Destroy()
+{
+	m_Destroy = true;
+}
+
+void dae::GameObject::ClearDestroy()
+{
+	m_Destroy = false;
+}
+
+bool dae::GameObject::DestroyFlagged() const
+{
+	return m_Destroy;
+}
+
 void dae::GameObject::SetTexture(const std::string& filename)
 {
 	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
