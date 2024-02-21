@@ -17,6 +17,6 @@ namespace dae
 	private:
 		friend class Singleton<ResourceManager>;
 		ResourceManager() = default;
-		std::filesystem::path m_dataPath;
+		std::filesystem::path m_DataPath;
 	};
 }

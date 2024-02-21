@@ -137,7 +137,7 @@ void dae::Minigin::RunOneFrame()
 
 	SceneManager::GetInstance().Update();
 	SceneManager::GetInstance().LateUpdate();
-	SceneManager::GetInstance().ResourceCleanup();
+	SceneManager::GetInstance().SceneCleanup();
 	Renderer::GetInstance().Render();
 
 	//const auto sleepTime{ currentTime + milliseconds(msPerFrame) - high_resolution_clock::now() };

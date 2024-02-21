@@ -12,12 +12,19 @@ namespace dae
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
+		virtual ~SceneManager() = default;
+
+		SceneManager(const SceneManager& other) = delete;
+		SceneManager(SceneManager&& other) = delete;
+		SceneManager& operator=(const SceneManager& other) = delete;
+		SceneManager& operator=(SceneManager&& other) = delete;
+
 		Scene& CreateScene(const std::string& name);
 
-		void FixedUpdate();
 		void Update();
+		void FixedUpdate();
 		void LateUpdate();
-		void ResourceCleanup();
+		void SceneCleanup();
 		void Render();
 
 		const TimeManager& GetTimeManager();
@@ -26,8 +33,8 @@ namespace dae
 		friend class Singleton<SceneManager>;
 		friend class Minigin;
 		SceneManager() = default;
-		std::vector<std::shared_ptr<Scene>> m_scenes;
 
+		std::vector<std::unique_ptr<Scene>> m_scenes;
 		TimeManager m_TimeManager{};
 	};
 }

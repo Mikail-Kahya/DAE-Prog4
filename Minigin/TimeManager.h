@@ -16,5 +16,5 @@ struct TimeManager
 	float fixedDeltaTime{ 0.2f };
 
 private:
-	std::chrono::steady_clock::time_point start{};
+	std::chrono::high_resolution_clock::time_point start{};
 };

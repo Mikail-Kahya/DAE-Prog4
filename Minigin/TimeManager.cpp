@@ -8,5 +8,5 @@ TimeManager::TimeManager()
 float TimeManager::GetTotalTime() const
 {
 	using namespace std::chrono;
-	return duration<float>(steady_clock::now() - start).count();
+	return duration<float>(high_resolution_clock::now() - start).count();
 }

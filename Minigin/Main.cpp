@@ -10,7 +10,7 @@
 #include "Minigin.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
-#include "TextObject.h"
+#include "TextComponent.h"
 #include "Scene.h"
 
 #include <filesystem>
@@ -20,19 +20,17 @@ void load()
 {
 	auto& scene = dae::SceneManager::GetInstance().CreateScene("Demo");
 
-	auto go = std::make_shared<dae::GameObject>();
-	go->SetTexture("background.tga");
-	scene.Add(go);
+	dae::GameObject& go{ scene.CreateGameObject("go") };
+	go.SetTexture("background.tga");
 
-	go = std::make_shared<dae::GameObject>();
-	go->SetTexture("logo.tga");
-	go->SetPosition(216, 180);
-	scene.Add(go);
+	dae::GameObject& fo{ scene.CreateGameObject("fo") };
+	fo.SetTexture("logo.tga");
+	fo.SetPosition(216, 180);
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<dae::TextObject>("Programming 4 Assignment", font);
+	auto to = std::make_shared<dae::TextComponent>("Programming 4 Assignment", font);
 	to->SetPosition(80, 20);
-	scene.Add(to);
+	//scene.Add(to);
 }
 
 int main(int, char*[]) {

@@ -12,17 +12,28 @@ dae::GameObject::GameObject(const std::string& name)
 
 dae::GameObject::~GameObject() = default;
 
-void dae::GameObject::RemoveComponent(std::unique_ptr<Component> component)
+void dae::GameObject::RemoveComponent(const std::unique_ptr<Component>& component)
 {
 	component->Destroy();
-	//m_Components.erase(std::ranges::find(m_Components, component));
 }
 
-void dae::GameObject::FixedUpdate(){}
+void dae::GameObject::Update()
+{
+	for (const auto& component : m_Components)
+		component->Update();
+}
 
-void dae::GameObject::Update(){}
+void dae::GameObject::FixedUpdate()
+{
+	for (const auto& component : m_Components)
+		component->FixedUpdate();
+}
 
-void dae::GameObject::LateUpdate(){}
+void dae::GameObject::LateUpdate()
+{
+	for (const auto& component : m_Components)
+		component->LateUpdate();
+}
 
 void dae::GameObject::Render() const
 {
@@ -30,7 +41,7 @@ void dae::GameObject::Render() const
 	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
 }
 
-void dae::GameObject::ResourceCleanup()
+void dae::GameObject::ComponentCleanup()
 {
 	auto eraseIt = std::stable_partition(m_Components.begin(), m_Components.end(), [](const std::unique_ptr<Component>& component)
 		{
