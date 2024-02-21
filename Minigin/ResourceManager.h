@@ -1,5 +1,6 @@
 #pragma once
 #include <filesystem>
+#include <map>
 #include <string>
 #include <memory>
 #include "Singleton.h"
@@ -12,11 +13,14 @@ namespace dae
 	{
 	public:
 		void Init(const std::filesystem::path& data);
-		std::shared_ptr<Texture2D> LoadTexture(const std::string& file) const;
+		Texture2D* LoadTexture(const std::string& file);
 		std::shared_ptr<Font> LoadFont(const std::string& file, unsigned int size) const;
 	private:
 		friend class Singleton<ResourceManager>;
 		ResourceManager() = default;
 		std::filesystem::path m_DataPath;
+
+		std::map<std::string, std::unique_ptr<Texture2D>> m_Textures{};
+		std::map<std::string, std::unique_ptr<Font>> m_Fonts{};
 	};
 }
