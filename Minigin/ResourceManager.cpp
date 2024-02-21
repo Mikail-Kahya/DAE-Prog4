@@ -6,7 +6,9 @@
 #include "Texture2D.h"
 #include "Font.h"
 
-void dae::ResourceManager::Init(const std::filesystem::path& dataPath)
+using namespace dae;
+
+void ResourceManager::Init(const std::filesystem::path& dataPath)
 {
 	m_DataPath = dataPath;
 
@@ -16,7 +18,7 @@ void dae::ResourceManager::Init(const std::filesystem::path& dataPath)
 	}
 }
 
-dae::Texture2D* dae::ResourceManager::LoadTexture(const std::string& file)
+Texture2D* ResourceManager::LoadTexture(const std::string& file)
 {
 	// Check if texture was loaded before
 	if (m_Textures.contains(file))
@@ -28,15 +30,21 @@ dae::Texture2D* dae::ResourceManager::LoadTexture(const std::string& file)
 	if (texture == nullptr)
 		throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
 
-	std::unique_ptr texture2D{ std::make_unique<Texture2D>(texture) };
-	Texture2D* texturePtr{ texture2D.get() };
-	m_Textures[file] = std::move(texture2D);
-
-	return texturePtr;
+	m_Textures[file] = std::make_unique<Texture2D>(texture);
+	return m_Textures.at(file).get();
 }
 
-std::shared_ptr<dae::Font> dae::ResourceManager::LoadFont(const std::string& file, unsigned int size) const
+Font* ResourceManager::LoadFont(const std::string& file, unsigned int size)
 {
+	const std::string alias{ file + std::to_string(size) };
+
+	// Check if font was loaded before
+	if (m_Fonts.contains(alias))
+		return m_Fonts.at(alias).get();
+
+	// Load new font
 	const auto fullPath = m_DataPath/file;
-	return std::make_shared<Font>(fullPath.string(), size);
+	m_Fonts[alias] = std::make_unique<Font>(fullPath.string(), size);
+
+	return m_Fonts.at(alias).get();
 }
