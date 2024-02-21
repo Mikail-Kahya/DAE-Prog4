@@ -26,6 +26,14 @@ void dae::SceneManager::LateUpdate()
 	}
 }
 
+void dae::SceneManager::ResourceCleanup()
+{
+	for (auto& scene : m_scenes)
+	{
+		scene->ResourceCleanup();
+	}
+}
+
 void dae::SceneManager::Render()
 {
 	for (const auto& scene : m_scenes)

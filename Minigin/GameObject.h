@@ -18,17 +18,17 @@ namespace dae
 		virtual void Update();
 		virtual void LateUpdate();
 		virtual void Render() const;
+		void ResourceCleanup();
 
 		void Destroy();
 		void ClearDestroy();
 		bool DestroyFlagged() const;
 
-
 		void SetTexture(const std::string& filename);
 		void SetPosition(float x, float y);
 
 
-		GameObject() = default;
+		GameObject(const std::string& name = {});
 		virtual ~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -41,9 +41,10 @@ namespace dae
 		void RemoveComponent(std::unique_ptr<Component> component);
 
 
-	private:
-		void RemoveComponents();
+		std::string m_Name{};
 
+
+	private:
 		std::vector<std::unique_ptr<Component>> m_Components{};
 		bool m_Destroy{};
 	};

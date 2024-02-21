@@ -9,6 +9,16 @@ unsigned int Scene::m_idCounter = 0;
 
 Scene::Scene(const std::string& name) : m_name(name) {}
 
+void Scene::RemoveDestroyed()
+{
+	auto eraseIt = std::stable_partition(m_objects.begin(), m_objects.end(), [](const std::unique_ptr<GameObject>& object)
+	{
+		return !object->DestroyFlagged();
+	});
+
+	m_objects.erase(eraseIt, m_objects.end());
+}
+
 Scene::~Scene() = default;
 
 void Scene::Add(std::shared_ptr<GameObject> object)
@@ -48,6 +58,15 @@ void Scene::LateUpdate()
 	{
 		object->LateUpdate();
 	}
+}
+
+void Scene::ResourceCleanup()
+{
+	for (auto& object : m_objects)
+	{
+		object->ResourceCleanup();
+	}
+	RemoveDestroyed();
 }
 
 void Scene::Render() const

@@ -17,6 +17,7 @@ namespace dae
 		void FixedUpdate();
 		void Update();
 		void LateUpdate();
+		void ResourceCleanup();
 		void Render();
 
 		const TimeManager& GetTimeManager();

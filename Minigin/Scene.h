@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneManager.h"
+#include "GameObject.h"
 
 namespace dae
 {
@@ -8,13 +9,15 @@ namespace dae
 	{
 		friend Scene& SceneManager::CreateScene(const std::string& name);
 	public:
-		void Add(std::shared_ptr<GameObject> object);
+		template<typename ObjectType, typename... Args>
+		void CreateGameObject(const std::string& name, Args... arguments);
 		void Remove(std::shared_ptr<GameObject> object);
 		void RemoveAll();
 		
 		void FixedUpdate();
 		void Update();
 		void LateUpdate();
+		void ResourceCleanup();
 		void Render() const;
 
 		~Scene();
@@ -25,6 +28,8 @@ namespace dae
 
 	private: 
 		explicit Scene(const std::string& name);
+		friend void GameObject::ResourceCleanup();
+		void RemoveDestroyed();
 
 		std::string m_name;
 		std::vector <std::shared_ptr<GameObject>> m_objects{};
@@ -32,4 +37,9 @@ namespace dae
 		static unsigned int m_idCounter; 
 	};
 
+	template <typename ObjectType, typename ... Args>
+	void Scene::CreateGameObject(const std::string& name, Args... arguments)
+	{
+		m_objects.emplace_back(std::make_shared<ObjectType>(name, arguments));
+	}
 }
