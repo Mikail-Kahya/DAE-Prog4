@@ -3,16 +3,28 @@
 class Component
 {
 public:
-	virtual ~Component(){}
+	virtual ~Component() {}
 
-	virtual void Update(){}
-	virtual void Render() const{}
+	Component(const Component& other) = delete;
+	Component(Component&& other) = delete;
+	Component& operator=(const Component& other) = delete;
+	Component& operator=(Component&& other) = delete;
 
-	Component(const Component& other)				= delete;
-	Component(Component&& other)					= delete;
-	Component& operator=(const Component& other)	= delete;
-	Component& operator=(Component&& other)			= delete;
+	virtual void Update() {}
+	virtual void FixedUpdate() {}
+	virtual void LateUpdate() {}
+	virtual void Render() const {}
+
+	void Destroy();
+	void ClearDestroy();
+
+	bool DestroyFlagged() const;
+
+	virtual Component* Clone() = 0;
 
 protected:
-	Component(){}
+	Component() = default;
+
+private:
+	bool m_Destroy{};
 };
