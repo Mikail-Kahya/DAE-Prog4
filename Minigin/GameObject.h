@@ -27,7 +27,6 @@ namespace dae
 		void FixedUpdate();
 		void LateUpdate();
 		void Render() const;
-		void ComponentCleanup();
 
 		void Destroy();
 		void ClearDestroy();
@@ -45,10 +44,13 @@ namespace dae
 		std::string m_Name{};
 
 	private:
+		void ComponentCleanup();
+
 		Transform m_Transform{};
 		Texture2D* m_TexturePtr{};
 
 		std::vector<std::unique_ptr<Component>> m_Components{};
+		std::vector<std::unique_ptr<Component>> m_ComponentBuffer{};
 		bool m_Destroy{};
 	};
 
@@ -66,6 +68,6 @@ namespace dae
 	template <std::derived_from<Component> ComponentType, typename... Args>
 	void GameObject::AddComponent(const std::string& name, Args... arguments)
 	{
-		m_Components.emplace_back(std::make_unique<ComponentType>(name, arguments));
+		m_ComponentBuffer.emplace_back(std::make_unique<ComponentType>(name, arguments));
 	}
 }

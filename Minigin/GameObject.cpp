@@ -83,6 +83,8 @@ void GameObject::LateUpdate()
 {
 	for (const auto& component : m_Components)
 		component->LateUpdate();
+
+	ComponentCleanup();
 }
 
 void GameObject::Render() const
@@ -99,6 +101,13 @@ void GameObject::ComponentCleanup()
 		});
 
 	m_Components.erase(eraseIt, m_Components.end());
+
+	// Flush buffer
+	m_Components.insert(m_Components.end(),
+		std::make_move_iterator(m_ComponentBuffer.begin()),
+		std::make_move_iterator(m_ComponentBuffer.end()));
+	m_ComponentBuffer.clear();
+	
 }
 
 void GameObject::Destroy()
