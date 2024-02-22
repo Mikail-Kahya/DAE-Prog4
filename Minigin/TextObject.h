@@ -11,23 +11,25 @@ namespace dae
 	class TextObject final : public GameObject
 	{
 	public:
+		TextObject(const std::string& text, Font* fontPtr);
+		virtual ~TextObject() = default;
+
+		TextObject(const TextObject& other)				= delete;
+		TextObject(TextObject&& other)					= delete;
+		TextObject& operator=(const TextObject& other)	= delete;
+		TextObject& operator=(TextObject&& other)		= delete;
+
 		void Update() override;
 		void Render() const override;
 
 		void SetText(const std::string& text);
 		void SetPosition(float x, float y);
 
-		TextObject(const std::string& text, std::shared_ptr<Font> font);
-		virtual ~TextObject() = default;
-		TextObject(const TextObject& other) = delete;
-		TextObject(TextObject&& other) = delete;
-		TextObject& operator=(const TextObject& other) = delete;
-		TextObject& operator=(TextObject&& other) = delete;
 	private:
-		bool m_needsUpdate;
+		bool m_needsUpdate{ false };
 		std::string m_text;
 		Transform m_transform{};
-		std::shared_ptr<Font> m_font;
-		std::shared_ptr<Texture2D> m_textTexture;
+		Font* m_FontPtr{};
+		std::unique_ptr<Texture2D> m_TexturePtr{};
 	};
 }
