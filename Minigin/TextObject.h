@@ -8,7 +8,7 @@ namespace dae
 {
 	class Font;
 	class Texture2D;
-	class TextObject final : public GameObject
+	class TextObject final
 	{
 	public:
 		TextObject(const std::string& text, Font* fontPtr);
@@ -19,8 +19,8 @@ namespace dae
 		TextObject& operator=(const TextObject& other)	= delete;
 		TextObject& operator=(TextObject&& other)		= delete;
 
-		void Update() override;
-		void Render() const override;
+		void Update();
+		void Render() const;
 
 		void SetText(const std::string& text);
 		void SetPosition(float x, float y);

@@ -1,29 +1,71 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <vector>
+
 #include "Transform.h"
+#include "Component.h"
+#include "Texture2D.h"
 
 namespace dae
 {
 	class Texture2D;
-	class GameObject 
+
+	class GameObject final
 	{
-		Transform m_transform{};
-		Texture2D* m_texture{};
 	public:
-		virtual void FixedUpdate();
-		virtual void Update();
-		virtual void LateUpdate();
-		virtual void Render() const;
+		GameObject(const std::string& name = {});
+		~GameObject();
+
+		// TODO fix
+		GameObject(const GameObject& other);
+		GameObject(GameObject&& other)					noexcept;
+		GameObject& operator=(const GameObject& other);
+		GameObject& operator=(GameObject&& other)		noexcept;
+
+		void Update();
+		void FixedUpdate();
+		void LateUpdate();
+		void Render() const;
+		void ComponentCleanup();
+
+		void Destroy();
+		void ClearDestroy();
+		bool DestroyFlagged() const;
 
 		void SetTexture(const std::string& filename);
 		void SetPosition(float x, float y);
 
-		GameObject() = default;
-		virtual ~GameObject();
-		GameObject(const GameObject& other) = delete;
-		GameObject(GameObject&& other) = delete;
-		GameObject& operator=(const GameObject& other) = delete;
-		GameObject& operator=(GameObject&& other) = delete;
+		template <std::derived_from<Component> ComponentType>
+		Component* GetComponent();
+		template <std::derived_from<Component> ComponentType, typename... Args>
+		void AddComponent(const std::string& name, Args... arguments);
+		void RemoveComponent(const std::unique_ptr<Component>& component);
+
+		std::string m_Name{};
+
+	private:
+		Transform m_Transform{};
+		Texture2D* m_TexturePtr{};
+
+		std::vector<std::unique_ptr<Component>> m_Components{};
+		bool m_Destroy{};
 	};
+
+	template <std::derived_from<Component> ComponentType>
+	Component* GameObject::GetComponent()
+	{
+		auto componentIt = std::ranges::find_if(m_Components, [](const std::unique_ptr<Component>& component)
+			{
+				return dynamic_cast<ComponentType>(component.get());
+			});
+
+		return (componentIt != m_Components.end()) ? *componentIt : nullptr;
+	}
+
+	template <std::derived_from<Component> ComponentType, typename... Args>
+	void GameObject::AddComponent(const std::string& name, Args... arguments)
+	{
+		m_Components.emplace_back(std::make_unique<ComponentType>(name, arguments));
+	}
 }

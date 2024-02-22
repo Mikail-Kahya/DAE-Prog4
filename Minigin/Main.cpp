@@ -29,10 +29,10 @@ void load()
 	go->SetPosition(216, 180);
 	scene.Add(go);
 
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	/*auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto to = std::make_shared<dae::TextObject>("Programming 4 Assignment", font);
 	to->SetPosition(80, 20);
-	scene.Add(to);
+	scene.Add(to);*/
 }
 
 int main(int, char*[]) {
