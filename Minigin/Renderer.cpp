@@ -40,6 +40,15 @@ void Renderer::Render() const
 
 	SceneManager::GetInstance().Render();
 	
+	for (RenderComponent* renderComponentPtr : m_RenderComponentPtrs)
+	{
+		if (renderComponentPtr->GetTexture() == nullptr)
+			continue;
+
+		const glm::vec3 position{ renderComponentPtr->GetTransform().GetPosition() };
+		RenderTexture(*renderComponentPtr->GetTexture(), position.x, position.y);
+	}
+
 	SDL_RenderPresent(m_renderer);
 }
 
@@ -49,15 +58,6 @@ void Renderer::Destroy()
 	{
 		SDL_DestroyRenderer(m_renderer);
 		m_renderer = nullptr;
-	}
-}
-
-void Renderer::RenderAll() const
-{
-	for (RenderComponent* renderComponentPtr : m_RenderComponentPtrs)
-	{
-		const glm::vec3 position{ renderComponentPtr->GetTransform().GetPosition() };
-		RenderTexture(*renderComponentPtr->GetTexture(), position.x, position.y);
 	}
 }
 
