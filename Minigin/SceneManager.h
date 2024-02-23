@@ -28,9 +28,9 @@ namespace mk
 
 		TimeManager m_TimeManager{};
 	};
-}
 
-inline const TimeManager& Time()
-{
-	return mk::SceneManager::GetInstance().GetTimeManager();
+	inline const TimeManager& Time()
+	{
+		return SceneManager::GetInstance().GetTimeManager();
+	}
 }
