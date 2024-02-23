@@ -31,7 +31,6 @@ namespace dae
 		void ClearDestroy();
 		bool DestroyFlagged() const;
 
-		void SetTexture(const std::string& filename);
 		void SetPosition(float x, float y);
 
 		template <std::derived_from<Component> ComponentType>
@@ -46,8 +45,6 @@ namespace dae
 		void ComponentCleanup();
 
 		Transform m_Transform{};
-		Texture2D* m_TexturePtr{};
-
 		std::vector<std::unique_ptr<Component>> m_Components{};
 		std::vector<std::unique_ptr<Component>> m_ComponentBuffer{};
 		bool m_Destroy{};
