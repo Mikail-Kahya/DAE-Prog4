@@ -5,12 +5,11 @@
 
 namespace mk
 {
-	class Texture2D;
 	class SpriteComponent : public RenderComponent
 	{
 	public:
 		SpriteComponent() = default;
-		virtual ~SpriteComponent() override = default;
+		~SpriteComponent() override = default;
 
 		SpriteComponent(const SpriteComponent& other) = delete;
 		SpriteComponent(SpriteComponent&& other) = delete;

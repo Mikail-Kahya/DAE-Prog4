@@ -8,12 +8,12 @@
 namespace mk
 {
 	class Font;
-	class Texture2D;
+	
 	class TextComponent : public RenderComponent
 	{
 	public:
 		TextComponent() = default;
-		virtual ~TextComponent() override = default;
+		~TextComponent() override = default;
 
 		TextComponent(const TextComponent& other)				= delete;
 		TextComponent(TextComponent&& other)					= delete;

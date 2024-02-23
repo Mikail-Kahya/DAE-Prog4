@@ -10,7 +10,7 @@ namespace mk
 	class RenderComponent : public Component
 	{
 	public:
-		virtual ~RenderComponent() override;
+		~RenderComponent() override;
 
 		RenderComponent(const RenderComponent& other)				= delete;
 		RenderComponent(RenderComponent&& other)					= delete;
