@@ -2,7 +2,7 @@
 #include <cstring>
 #include "Renderer.h"
 
-#include "Components/Rendering/RenderComponent.h"
+#include "RenderComponent.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
 

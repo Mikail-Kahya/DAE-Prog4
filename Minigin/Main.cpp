@@ -12,8 +12,8 @@
 #include "ResourceManager.h"
 #include <filesystem>
 
-#include "Components/Rendering/TextComponent.h"
-#include "Components/Rendering/SpriteComponent.h"
+#include "TextComponent.h"
+#include "SpriteComponent.h"
 #include "Scene.h"
 
 namespace fs = std::filesystem;
