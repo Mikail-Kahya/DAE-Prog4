@@ -11,6 +11,7 @@ struct TimeManager
 	TimeManager& operator=(TimeManager&& other)			= default;
 
 	float GetTotalTime() const;
+	float GetFPS() const;
 
 	float deltaTime{};
 	float fixedDeltaTime{ 0.2f };
