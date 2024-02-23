@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 class Component
 {
@@ -20,7 +21,7 @@ public:
 
 	bool DestroyFlagged() const;
 
-	virtual Component* Clone() = 0;
+	virtual std::shared_ptr<Component> Clone() = 0;
 
 protected:
 	Component() = default;
