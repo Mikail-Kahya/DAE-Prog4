@@ -37,8 +37,8 @@ namespace dae
 
 		template <std::derived_from<Component> ComponentType>
 		Component* GetComponent();
-		template <std::derived_from<Component> ComponentType, typename... Args>
-		void AddComponent(const std::string& name, Args... arguments);
+		template <std::derived_from<Component> ComponentType>
+		ComponentType* AddComponent();
 		void RemoveComponent(const std::unique_ptr<Component>& component);
 
 		std::string m_Name{};
@@ -65,9 +65,12 @@ namespace dae
 		return (componentIt != m_Components.end()) ? *componentIt : nullptr;
 	}
 
-	template <std::derived_from<Component> ComponentType, typename... Args>
-	void GameObject::AddComponent(const std::string& name, Args... arguments)
+	template <std::derived_from<Component> ComponentType>
+	ComponentType* GameObject::AddComponent()
 	{
-		m_ComponentBuffer.emplace_back(std::make_unique<ComponentType>(name, arguments));
+		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>() };
+		ComponentType* componentPtr{ component.get() };
+		m_ComponentBuffer.emplace_back(std::move(component));
+		return componentPtr;
 	}
 }

@@ -34,8 +34,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/SceneManager.h
   Minigin/TimeManager.cpp
   Minigin/TimeManager.h
-  Minigin/TextObject.cpp
-  Minigin/TextObject.h
+  Minigin/TextComponent.cpp
+  Minigin/TextComponent.h
   Minigin/Texture2D.cpp
   Minigin/Texture2D.h
   Minigin/Transform.cpp

@@ -89,8 +89,15 @@ void GameObject::LateUpdate()
 
 void GameObject::Render() const
 {
-	const auto& pos = m_Transform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_TexturePtr, pos.x, pos.y);
+	if (m_TexturePtr != nullptr)
+	{
+		const auto& pos = m_Transform.GetPosition();
+		Renderer::GetInstance().RenderTexture(*m_TexturePtr, pos.x, pos.y);
+		
+	}
+
+	for (const auto& component : m_Components)
+		component->Render();
 }
 
 void GameObject::ComponentCleanup()
