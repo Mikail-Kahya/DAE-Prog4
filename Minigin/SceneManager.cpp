@@ -26,14 +26,6 @@ void dae::SceneManager::LateUpdate()
 	}
 }
 
-void dae::SceneManager::Render()
-{
-	for (const auto& scene : m_scenes)
-	{
-		scene->Render();
-	}
-}
-
 const TimeManager& dae::SceneManager::GetTimeManager()
 {
 	return m_TimeManager;

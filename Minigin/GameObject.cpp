@@ -87,21 +87,9 @@ void GameObject::LateUpdate()
 	ComponentCleanup();
 }
 
-void GameObject::Render() const
-{
-	if (m_TexturePtr != nullptr)
-	{
-		const auto& pos = m_Transform.GetPosition();
-		Renderer::GetInstance().RenderTexture(*m_TexturePtr, pos.x, pos.y);
-		
-	}
-
-	for (const auto& component : m_Components)
-		component->Render();
-}
-
 void GameObject::ComponentCleanup()
 {
+	// Remove destroy flagged components
 	auto eraseIt = std::stable_partition(m_Components.begin(), m_Components.end(), [](const std::unique_ptr<Component>& component)
 		{
 			return !component->DestroyFlagged();
@@ -109,7 +97,7 @@ void GameObject::ComponentCleanup()
 
 	m_Components.erase(eraseIt, m_Components.end());
 
-	// Flush buffer
+	// Move components and flush buffer
 	m_Components.insert(m_Components.end(),
 		std::make_move_iterator(m_ComponentBuffer.begin()),
 		std::make_move_iterator(m_ComponentBuffer.end()));

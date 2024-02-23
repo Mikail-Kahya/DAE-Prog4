@@ -29,15 +29,6 @@ void TextComponent::Update()
 	}
 }
 
-void TextComponent::Render() const
-{
-	//if (m_TexturePtr != nullptr)
-	//{
-	//	const auto& pos = m_Transform.GetPosition();
-	//	Renderer::GetInstance().RenderTexture(*m_TexturePtr, pos.x, pos.y);
-	//}
-}
-
 // This implementation uses the "dirty flag" pattern
 void TextComponent::SetText(const std::string& text)
 {

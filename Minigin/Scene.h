@@ -15,7 +15,6 @@ namespace dae
 		void FixedUpdate();
 		void Update();
 		void LateUpdate();
-		void Render() const;
 
 		~Scene();
 		Scene(const Scene& other) = delete;
