@@ -2,8 +2,6 @@
 #include <algorithm>
 
 #include "GameObject.h"
-#include "ResourceManager.h"
-#include "Renderer.h"
 
 using namespace dae;
 
@@ -17,7 +15,6 @@ GameObject::~GameObject() = default;
 GameObject::GameObject(const GameObject& other)
 	: m_Name{ other.m_Name }
 	, m_Transform{ other.m_Transform }
-	, m_TexturePtr{ other.m_TexturePtr }
 	, m_Destroy{ other.m_Destroy }
 {
 	for (const auto& component : other.m_Components)
@@ -27,11 +24,9 @@ GameObject::GameObject(const GameObject& other)
 GameObject::GameObject(GameObject&& other) noexcept
 	: m_Name{ std::move(other.m_Name) }
 	, m_Transform{ other.m_Transform }
-	, m_TexturePtr{ other.m_TexturePtr }
 	, m_Components{ std::move(other.m_Components) }
 	, m_Destroy{ other.m_Destroy }
 {
-	other.m_TexturePtr = nullptr;
 	other.m_Components.clear();
 }
 
@@ -39,7 +34,6 @@ GameObject& GameObject::operator=(const GameObject& other)
 {
 	m_Name = other.m_Name;
 	m_Transform = other.m_Transform;
-	m_TexturePtr = other.m_TexturePtr;
 	m_Destroy = other.m_Destroy;
 
 	for (const auto& component : other.m_Components)
@@ -52,11 +46,9 @@ GameObject& GameObject::operator=(GameObject&& other) noexcept
 {
 	m_Name = other.m_Name;
 	m_Transform = other.m_Transform;
-	m_TexturePtr = other.m_TexturePtr;
 	m_Components = std::move(other.m_Components);
 	m_Destroy = other.m_Destroy;
 
-	other.m_TexturePtr = nullptr;
 	other.m_Components.clear();
 
 	return *this;
@@ -117,11 +109,6 @@ void GameObject::ClearDestroy()
 bool GameObject::DestroyFlagged() const
 {
 	return m_Destroy;
-}
-
-void GameObject::SetTexture(const std::string& filename)
-{
-	m_TexturePtr = ResourceManager::GetInstance().LoadTexture(filename);
 }
 
 void GameObject::SetPosition(float x, float y)
