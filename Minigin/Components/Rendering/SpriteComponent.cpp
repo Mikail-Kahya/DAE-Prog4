@@ -1,6 +1,14 @@
 #include "SpriteComponent.h"
+#include "ResourceManager.h"
 
-dae::Texture2D* dae::SpriteComponent::GetTexture() const
+using namespace dae;
+
+void SpriteComponent::SetTexture(const std::string& file)
+{
+	m_TexturePtr = ResourceManager::GetInstance().LoadTexture(file);
+}
+
+Texture2D* SpriteComponent::GetTexture() const
 {
 	return m_TexturePtr;
 }

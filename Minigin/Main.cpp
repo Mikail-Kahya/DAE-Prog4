@@ -10,36 +10,38 @@
 #include "Minigin.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
+#include <filesystem>
+
 #include "Components/Rendering/TextComponent.h"
+#include "Components/Rendering/SpriteComponent.h"
 #include "Scene.h"
 
-#include <filesystem>
 namespace fs = std::filesystem;
+using namespace dae;
 
 void load()
 {
-	auto& scene = dae::SceneManager::GetInstance().CreateScene("Demo");
+	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 
-	auto go = std::make_shared<dae::GameObject>();
-	go->SetTexture("background.tga");
+	SpriteComponent* spriteCompPtr{};
+
+	auto go = std::make_shared<GameObject>();
+	spriteCompPtr = go->AddComponent<SpriteComponent>();
+	spriteCompPtr->SetTexture("background.tga");
 	scene.Add(go);
 
-	go = std::make_shared<dae::GameObject>();
-	go->SetTexture("logo.tga");
-	go->SetPosition(216, 180);
+	go = std::make_shared<GameObject>();
+	spriteCompPtr = go->AddComponent<SpriteComponent>();
+	spriteCompPtr->SetTexture("logo.tga");
+	spriteCompPtr->SetPosition(216, 180);
 	scene.Add(go);
 
-	go = std::make_shared<dae::GameObject>();
+	go = std::make_shared<GameObject>();
 	scene.Add(go);
-	auto b = go->AddComponent<dae::TextComponent>();
-	b->SetText("beyu");
-	b->SetFont("Lingua.otf", 36);
-	b->SetPosition(80, 20);
-
-	/*auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<dae::TextComponent>("Programming 4 Assignment", font);
-	to->SetPosition(80, 20);
-	scene.Add(to);*/
+	auto testTextComponent = go->AddComponent<TextComponent>();
+	testTextComponent->SetText("Programming 4 assignment");
+	testTextComponent->SetFont("Lingua.otf", 36);
+	testTextComponent->SetPosition(80, 20);
 }
 
 int main(int, char*[]) {

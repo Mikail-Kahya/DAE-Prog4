@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 #include "RenderComponent.h"
 
@@ -15,6 +16,8 @@ namespace dae
 		SpriteComponent(SpriteComponent&& other) = delete;
 		SpriteComponent& operator=(const SpriteComponent& other) = delete;
 		SpriteComponent& operator=(SpriteComponent&& other) = delete;
+
+		void SetTexture(const std::string& file);
 
 		Texture2D* GetTexture() const override;
 
