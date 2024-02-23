@@ -33,9 +33,9 @@ namespace mk
 		void SetPosition(float x, float y);
 
 		template <std::derived_from<Component> ComponentType>
-		Component* GetComponent();
+		[[nodiscard]] Component* GetComponent();
 		template <std::derived_from<Component> ComponentType>
-		ComponentType* AddComponent();
+		[[nodiscard]] ComponentType* AddComponent();
 		void RemoveComponent(const std::unique_ptr<Component>& component);
 
 		std::string m_Name{};
