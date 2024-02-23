@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "RenderComponent.h"
-#include "GameObject.h"
 
 namespace mk
 {
@@ -27,7 +26,7 @@ namespace mk
 
 		Texture2D* GetTexture() const override;
 
-		std::unique_ptr<Component> Clone() override { return std::make_unique<TextComponent>(); }
+		std::unique_ptr<Component> Clone() override;
 
 	private:
 		bool m_NeedsUpdate{ false };

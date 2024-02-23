@@ -45,3 +45,8 @@ Texture2D* TextComponent::GetTexture() const
 {
 	return m_TexturePtr.get();
 }
+
+std::unique_ptr<Component> TextComponent::Clone()
+{
+	return std::make_unique<TextComponent>();
+}
