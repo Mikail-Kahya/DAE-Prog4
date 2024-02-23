@@ -102,7 +102,6 @@ void GameObject::ComponentCleanup()
 		std::make_move_iterator(m_ComponentBuffer.begin()),
 		std::make_move_iterator(m_ComponentBuffer.end()));
 	m_ComponentBuffer.clear();
-	
 }
 
 void GameObject::Destroy()

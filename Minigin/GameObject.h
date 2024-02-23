@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Transform.h"
-#include "Component.h"
+#include "Components/Component.h"
 #include "Texture2D.h"
 
 namespace dae
