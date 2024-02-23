@@ -1,0 +1,26 @@
+#pragma once
+
+#include "RenderComponent.h"
+
+namespace dae
+{
+	class Texture2D;
+	class SpriteComponent : public RenderComponent
+	{
+	public:
+		SpriteComponent() = default;
+		virtual ~SpriteComponent() override = default;
+
+		SpriteComponent(const SpriteComponent& other) = delete;
+		SpriteComponent(SpriteComponent&& other) = delete;
+		SpriteComponent& operator=(const SpriteComponent& other) = delete;
+		SpriteComponent& operator=(SpriteComponent&& other) = delete;
+
+		Texture2D* GetTexture() const override;
+
+		std::unique_ptr<Component> Clone() override { return std::make_unique<SpriteComponent>(); }
+
+	private:
+		Texture2D* m_TexturePtr{};
+	};
+}
