@@ -15,6 +15,8 @@ namespace mk
 		FPSComponent& operator=(const FPSComponent& other)	= delete;
 		FPSComponent& operator=(FPSComponent&& other)		= delete;
 
+		void Update() override;
+
 		std::unique_ptr<Component> Clone() override;
 
 	private:

@@ -12,6 +12,7 @@
 #include "ResourceManager.h"
 #include <filesystem>
 
+#include "GameObject.h"
 #include "TextComponent.h"
 #include "SpriteComponent.h"
 #include "Scene.h"
@@ -52,7 +53,7 @@ int main(int, char*[]) {
 	if(!fs::exists(data_location))
 		data_location = "../Data/";
 #endif
-	mk::Minigin engine(data_location);
+	Minigin engine(data_location);
 	engine.Run(load);
     return 0;
 }
