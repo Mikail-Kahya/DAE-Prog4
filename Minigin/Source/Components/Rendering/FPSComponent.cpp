@@ -10,7 +10,11 @@ using namespace mk;
 void FPSComponent::Update()
 {
 	const TimeManager& time{ Time() };
-	OutputDebugString(std::string{ "\nDT: " + std::to_string(time.deltaTime) + "\nFT: " + std::to_string(time.fixedDeltaTime) }.c_str());
+
+	std::stringstream textBuffer;
+	textBuffer << std::fixed << std::setprecision(2) << time.GetFPS();
+
+	SetText(textBuffer.str());
 
 	TextComponent::Update();
 }
