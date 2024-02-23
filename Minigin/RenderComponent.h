@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <string_view>
-
 #include "Component.h"
 #include "Transform.h"
 
