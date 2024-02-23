@@ -28,8 +28,10 @@ namespace mk
 
 		std::unique_ptr<Component> Clone() override;
 
-	private:
+	protected:
 		bool m_NeedsUpdate{ false };
+
+	private:
 		std::string m_Text{};
 		Font* m_FontPtr{};
 		std::unique_ptr<Texture2D> m_TexturePtr{};

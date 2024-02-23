@@ -1,5 +1,3 @@
-#include <windows.h>
-
 #include "FPSComponent.h"
 
 #include "SceneManager.h"
@@ -9,17 +7,39 @@ using namespace mk;
 
 void FPSComponent::Update()
 {
-	const TimeManager& time{ Time() };
 
-	std::stringstream textBuffer;
-	textBuffer << std::fixed << std::setprecision(2) << time.GetFPS();
+	if (m_NeedsUpdate)
+	{
+		m_Timer -= m_UpdateDelay;
+		UpdateText();
+		TextComponent::Update();
+		return;
+	}
 
-	SetText(textBuffer.str());
+	m_Timer += Time().deltaTime;
+	m_NeedsUpdate = m_Timer > m_UpdateDelay;
+}
 
-	TextComponent::Update();
+void FPSComponent::SetPrecision(int precision)
+{
+	m_Precision = precision;
+}
+
+void FPSComponent::SetUpdateDelay(float updateDelay)
+{
+	m_UpdateDelay = updateDelay;
 }
 
 std::unique_ptr<Component> FPSComponent::Clone()
 {
 	return std::make_unique<FPSComponent>();
+}
+
+void FPSComponent::UpdateText()
+{
+	std::stringstream textBuffer;
+	textBuffer << std::fixed << std::setprecision(m_Precision) << Time().GetFPS();
+	textBuffer << "  FPS";
+
+	SetText(textBuffer.str());
 }

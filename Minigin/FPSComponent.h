@@ -17,8 +17,16 @@ namespace mk
 
 		void Update() override;
 
+		void SetPrecision(int precision);
+		void SetUpdateDelay(float updateDelay);
+
 		std::unique_ptr<Component> Clone() override;
 
 	private:
+		void UpdateText();
+
+		int m_Precision{ 1 };
+		float m_UpdateDelay{ 0.5f };
+		float m_Timer{};
 	};
 }
