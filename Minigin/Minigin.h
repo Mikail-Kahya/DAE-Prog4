@@ -23,7 +23,7 @@ namespace mk
 		bool m_quit{};
 		std::chrono::high_resolution_clock::time_point m_LastTime{};
 
-		static constexpr int FPS{ 1 };
+		static constexpr int FPS{ 60 };
 		static constexpr float FIXED_TIME_STEP{ 0.2f };
 
 		float m_Lag{};

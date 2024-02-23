@@ -12,6 +12,7 @@
 #include "ResourceManager.h"
 #include <filesystem>
 
+#include "FPSComponent.h"
 #include "GameObject.h"
 #include "TextComponent.h"
 #include "SpriteComponent.h"
@@ -43,6 +44,13 @@ void load()
 	testTextComponent->SetText("Programming 4 assignment");
 	testTextComponent->SetFont("Lingua.otf", 36);
 	testTextComponent->SetPosition(80, 20);
+
+	go = std::make_shared<GameObject>();
+	scene.Add(go);
+	testTextComponent = go->AddComponent<FPSComponent>();
+	testTextComponent->SetText("test");
+	testTextComponent->SetFont("Lingua.otf", 36);
+	testTextComponent->SetPosition(0, 20);
 }
 
 int main(int, char*[]) {
