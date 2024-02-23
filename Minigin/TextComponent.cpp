@@ -55,9 +55,4 @@ void TextComponent::SetPosition(const float x, const float y)
 	m_Transform.SetPosition(x, y, 0.0f);
 }
 
-Component* TextComponent::Clone()
-{
-	return nullptr;
-}
-
 

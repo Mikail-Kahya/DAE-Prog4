@@ -1,8 +1,12 @@
 #include <stdexcept>
 #include <cstring>
 #include "Renderer.h"
+
+#include "RenderComponent.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
+
+using namespace dae;
 
 int GetOpenGLDriverIndex()
 {
@@ -18,7 +22,7 @@ int GetOpenGLDriverIndex()
 	return openglIndex;
 }
 
-void dae::Renderer::Init(SDL_Window* window)
+void Renderer::Init(SDL_Window* window)
 {
 	m_window = window;
 	m_renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED);
@@ -28,7 +32,7 @@ void dae::Renderer::Init(SDL_Window* window)
 	}
 }
 
-void dae::Renderer::Render() const
+void Renderer::Render() const
 {
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
@@ -39,7 +43,7 @@ void dae::Renderer::Render() const
 	SDL_RenderPresent(m_renderer);
 }
 
-void dae::Renderer::Destroy()
+void Renderer::Destroy()
 {
 	if (m_renderer != nullptr)
 	{
@@ -48,7 +52,16 @@ void dae::Renderer::Destroy()
 	}
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
+void Renderer::RenderAll() const
+{
+	for (RenderComponent* renderComponentPtr : m_RenderComponentPtrs)
+	{
+		const glm::vec3 position{ renderComponentPtr->GetTransform().GetPosition() };
+		RenderTexture(*renderComponentPtr->GetTexture(), position.x, position.y);
+	}
+}
+
+void Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
@@ -57,7 +70,7 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
+void Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
@@ -67,4 +80,14 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_renderer; }
+SDL_Renderer* Renderer::GetSDLRenderer() const { return m_renderer; }
+
+void Renderer::RegisterRenderComponent(RenderComponent* renderComponentPtr)
+{
+	m_RenderComponentPtrs.emplace(renderComponentPtr);
+}
+
+void Renderer::UnregisterRenderComponent(RenderComponent* renderComponentPtr)
+{
+	m_RenderComponentPtrs.erase(renderComponentPtr);
+}

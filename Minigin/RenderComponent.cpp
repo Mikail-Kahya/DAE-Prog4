@@ -1,17 +1,24 @@
 #include "RenderComponent.h"
-#include "ResourceManager.h"
+#include "Renderer.h"
 
 using namespace dae;
 
 RenderComponent::RenderComponent()
 {
+	Renderer::GetInstance().RegisterRenderComponent(this);
 }
 
 RenderComponent::~RenderComponent()
 {
+	Renderer::GetInstance().UnregisterRenderComponent(this);
 }
 
 void RenderComponent::SetPosition(float x, float y)
 {
 	m_Transform.SetPosition(x, y, 0);
+}
+
+const Transform& RenderComponent::GetTransform() const
+{
+	return m_Transform;
 }

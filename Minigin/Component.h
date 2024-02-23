@@ -21,7 +21,7 @@ public:
 
 	bool DestroyFlagged() const;
 
-	virtual std::shared_ptr<Component> Clone() = 0;
+	virtual std::unique_ptr<Component> Clone() = 0;
 
 protected:
 	Component() = default;

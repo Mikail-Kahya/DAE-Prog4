@@ -8,6 +8,8 @@
 
 namespace dae
 {
+	class Texture2D;
+
 	class RenderComponent : public Component
 	{
 	public:
@@ -19,6 +21,9 @@ namespace dae
 		RenderComponent& operator=(RenderComponent&& other)			= delete;
 
 		void SetPosition(float x, float y);
+
+		const Transform& GetTransform() const;
+		virtual Texture2D* GetTexture() const = 0;
 
 	protected:
 		RenderComponent();

@@ -28,7 +28,7 @@ namespace dae
 		void SetFont(const std::string& fontPath, unsigned int size);
 		void SetPosition(float x, float y);
 
-		Component* Clone() override;
+		std::unique_ptr<Component> Clone() override { return std::make_unique<TextComponent>(); }
 
 	private:
 		bool m_NeedsUpdate{ false };
