@@ -31,11 +31,11 @@ void TextComponent::Update()
 
 void TextComponent::Render() const
 {
-	if (m_TexturePtr != nullptr)
-	{
-		const auto& pos = m_Transform.GetPosition();
-		Renderer::GetInstance().RenderTexture(*m_TexturePtr, pos.x, pos.y);
-	}
+	//if (m_TexturePtr != nullptr)
+	//{
+	//	const auto& pos = m_Transform.GetPosition();
+	//	Renderer::GetInstance().RenderTexture(*m_TexturePtr, pos.x, pos.y);
+	//}
 }
 
 // This implementation uses the "dirty flag" pattern
@@ -50,9 +50,7 @@ void TextComponent::SetFont(const std::string& fontPath, unsigned int size)
 	m_FontPtr = ResourceManager::GetInstance().LoadFont(fontPath, size);
 }
 
-void TextComponent::SetPosition(const float x, const float y)
+Texture2D* TextComponent::GetTexture() const
 {
-	m_Transform.SetPosition(x, y, 0.0f);
+	return m_TexturePtr.get();
 }
-
-

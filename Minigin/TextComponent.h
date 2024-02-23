@@ -2,7 +2,7 @@
 #include <string>
 #include <memory>
 
-#include "Component.h"
+#include "RenderComponent.h"
 #include "GameObject.h"
 #include "Transform.h"
 
@@ -10,7 +10,7 @@ namespace dae
 {
 	class Font;
 	class Texture2D;
-	class TextComponent : public Component
+	class TextComponent : public RenderComponent
 	{
 	public:
 		TextComponent() = default;
@@ -26,14 +26,14 @@ namespace dae
 
 		void SetText(const std::string& text);
 		void SetFont(const std::string& fontPath, unsigned int size);
-		void SetPosition(float x, float y);
+
+		Texture2D* GetTexture() const override;
 
 		std::unique_ptr<Component> Clone() override { return std::make_unique<TextComponent>(); }
 
 	private:
 		bool m_NeedsUpdate{ false };
 		std::string m_Text{};
-		Transform m_Transform{};
 		Font* m_FontPtr{};
 		std::unique_ptr<Texture2D> m_TexturePtr{};
 	};
