@@ -142,5 +142,6 @@ void mk::Minigin::RunOneFrame()
 	//const auto sleepTime{ currentTime + milliseconds(msPerFrame) - high_resolution_clock::now() };
 	//Sleep(static_cast<DWORD>(sleepTime.count() * timeTransform));
 	const auto sleepTime{ duration<float>(currentTime + milliseconds(msPerFrame) - high_resolution_clock::now()).count() };
-	Sleep(static_cast<DWORD>(sleepTime * 1000));
+#undef max
+	Sleep(static_cast<DWORD>(std::max(0.f, sleepTime * 1000)));
 }
