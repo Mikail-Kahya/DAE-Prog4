@@ -3,7 +3,7 @@
 
 #include "RenderComponent.h"
 
-namespace dae
+namespace mk
 {
 	class Texture2D;
 	class SpriteComponent : public RenderComponent

@@ -6,7 +6,7 @@
 #include "ResourceManager.h"
 #include "Texture2D.h"
 
-using namespace dae;
+using namespace mk;
 
 void TextComponent::Update()
 {

@@ -6,7 +6,7 @@
 #include "SceneManager.h"
 #include "Texture2D.h"
 
-using namespace dae;
+using namespace mk;
 
 int GetOpenGLDriverIndex()
 {

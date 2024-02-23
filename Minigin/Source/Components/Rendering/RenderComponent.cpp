@@ -1,7 +1,7 @@
 #include "RenderComponent.h"
 #include "Renderer.h"
 
-using namespace dae;
+using namespace mk;
 
 RenderComponent::RenderComponent()
 {

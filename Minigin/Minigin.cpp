@@ -34,7 +34,7 @@ void LogSDLVersion(const std::string& message, const SDL_version& v)
 
 void LoopCallback(void* arg)
 {
-	static_cast<dae::Minigin*>(arg)->RunOneFrame();
+	static_cast<mk::Minigin*>(arg)->RunOneFrame();
 }
 #endif
 
@@ -63,7 +63,7 @@ void PrintSDLVersion()
 	LogSDLVersion("We linked against SDL_ttf version ", version);
 }
 
-dae::Minigin::Minigin(const std::filesystem::path &dataPath)
+mk::Minigin::Minigin(const std::filesystem::path &dataPath)
 {
 	PrintSDLVersion();
 	
@@ -89,7 +89,7 @@ dae::Minigin::Minigin(const std::filesystem::path &dataPath)
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
-dae::Minigin::~Minigin()
+mk::Minigin::~Minigin()
 {
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(g_window);
@@ -97,7 +97,7 @@ dae::Minigin::~Minigin()
 	SDL_Quit();
 }
 
-void dae::Minigin::Run(const std::function<void()>& load)
+void mk::Minigin::Run(const std::function<void()>& load)
 {
 	load();
 
@@ -112,7 +112,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 #endif
 }
 
-void dae::Minigin::RunOneFrame()
+void mk::Minigin::RunOneFrame()
 {
 	using namespace std::chrono;
 	constexpr int msPerFrame{ static_cast<int>((1.f / FPS) * 1000.f) };

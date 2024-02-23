@@ -6,7 +6,7 @@
 #include "Transform.h"
 #include "Component.h"
 
-namespace dae
+namespace mk
 {
 	class Texture2D;
 

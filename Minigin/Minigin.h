@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <chrono>
 
-namespace dae
+namespace mk
 {
 	class Minigin final
 	{

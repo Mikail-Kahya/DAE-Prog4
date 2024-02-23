@@ -5,7 +5,7 @@
 #include "RenderComponent.h"
 #include "GameObject.h"
 
-namespace dae
+namespace mk
 {
 	class Font;
 	class Texture2D;

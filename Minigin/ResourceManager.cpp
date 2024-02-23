@@ -5,7 +5,7 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
-using namespace dae;
+using namespace mk;
 
 void ResourceManager::Init(const std::filesystem::path& dataPath)
 {

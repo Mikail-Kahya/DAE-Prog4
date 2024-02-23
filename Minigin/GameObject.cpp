@@ -3,7 +3,7 @@
 
 #include "GameObject.h"
 
-using namespace dae;
+using namespace mk;
 
 GameObject::GameObject(const std::string& name)
 	: m_Name{ name }

@@ -1,7 +1,7 @@
 #include "SpriteComponent.h"
 #include "ResourceManager.h"
 
-using namespace dae;
+using namespace mk;
 
 void SpriteComponent::SetTexture(const std::string& file)
 {

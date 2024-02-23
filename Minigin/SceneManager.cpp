@@ -2,7 +2,7 @@
 
 #include "Scene.h"
 
-void dae::SceneManager::FixedUpdate()
+void mk::SceneManager::FixedUpdate()
 {
 	for (auto& scene : m_scenes)
 	{
@@ -10,7 +10,7 @@ void dae::SceneManager::FixedUpdate()
 	}
 }
 
-void dae::SceneManager::Update()
+void mk::SceneManager::Update()
 {
 	for(auto& scene : m_scenes)
 	{
@@ -18,7 +18,7 @@ void dae::SceneManager::Update()
 	}
 }
 
-void dae::SceneManager::LateUpdate()
+void mk::SceneManager::LateUpdate()
 {
 	for (auto& scene : m_scenes)
 	{
@@ -26,12 +26,12 @@ void dae::SceneManager::LateUpdate()
 	}
 }
 
-const TimeManager& dae::SceneManager::GetTimeManager()
+const TimeManager& mk::SceneManager::GetTimeManager()
 {
 	return m_TimeManager;
 }
 
-dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
+mk::Scene& mk::SceneManager::CreateScene(const std::string& name)
 {
 	const auto& scene = std::shared_ptr<Scene>(new Scene(name));
 	m_scenes.push_back(scene);

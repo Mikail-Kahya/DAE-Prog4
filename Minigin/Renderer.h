@@ -3,7 +3,7 @@
 #include <set>
 #include "Singleton.h"
 
-namespace dae
+namespace mk
 {
 	class RenderComponent;
 	class Texture2D;

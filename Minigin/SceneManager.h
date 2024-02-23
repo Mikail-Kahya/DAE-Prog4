@@ -6,7 +6,7 @@
 #include "TimeManager.h"
 
 
-namespace dae
+namespace mk
 {
 	class Scene;
 	class SceneManager final : public Singleton<SceneManager>
@@ -32,5 +32,5 @@ namespace dae
 
 inline const TimeManager& Time()
 {
-	return dae::SceneManager::GetInstance().GetTimeManager();
+	return mk::SceneManager::GetInstance().GetTimeManager();
 }

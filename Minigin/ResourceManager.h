@@ -8,7 +8,7 @@
 #include "Font.h"
 #include "Singleton.h"
 
-namespace dae
+namespace mk
 {
 
 	class ResourceManager final : public Singleton<ResourceManager>
