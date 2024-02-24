@@ -3,6 +3,10 @@
 
 #include "GameObject.h"
 
+#include <windows.h>
+
+#include "TextComponent.h"
+
 using namespace mk;
 
 GameObject::GameObject(const std::string& name)

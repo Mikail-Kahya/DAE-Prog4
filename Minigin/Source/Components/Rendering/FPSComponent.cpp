@@ -9,7 +9,7 @@ using namespace mk;
 FPSComponent::FPSComponent(GameObject* ownerPtr)
 	: Component(ownerPtr)
 {
-	//m_TextCompPtr = ownerPtr->GetComponent<TextComponent>();
+	m_TextCompPtr = ownerPtr->GetComponent<TextComponent>();
 	//if (m_TextCompPtr == nullptr)
 	//	m_TextCompPtr = ownerPtr->AddComponent<TextComponent>();
 
