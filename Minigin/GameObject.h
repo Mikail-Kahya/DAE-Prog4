@@ -35,7 +35,7 @@ namespace mk
 		template <std::derived_from<Component> ComponentType>
 		[[nodiscard]] ComponentType* GetComponent() const;
 		template <std::derived_from<Component> ComponentType, typename... Args>
-		[[nodiscard]] ComponentType* AddComponent(const Args&... args);
+		[[nodiscard]] ComponentType* AddComponent(Args&&... args);
 		template <std::derived_from<Component> ComponentType>
 		[[nodiscard]] ComponentType* AddComponent();
 		void RemoveComponent(const std::unique_ptr<Component>& component);
@@ -66,13 +66,13 @@ namespace mk
 	}
 
 	template <std::derived_from<Component> ComponentType, typename... Args>
-	ComponentType* GameObject::AddComponent(const Args&... args)
+	ComponentType* GameObject::AddComponent(Args&&... args)
 	{
 		ComponentType* componentPtr{ GetComponent<ComponentType>() };
 		if (componentPtr != nullptr)
 			return componentPtr;
 
-		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>(this, args) };
+		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>(this, args...) };
 		componentPtr = component.get();
 		m_ComponentBuffer.emplace_back(std::move(component));
 		return componentPtr;

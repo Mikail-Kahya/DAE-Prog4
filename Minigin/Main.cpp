@@ -44,9 +44,8 @@ void load()
 
 	go = std::make_shared<GameObject>();
 	scene.Add(go);
-	auto testTextComponent = go->AddComponent<TextComponent>();
+	auto testTextComponent = go->AddComponent<TextComponent>(std::string{ "Lingua.otf" }, 36);
 	testTextComponent->SetText("Programming 4 assignment");
-	testTextComponent->SetFont("Lingua.otf", 36);
 	testTextComponent->SetPosition(80, 20);
 
 	go = std::make_shared<GameObject>();

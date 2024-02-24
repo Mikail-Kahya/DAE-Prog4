@@ -13,8 +13,7 @@ using namespace mk;
 FPSComponent::FPSComponent(GameObject* ownerPtr)
 	: Component(ownerPtr)
 {
-	m_TextCompPtr = ownerPtr->AddComponent<TextComponent>();
-	m_TextCompPtr->SetFont("Lingua.otf", 36);
+	m_TextCompPtr = ownerPtr->AddComponent<TextComponent>(std::string{ "Lingua.otf" }, 36);
 	m_TextCompPtr->SetPosition(0, 20);
 }
 

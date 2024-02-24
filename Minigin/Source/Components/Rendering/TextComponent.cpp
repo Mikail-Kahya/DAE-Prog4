@@ -8,9 +8,10 @@
 
 using namespace mk;
 
-TextComponent::TextComponent(GameObject* ownerPtr)
+TextComponent::TextComponent(GameObject* ownerPtr, const std::string& fontName, int size)
 	: RenderComponent(ownerPtr)
 {
+	m_FontPtr = ResourceManager::GetInstance().LoadFont(fontName, size);
 }
 
 void TextComponent::Update()
