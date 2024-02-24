@@ -1,5 +1,9 @@
 #include <SDL.h>
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 #if _DEBUG
 // ReSharper disable once CppUnusedIncludeDirective
 #if __has_include(<vld.h>)
@@ -56,6 +60,16 @@ void load()
 }
 
 int main(int, char*[]) {
+	// Console forcing
+	// MAT (yes... of course that Mat, the one who lost the hat) SNIPPET
+#ifdef WIN32
+	if (AllocConsole()) { // opens console
+		FILE* empty; // C file (macro) ignored
+		freopen_s(&empty, "CONOUT$", "w", stdout); // opens console as file and allows std::cout
+		freopen_s(&empty, "CONOUT$", "w", stderr); // opens console as file and allows std::cerr
+	}
+#endif
+
 #if __EMSCRIPTEN__
 	fs::path data_location = "";
 #else
