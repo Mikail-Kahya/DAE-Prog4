@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <thread>
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -115,8 +116,7 @@ void mk::Minigin::Run(const std::function<void()>& load)
 void mk::Minigin::RunOneFrame()
 {
 	using namespace std::chrono;
-	constexpr int msPerFrame{ static_cast<int>((1.f / FPS) * 1000.f) };
-	//constexpr float timeTransform{ 1.f / (1000 * 1000) };
+	constexpr std::chrono::milliseconds msPerFrame{ static_cast<long long>(1.f / FPS * 1000.f) };
 
 	m_quit = !InputManager::GetInstance().ProcessInput();
 
@@ -141,7 +141,8 @@ void mk::Minigin::RunOneFrame()
 
 	//const auto sleepTime{ currentTime + milliseconds(msPerFrame) - high_resolution_clock::now() };
 	//Sleep(static_cast<DWORD>(sleepTime.count() * timeTransform));
-	const auto sleepTime{ duration<float>(currentTime + milliseconds(msPerFrame) - high_resolution_clock::now()).count() };
+	const auto sleepTime{ currentTime + msPerFrame - high_resolution_clock::now() };
+
 #undef max
-	Sleep(static_cast<DWORD>(std::max(0.f, sleepTime * 1000)));
+	std::this_thread::sleep_for(sleepTime);
 }
