@@ -53,7 +53,7 @@ void load()
 	scene.Add(go);
 
 	auto fpsComponent = go->AddComponent<FPSComponent>();
-	fpsComponent->SetUpdateDelay(0.1f);
+	fpsComponent->SetUpdateDelay(0.5f);
 }
 
 int main(int, char*[]) {

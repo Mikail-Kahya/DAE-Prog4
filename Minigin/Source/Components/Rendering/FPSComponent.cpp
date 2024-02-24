@@ -1,3 +1,6 @@
+#include <algorithm>
+#include <numeric>
+
 #include "FPSComponent.h"
 
 #include "GameObject.h"
@@ -22,19 +25,23 @@ void FPSComponent::Update()
 
 	if (m_NeedsUpdate)
 	{
+		m_NeedsUpdate = false;
 		m_Timer -= m_UpdateDelay;
 
 		// Update text component
 		std::stringstream textBuffer;
-		textBuffer << std::fixed << std::setprecision(m_Precision) << Time().GetFPS();
+		textBuffer << std::fixed << std::setprecision(m_Precision) << GetAverageFPS();
 		textBuffer << "  FPS";
 
 		m_TextCompPtr->SetText(textBuffer.str());
+		m_FrameRates.clear();
 
 		return;
 	}
 
-	m_Timer += Time().deltaTime;
+	const float deltaTime{ Time().deltaTime };
+	m_FrameRates.emplace_back(deltaTime);
+	m_Timer += deltaTime;
 	m_NeedsUpdate = m_Timer > m_UpdateDelay;
 }
 
@@ -46,4 +53,13 @@ void FPSComponent::SetPrecision(int precision)
 void FPSComponent::SetUpdateDelay(float updateDelay)
 {
 	m_UpdateDelay = updateDelay;
+}
+
+float FPSComponent::GetAverageFPS()
+{
+	if (m_FrameRates.empty())
+		return Time().GetFPS();
+
+	std::ranges::sort(m_FrameRates);
+	return std::accumulate( m_FrameRates.begin()+1, m_FrameRates.end() - 1, 0.f) / (m_FrameRates.size() - 2);
 }

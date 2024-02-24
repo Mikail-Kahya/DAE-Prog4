@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "Component.h"
 
 namespace mk
@@ -23,6 +25,7 @@ namespace mk
 		void SetUpdateDelay(float updateDelay);
 
 	private:
+		float GetAverageFPS();
 
 		TextComponent* m_TextCompPtr{};
 
@@ -30,5 +33,7 @@ namespace mk
 		int m_Precision{ 1 };
 		float m_UpdateDelay{ 0.5f };
 		float m_Timer{};
+
+		std::vector<float> m_FrameRates{};
 	};
 }
