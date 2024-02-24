@@ -116,7 +116,7 @@ void mk::Minigin::Run(const std::function<void()>& load)
 void mk::Minigin::RunOneFrame()
 {
 	using namespace std::chrono;
-	constexpr std::chrono::milliseconds msPerFrame{ static_cast<long long>(1.f / FPS * 1000.f) };
+	constexpr milliseconds msPerFrame{ static_cast<long long>(1.f / FPS * 1000.f) };
 
 	m_quit = !InputManager::GetInstance().ProcessInput();
 
@@ -139,8 +139,6 @@ void mk::Minigin::RunOneFrame()
 	SceneManager::GetInstance().LateUpdate();
 	Renderer::GetInstance().Render();
 
-	//const auto sleepTime{ currentTime + milliseconds(msPerFrame) - high_resolution_clock::now() };
-	//Sleep(static_cast<DWORD>(sleepTime.count() * timeTransform));
 	const auto sleepTime{ currentTime + msPerFrame - high_resolution_clock::now() };
 
 #undef max

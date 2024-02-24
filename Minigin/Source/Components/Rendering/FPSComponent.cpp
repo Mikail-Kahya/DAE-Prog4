@@ -31,7 +31,7 @@ void FPSComponent::Update()
 		// Update text component
 		std::stringstream textBuffer;
 		textBuffer << std::fixed << std::setprecision(m_Precision) << GetAverageFPS();
-		textBuffer << "  FPS";
+		textBuffer << " FPS";
 
 		m_TextCompPtr->SetText(textBuffer.str());
 		m_FrameRates.clear();
@@ -39,9 +39,9 @@ void FPSComponent::Update()
 		return;
 	}
 
-	const float deltaTime{ Time().deltaTime };
-	m_FrameRates.emplace_back(deltaTime);
-	m_Timer += deltaTime;
+	const TimeManager& time{ Time() };
+	m_FrameRates.emplace_back(time.GetFPS());
+	m_Timer += time.deltaTime;
 	m_NeedsUpdate = m_Timer > m_UpdateDelay;
 }
 
@@ -57,7 +57,7 @@ void FPSComponent::SetUpdateDelay(float updateDelay)
 
 float FPSComponent::GetAverageFPS()
 {
-	if (m_FrameRates.empty())
+	if (m_FrameRates.size() < 4)
 		return Time().GetFPS();
 
 	std::ranges::sort(m_FrameRates);
