@@ -1,13 +1,15 @@
 #pragma once
 
-#include "TextComponent.h"
+#include "Component.h"
 
 namespace mk
 {
-	class FPSComponent : public TextComponent
+	class TextComponent;
+
+	class FPSComponent : public Component
 	{
 	public:
-		FPSComponent() = default;
+		FPSComponent(GameObject* ownerPtr);
 		~FPSComponent() override = default;
 
 		FPSComponent(const FPSComponent& other)				= delete;
@@ -20,11 +22,11 @@ namespace mk
 		void SetPrecision(int precision);
 		void SetUpdateDelay(float updateDelay);
 
-		std::unique_ptr<Component> Clone() override;
-
 	private:
-		void UpdateText();
 
+		TextComponent* m_TextCompPtr{};
+
+		bool m_NeedsUpdate{ true };
 		int m_Precision{ 1 };
 		float m_UpdateDelay{ 0.5f };
 		float m_Timer{};

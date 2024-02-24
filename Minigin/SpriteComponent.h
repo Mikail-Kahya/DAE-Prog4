@@ -5,10 +5,10 @@
 
 namespace mk
 {
-	class SpriteComponent : public RenderComponent
+	class SpriteComponent final : public RenderComponent
 	{
 	public:
-		SpriteComponent() = default;
+		SpriteComponent(GameObject* ownerPtr);
 		~SpriteComponent() override = default;
 
 		SpriteComponent(const SpriteComponent& other) = delete;
@@ -19,8 +19,6 @@ namespace mk
 		void SetTexture(const std::string& file);
 
 		Texture2D* GetTexture() const override;
-
-		std::unique_ptr<Component> Clone() override { return std::make_unique<SpriteComponent>(); }
 
 	private:
 		Texture2D* m_TexturePtr{};

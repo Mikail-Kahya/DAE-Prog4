@@ -8,10 +8,10 @@ namespace mk
 {
 	class Font;
 	
-	class TextComponent : public RenderComponent
+	class TextComponent final : public RenderComponent
 	{
 	public:
-		TextComponent() = default;
+		TextComponent(GameObject* ownerPtr);
 		~TextComponent() override = default;
 
 		TextComponent(const TextComponent& other)				= delete;
@@ -26,12 +26,8 @@ namespace mk
 
 		Texture2D* GetTexture() const override;
 
-		std::unique_ptr<Component> Clone() override;
-
-	protected:
-		bool m_NeedsUpdate{ false };
-
 	private:
+		bool m_NeedsUpdate{ false };
 		std::string m_Text{};
 		Font* m_FontPtr{};
 		std::unique_ptr<Texture2D> m_TexturePtr{};

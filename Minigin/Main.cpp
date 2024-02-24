@@ -47,10 +47,11 @@ void load()
 
 	go = std::make_shared<GameObject>();
 	scene.Add(go);
+	testTextComponent = go->AddComponent<TextComponent>();
+	testTextComponent->SetFont("Lingua.otf", 36);
+	testTextComponent->SetPosition(0, 20);
+
 	auto fpsComponent = go->AddComponent<FPSComponent>();
-	fpsComponent->SetText("test");
-	fpsComponent->SetFont("Lingua.otf", 36);
-	fpsComponent->SetPosition(0, 20);
 	fpsComponent->SetUpdateDelay(0.1f);
 }
 

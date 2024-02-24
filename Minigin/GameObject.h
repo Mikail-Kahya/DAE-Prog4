@@ -17,9 +17,9 @@ namespace mk
 		~GameObject();
 
 		// TODO fix
-		GameObject(const GameObject& other);
+		GameObject(const GameObject& other)				= delete;
 		GameObject(GameObject&& other)					noexcept;
-		GameObject& operator=(const GameObject& other);
+		GameObject& operator=(const GameObject& other)	= delete;
 		GameObject& operator=(GameObject&& other)		noexcept;
 
 		void Update();
@@ -33,7 +33,7 @@ namespace mk
 		void SetPosition(float x, float y);
 
 		template <std::derived_from<Component> ComponentType>
-		[[nodiscard]] Component* GetComponent();
+		[[nodiscard]] ComponentType* GetComponent();
 		template <std::derived_from<Component> ComponentType>
 		[[nodiscard]] ComponentType* AddComponent();
 		void RemoveComponent(const std::unique_ptr<Component>& component);
@@ -50,20 +50,22 @@ namespace mk
 	};
 
 	template <std::derived_from<Component> ComponentType>
-	Component* GameObject::GetComponent()
+	ComponentType* GameObject::GetComponent()
 	{
 		auto componentIt = std::ranges::find_if(m_Components, [](const std::unique_ptr<Component>& component)
 			{
 				return dynamic_cast<ComponentType>(component.get());
 			});
 
-		return (componentIt != m_Components.end()) ? *componentIt : nullptr;
+		Component* componentPtr{ static_cast<std::unique_ptr<Component>>(*componentIt).get() };
+
+		return (componentIt != m_Components.end()) ? dynamic_cast<ComponentType*>(componentPtr) : nullptr;
 	}
 
 	template <std::derived_from<Component> ComponentType>
 	ComponentType* GameObject::AddComponent()
 	{
-		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>() };
+		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>(this) };
 		ComponentType* componentPtr{ component.get() };
 		m_ComponentBuffer.emplace_back(std::move(component));
 		return componentPtr;

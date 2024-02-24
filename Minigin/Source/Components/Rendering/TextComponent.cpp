@@ -8,6 +8,11 @@
 
 using namespace mk;
 
+TextComponent::TextComponent(GameObject* ownerPtr)
+	: RenderComponent(ownerPtr)
+{
+}
+
 void TextComponent::Update()
 {
 	if (m_NeedsUpdate)
@@ -44,9 +49,4 @@ void TextComponent::SetFont(const std::string& fontPath, unsigned int size)
 Texture2D* TextComponent::GetTexture() const
 {
 	return m_TexturePtr.get();
-}
-
-std::unique_ptr<Component> TextComponent::Clone()
-{
-	return std::make_unique<TextComponent>();
 }

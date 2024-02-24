@@ -3,6 +3,11 @@
 
 using namespace mk;
 
+SpriteComponent::SpriteComponent(GameObject* ownerPtr)
+	: RenderComponent(ownerPtr)
+{
+}
+
 void SpriteComponent::SetTexture(const std::string& file)
 {
 	m_TexturePtr = ResourceManager::GetInstance().LoadTexture(file);

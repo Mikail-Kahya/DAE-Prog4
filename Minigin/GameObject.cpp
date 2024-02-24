@@ -12,15 +12,6 @@ GameObject::GameObject(const std::string& name)
 
 GameObject::~GameObject() = default;
 
-GameObject::GameObject(const GameObject& other)
-	: m_Name{ other.m_Name }
-	, m_Transform{ other.m_Transform }
-	, m_Destroy{ other.m_Destroy }
-{
-	for (const auto& component : other.m_Components)
-		m_Components.emplace_back(std::unique_ptr<Component>(component->Clone()));
-}
-
 GameObject::GameObject(GameObject&& other) noexcept
 	: m_Name{ std::move(other.m_Name) }
 	, m_Transform{ other.m_Transform }
@@ -28,18 +19,6 @@ GameObject::GameObject(GameObject&& other) noexcept
 	, m_Destroy{ other.m_Destroy }
 {
 	other.m_Components.clear();
-}
-
-GameObject& GameObject::operator=(const GameObject& other)
-{
-	m_Name = other.m_Name;
-	m_Transform = other.m_Transform;
-	m_Destroy = other.m_Destroy;
-
-	for (const auto& component : other.m_Components)
-		m_Components.emplace_back(std::unique_ptr<Component>(component->Clone()));
-
-	return *this;
 }
 
 GameObject& GameObject::operator=(GameObject&& other) noexcept
