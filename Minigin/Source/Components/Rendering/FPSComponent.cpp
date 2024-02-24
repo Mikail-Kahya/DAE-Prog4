@@ -3,21 +3,20 @@
 #include "GameObject.h"
 #include "SceneManager.h"
 #include "TextComponent.h"
+#include "Texture2D.h"
 
 using namespace mk;
 
 FPSComponent::FPSComponent(GameObject* ownerPtr)
 	: Component(ownerPtr)
 {
-	m_TextCompPtr = ownerPtr->GetComponent<TextComponent>();
-	//if (m_TextCompPtr == nullptr)
-	//	m_TextCompPtr = ownerPtr->AddComponent<TextComponent>();
-
+	m_TextCompPtr = ownerPtr->AddComponent<TextComponent>();
+	m_TextCompPtr->SetFont("Lingua.otf", 36);
+	m_TextCompPtr->SetPosition(0, 20);
 }
 
 void FPSComponent::Update()
 {
-
 	if (m_TextCompPtr == nullptr)
 		return;
 
