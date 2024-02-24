@@ -8,7 +8,7 @@ namespace mk
 	class SpriteComponent final : public RenderComponent
 	{
 	public:
-		SpriteComponent(GameObject* ownerPtr);
+		SpriteComponent(const std::string& file);
 		~SpriteComponent() override = default;
 
 		SpriteComponent(const SpriteComponent& other) = delete;

@@ -3,8 +3,7 @@
 
 using namespace mk;
 
-RenderComponent::RenderComponent(GameObject* ownerPtr)
-	: Component(ownerPtr)
+RenderComponent::RenderComponent()
 {
 	Renderer::GetInstance().RegisterRenderComponent(this);
 }

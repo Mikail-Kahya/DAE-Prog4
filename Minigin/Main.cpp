@@ -32,13 +32,11 @@ void load()
 	SpriteComponent* spriteCompPtr{};
 
 	auto go = std::make_shared<GameObject>();
-	spriteCompPtr = go->AddComponent<SpriteComponent>();
-	spriteCompPtr->SetTexture("background.tga");
+	spriteCompPtr = go->AddComponent<SpriteComponent>("background.tga");
 	scene.Add(go);
 
 	go = std::make_shared<GameObject>();
-	spriteCompPtr = go->AddComponent<SpriteComponent>();
-	spriteCompPtr->SetTexture("logo.tga");
+	spriteCompPtr = go->AddComponent<SpriteComponent>("logo.tga");
 	spriteCompPtr->SetPosition(216, 180);
 	scene.Add(go);
 

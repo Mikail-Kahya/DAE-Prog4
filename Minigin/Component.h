@@ -8,12 +8,14 @@ namespace mk
 	class Component
 	{
 	public:
-		virtual ~Component() {}
+		virtual ~Component() = default;
 
 		Component(const Component& other) = delete;
 		Component(Component&& other) = delete;
 		Component& operator=(const Component& other) = delete;
 		Component& operator=(Component&& other) = delete;
+
+		virtual void Start() {}
 
 		virtual void Update() {}
 		virtual void FixedUpdate() {}
@@ -25,10 +27,14 @@ namespace mk
 		bool DestroyFlagged() const;
 
 	protected:
-		Component(GameObject* ownerPtr);
+		Component() = default;
 		GameObject& GetOwner() const;
 
+		friend class GameObject;
+
 	private:
+		void SetOwner(GameObject* ownerPtr);
+
 		GameObject* m_OwnerPtr{};
 		bool m_Destroy{};
 	};

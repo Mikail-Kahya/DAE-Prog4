@@ -72,7 +72,7 @@ namespace mk
 		if (componentPtr != nullptr)
 			return componentPtr;
 
-		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>(this, args...) };
+		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>(args...) };
 		componentPtr = component.get();
 		m_ComponentBuffer.emplace_back(std::move(component));
 		return componentPtr;
@@ -85,7 +85,10 @@ namespace mk
 		if (componentPtr != nullptr)
 			return componentPtr;
 
-		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>(this) };
+		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>() };
+		component->SetOwner(this);
+		component->Start();
+
 		componentPtr = component.get();
 		m_ComponentBuffer.emplace_back(std::move(component));
 		return componentPtr;

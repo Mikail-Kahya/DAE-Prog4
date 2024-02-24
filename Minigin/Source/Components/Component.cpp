@@ -2,6 +2,11 @@
 
 using namespace mk;
 
+void Component::SetOwner(GameObject* ownerPtr)
+{
+	m_OwnerPtr = ownerPtr;
+}
+
 void Component::Destroy()
 {
 	m_Destroy = true;
@@ -15,11 +20,6 @@ void Component::ClearDestroy()
 bool Component::DestroyFlagged() const
 {
 	return m_Destroy;
-}
-
-Component::Component(GameObject* ownerPtr)
-	: m_OwnerPtr{ ownerPtr }
-{
 }
 
 GameObject& Component::GetOwner() const

@@ -11,7 +11,7 @@ namespace mk
 	class TextComponent final : public RenderComponent
 	{
 	public:
-		TextComponent(GameObject* ownerPtr, const std::string& fontName, int size = 11);
+		TextComponent(const std::string& fontName, int size = 11);
 		~TextComponent() override = default;
 
 		TextComponent(const TextComponent& other)				= delete;

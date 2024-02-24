@@ -11,13 +11,15 @@ namespace mk
 	class FPSComponent : public Component
 	{
 	public:
-		FPSComponent(GameObject* ownerPtr);
+		FPSComponent() = default;
 		~FPSComponent() override = default;
 
 		FPSComponent(const FPSComponent& other)				= delete;
 		FPSComponent(FPSComponent&& other)					= delete;
 		FPSComponent& operator=(const FPSComponent& other)	= delete;
 		FPSComponent& operator=(FPSComponent&& other)		= delete;
+
+		void Start() override;
 
 		void Update() override;
 

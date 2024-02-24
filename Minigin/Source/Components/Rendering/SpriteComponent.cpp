@@ -3,9 +3,9 @@
 
 using namespace mk;
 
-SpriteComponent::SpriteComponent(GameObject* ownerPtr)
-	: RenderComponent(ownerPtr)
+SpriteComponent::SpriteComponent(const std::string& file)
 {
+	SetTexture(file);
 }
 
 void SpriteComponent::SetTexture(const std::string& file)

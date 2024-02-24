@@ -23,7 +23,7 @@ namespace mk
 		virtual Texture2D* GetTexture() const = 0;
 
 	protected:
-		RenderComponent(GameObject* ownerPtr);
+		RenderComponent();
 
 	private:
 		Transform m_Transform{};

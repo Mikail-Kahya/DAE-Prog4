@@ -10,10 +10,9 @@
 
 using namespace mk;
 
-FPSComponent::FPSComponent(GameObject* ownerPtr)
-	: Component(ownerPtr)
+void FPSComponent::Start()
 {
-	m_TextCompPtr = ownerPtr->AddComponent<TextComponent>(std::string{ "Lingua.otf" }, 36);
+	m_TextCompPtr = GetOwner().AddComponent<TextComponent>(std::string{ "Lingua.otf" }, 36);
 	m_TextCompPtr->SetPosition(0, 20);
 }
 
