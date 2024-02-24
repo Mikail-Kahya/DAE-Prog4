@@ -66,11 +66,9 @@ namespace mk
 	template <std::derived_from<Component> ComponentType>
 	ComponentType* GameObject::AddComponent()
 	{
-		//ComponentType* componentPtr{ GetComponent<ComponentType>() };
-		//if (componentPtr != nullptr)
-		//	return componentPtr;
-
-		ComponentType* componentPtr{};
+		ComponentType* componentPtr{ GetComponent<ComponentType>() };
+		if (componentPtr != nullptr)
+			return componentPtr;
 
 		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>(this) };
 		componentPtr = component.get();
