@@ -57,15 +57,6 @@ void load()
 }
 
 int main(int, char*[]) {
-	// Console forcing
-	// MAT (yes... of course that Mat, the one who lost the hat) SNIPPET
-#ifdef WIN32
-	if (AllocConsole()) { // opens console
-		FILE* empty; // C file (macro) ignored
-		freopen_s(&empty, "CONOUT$", "w", stdout); // opens console as file and allows std::cout
-		freopen_s(&empty, "CONOUT$", "w", stderr); // opens console as file and allows std::cerr
-	}
-#endif
 
 #if __EMSCRIPTEN__
 	fs::path data_location = "";
@@ -76,5 +67,6 @@ int main(int, char*[]) {
 #endif
 	Minigin engine(data_location);
 	engine.Run(load);
-    return 0;
+
+	return 0;
 }
