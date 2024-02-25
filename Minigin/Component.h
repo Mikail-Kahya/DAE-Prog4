@@ -30,9 +30,9 @@ namespace mk
 		Component() = default;
 		GameObject& GetOwner() const;
 
-		friend class GameObject;
 
 	private:
+		friend class GameObject;
 		void SetOwner(GameObject* ownerPtr);
 
 		GameObject* m_OwnerPtr{};

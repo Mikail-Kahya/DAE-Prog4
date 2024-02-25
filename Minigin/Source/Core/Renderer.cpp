@@ -2,6 +2,8 @@
 #include <cstring>
 #include "Renderer.h"
 
+#include <algorithm>
+
 #include "RenderComponent.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
@@ -37,8 +39,14 @@ void Renderer::Render() const
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_renderer);
-	
-	for (RenderComponent* renderComponentPtr : m_RenderComponentPtrs)
+
+	std::vector<RenderComponent*> renderCompPtrs{ m_RenderComponentPtrs.begin(), m_RenderComponentPtrs.end() };
+	std::ranges::sort(renderCompPtrs, [](RenderComponent* a, RenderComponent* b)
+	{
+			return a->GetTransform().GetPosition().z > b->GetTransform().GetPosition().z;
+	});
+
+	for (RenderComponent* renderComponentPtr : renderCompPtrs)
 	{
 		if (renderComponentPtr->GetTexture() == nullptr)
 			continue;
@@ -78,11 +86,19 @@ void Renderer::RenderTexture(const Texture2D& texture, const float x, const floa
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
+float Renderer::GetNextDepth()
+{
+	constexpr float depthSlice{ 0.1f };
+	const float depth{ m_AutoDepth };
+	m_AutoDepth -= depthSlice;
+	return depth;
+}
+
 SDL_Renderer* Renderer::GetSDLRenderer() const { return m_renderer; }
 
 void Renderer::RegisterRenderComponent(RenderComponent* renderComponentPtr)
 {
-	m_RenderComponentPtrs.emplace(renderComponentPtr);
+	m_RenderComponentPtrs.insert(renderComponentPtr);
 }
 
 void Renderer::UnregisterRenderComponent(RenderComponent* renderComponentPtr)

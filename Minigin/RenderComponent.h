@@ -17,7 +17,7 @@ namespace mk
 		RenderComponent& operator=(const RenderComponent& other)	= delete;
 		RenderComponent& operator=(RenderComponent&& other)			= delete;
 
-		void SetPosition(float x, float y);
+		void SetPosition(float x, float y, float z = 0.f);
 
 		const Transform& GetTransform() const;
 		virtual Texture2D* GetTexture() const = 0;

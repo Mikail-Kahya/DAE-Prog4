@@ -13,9 +13,12 @@ RenderComponent::~RenderComponent()
 	Renderer::GetInstance().UnregisterRenderComponent(this);
 }
 
-void RenderComponent::SetPosition(float x, float y)
+void RenderComponent::SetPosition(float x, float y, float z)
 {
-	m_Transform.SetPosition(x, y, 0);
+	if (z < FLT_EPSILON)
+		z = Renderer::GetInstance().GetNextDepth();
+
+	m_Transform.SetPosition(x, y, z);
 }
 
 const Transform& RenderComponent::GetTransform() const
