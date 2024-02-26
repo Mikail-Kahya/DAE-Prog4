@@ -43,7 +43,9 @@ void TextComponent::SetText(const std::string& text)
 
 void TextComponent::SetFont(const std::string& fontPath, unsigned int size)
 {
-	m_FontPtr = ResourceManager::GetInstance().LoadFont(fontPath, size);
+	Font* fontPtr{ ResourceManager::GetInstance().LoadFont(fontPath, size) };
+	m_NeedsUpdate = m_FontPtr != fontPtr;
+	m_FontPtr = fontPtr;
 }
 
 Texture2D* TextComponent::GetTexture() const

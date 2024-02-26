@@ -12,7 +12,7 @@ using namespace mk;
 
 void FPSComponent::Start()
 {
-	m_TextCompPtr = GetOwner().AddComponent<TextComponent>(std::string{ "Lingua.otf" }, 36);
+	m_TextCompPtr = GetOwner().AddComponent<TextComponent>(std::string{ "Lingua.otf" }, 18);
 	m_TextCompPtr->SetPosition(0, 20);
 }
 
@@ -59,5 +59,5 @@ float FPSComponent::GetAverageFPS()
 		return Time().GetFPS();
 
 	std::ranges::sort(m_FrameRates);
-	return std::accumulate( m_FrameRates.begin()+1, m_FrameRates.end() - 1, 0.f) / (m_FrameRates.size() - 2);
+	return std::accumulate( m_FrameRates.begin() + 1, m_FrameRates.end() - 1, 0.f) / (m_FrameRates.size() - 2);
 }

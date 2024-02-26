@@ -51,6 +51,7 @@ void load()
 
 	auto fpsComponent = go->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
+
 }
 
 int main(int, char*[]) {
