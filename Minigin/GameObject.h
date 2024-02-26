@@ -30,6 +30,8 @@ namespace mk
 		void ClearDestroy();
 		bool DestroyFlagged() const;
 
+		const Transform& GetTransform() const;
+
 		void SetPosition(float x, float y);
 
 		template <std::derived_from<Component> ComponentType>

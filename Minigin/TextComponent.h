@@ -2,16 +2,18 @@
 #include <string>
 #include <memory>
 
-#include "RenderComponent.h"
+#include "Component.h"
 
 namespace mk
 {
+	class RenderComponent;
+	class Texture2D;
 	class Font;
 	
-	class TextComponent final : public RenderComponent
+	class TextComponent final : public Component
 	{
 	public:
-		TextComponent(const std::string& fontName, int size = 11);
+		TextComponent(const std::string& text, const std::string& fontName = "Lingua.otf", int size = 11);
 		~TextComponent() override = default;
 
 		TextComponent(const TextComponent& other)				= delete;
@@ -19,17 +21,18 @@ namespace mk
 		TextComponent& operator=(const TextComponent& other)	= delete;
 		TextComponent& operator=(TextComponent&& other)			= delete;
 
+		void Start() override;
+
 		void Update() override;
 
 		void SetText(const std::string& text);
 		void SetFont(const std::string& fontPath, unsigned int size);
 
-		Texture2D* GetTexture() const override;
-
 	private:
 		bool m_NeedsUpdate{ false };
 		std::string m_Text{};
 		Font* m_FontPtr{};
-		std::unique_ptr<Texture2D> m_TexturePtr{};
+		std::unique_ptr<Texture2D> m_Texture{};
+		RenderComponent* m_RendererPtr{};
 	};
 }

@@ -1,11 +1,14 @@
 #pragma once
 #include <string>
 
-#include "RenderComponent.h"
+#include "Component.h"
 
 namespace mk
 {
-	class SpriteComponent final : public RenderComponent
+	class RenderComponent;
+	class Texture2D;
+
+	class SpriteComponent final : public Component
 	{
 	public:
 		SpriteComponent(const std::string& file);
@@ -16,11 +19,12 @@ namespace mk
 		SpriteComponent& operator=(const SpriteComponent& other) = delete;
 		SpriteComponent& operator=(SpriteComponent&& other) = delete;
 
-		void SetTexture(const std::string& file);
+		void Start() override;
 
-		Texture2D* GetTexture() const override;
+		void SetTexture(const std::string& file);
 
 	private:
 		Texture2D* m_TexturePtr{};
+		RenderComponent* m_RendererPtr{};
 	};
 }

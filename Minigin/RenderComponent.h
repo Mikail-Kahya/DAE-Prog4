@@ -10,6 +10,7 @@ namespace mk
 	class RenderComponent : public Component
 	{
 	public:
+		RenderComponent(Texture2D* texturePtr);
 		~RenderComponent() override;
 
 		RenderComponent(const RenderComponent& other)				= delete;
@@ -17,15 +18,11 @@ namespace mk
 		RenderComponent& operator=(const RenderComponent& other)	= delete;
 		RenderComponent& operator=(RenderComponent&& other)			= delete;
 
-		void SetPosition(float x, float y, float z = 0.f);
-
 		const Transform& GetTransform() const;
-		virtual Texture2D* GetTexture() const = 0;
-
-	protected:
-		RenderComponent();
+		Texture2D* GetTexture() const;
+		void SetTexture(Texture2D* texturePtr);
 
 	private:
-		Transform m_Transform{};
+		Texture2D* m_TexturePtr{};
 	};
 }

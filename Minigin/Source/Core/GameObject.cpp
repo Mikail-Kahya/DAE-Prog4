@@ -90,6 +90,11 @@ bool GameObject::DestroyFlagged() const
 	return m_Destroy;
 }
 
+const Transform& GameObject::GetTransform() const
+{
+	return m_Transform;
+}
+
 void GameObject::SetPosition(float x, float y)
 {
 	m_Transform.SetPosition(x, y, 0.0f);

@@ -12,8 +12,7 @@ using namespace mk;
 
 void FPSComponent::Start()
 {
-	m_TextCompPtr = GetOwner().AddComponent<TextComponent>(std::string{ "Lingua.otf" }, 18);
-	m_TextCompPtr->SetPosition(0, 20);
+	m_TextCompPtr = GetOwner().AddComponent<TextComponent>("", std::string{"Lingua.otf"}, 18);
 }
 
 void FPSComponent::Update()

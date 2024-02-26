@@ -32,23 +32,23 @@ void load()
 	SpriteComponent* spriteCompPtr{};
 
 	auto go = std::make_shared<GameObject>();
+	scene.Add(go);
 	spriteCompPtr = go->AddComponent<SpriteComponent>("background.tga");
-	scene.Add(go);
-
+	
 	go = std::make_shared<GameObject>();
+	go->SetPosition(100, 100);
+	scene.Add(go);
 	spriteCompPtr = go->AddComponent<SpriteComponent>("logo.tga");
-	spriteCompPtr->SetPosition(216, 180);
-	scene.Add(go);
-
+	
 	go = std::make_shared<GameObject>();
+	go->SetPosition(100, 20);
 	scene.Add(go);
-	auto testTextComponent = go->AddComponent<TextComponent>(std::string{ "Lingua.otf" }, 36);
+	auto testTextComponent = go->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
 	testTextComponent->SetText("Programming 4 assignment");
-	testTextComponent->SetPosition(80, 20);
 
 	go = std::make_shared<GameObject>();
+	go->SetPosition(0, 20);
 	scene.Add(go);
-
 	auto fpsComponent = go->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
 
