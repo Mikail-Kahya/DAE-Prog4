@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <filesystem>
 
 #ifdef WIN32
 #include <windows.h>
@@ -14,13 +15,12 @@
 #include "Minigin.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
-#include <filesystem>
-
-#include "FPSComponent.h"
-#include "GameObject.h"
-#include "TextComponent.h"
-#include "SpriteComponent.h"
 #include "Scene.h"
+
+#include "GameObject.h"
+#include "FPSComponent.h"
+#include "TextComponent.h"
+#include "RenderComponent.h"
 
 namespace fs = std::filesystem;
 using namespace mk;
@@ -29,27 +29,27 @@ void load()
 {
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 
-	SpriteComponent* spriteCompPtr{};
+	RenderComponent* spriteCompPtr{};
 
-	auto go = std::make_shared<GameObject>();
-	scene.Add(go);
-	spriteCompPtr = go->AddComponent<SpriteComponent>("background.tga");
+	auto gameObject = std::make_shared<GameObject>();
+	scene.Add(gameObject);
+	spriteCompPtr = gameObject->AddComponent<RenderComponent>("background.tga");
 	
-	go = std::make_shared<GameObject>();
-	go->SetPosition(100, 100);
-	scene.Add(go);
-	spriteCompPtr = go->AddComponent<SpriteComponent>("logo.tga");
+	gameObject = std::make_shared<GameObject>();
+	gameObject->SetPosition(100, 100);
+	scene.Add(gameObject);
+	spriteCompPtr = gameObject->AddComponent<RenderComponent>("logo.tga");
 	
-	go = std::make_shared<GameObject>();
-	go->SetPosition(100, 20);
-	scene.Add(go);
-	auto testTextComponent = go->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
+	gameObject = std::make_shared<GameObject>();
+	gameObject->SetPosition(100, 20);
+	scene.Add(gameObject);
+	auto testTextComponent = gameObject->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
 	testTextComponent->SetText("Programming 4 assignment");
 
-	go = std::make_shared<GameObject>();
-	go->SetPosition(0, 20);
-	scene.Add(go);
-	auto fpsComponent = go->AddComponent<FPSComponent>();
+	gameObject = std::make_shared<GameObject>();
+	gameObject->SetPosition(0, 20);
+	scene.Add(gameObject);
+	auto fpsComponent = gameObject->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
 
 }
