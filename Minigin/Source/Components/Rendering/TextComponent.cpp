@@ -46,7 +46,6 @@ void TextComponent::Update()
 	}
 }
 
-// This implementation uses the "dirty flag" pattern
 void TextComponent::SetText(const std::string& text)
 {
 	m_Text = text;
