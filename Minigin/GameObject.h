@@ -31,11 +31,13 @@ namespace mk
 		void ClearDestroy();
 		bool DestroyFlagged() const;
 
-		const Transform& GetTransform() const;
+		const glm::vec3& GetWorldPosition();
 
 		void SetPosition(float x, float y);
+		void SetPosition(float x, float y, float z);
+		void SetPosition(const glm::vec3& position);
 
-		void SetParent(GameObject* parent);
+		void SetParent(GameObject* parent, bool keepWorldPosition = true);
 		int GetChildCount() const;
 		GameObject* GetChildAt(int index) const;
 
@@ -48,7 +50,8 @@ namespace mk
 
 	private:
 		void ComponentCleanup();
-
+		void UpdateWorldPosition();
+		void FlagPositionDirty();
 		void AddChild(GameObject* child);
 		void RemoveChild(GameObject* child);
 
@@ -57,7 +60,9 @@ namespace mk
 		// Common state
 		std::string m_Name{};
 		bool m_Destroy{};
-		Transform m_Transform{};
+		Transform m_LocalTransform{};
+		Transform m_WorldTransform{};
+		bool m_PositionIsDirty{ false };
 
 		// Ownership
 		GameObject* m_Parent{};

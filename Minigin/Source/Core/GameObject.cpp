@@ -14,21 +14,32 @@ GameObject::~GameObject() = default;
 
 GameObject::GameObject(GameObject&& other) noexcept
 	: m_Name{ std::move(other.m_Name) }
-	, m_Transform{ other.m_Transform }
-	, m_Components{ std::move(other.m_Components) }
 	, m_Destroy{ other.m_Destroy }
+	, m_LocalTransform{ other.m_LocalTransform }
+	, m_WorldTransform{ other.m_WorldTransform }
+	, m_PositionIsDirty{ other.m_PositionIsDirty }
+	, m_Parent{ other.m_Parent }
+	, m_Children{ std::move(other.m_Children) }
+	, m_Components{ std::move(other.m_Components) }
+	, m_ComponentBuffer{ std::move(other.m_ComponentBuffer) }
+	
 {
-	other.m_Components.clear();
+	other.m_Parent = nullptr;
 }
 
 GameObject& GameObject::operator=(GameObject&& other) noexcept
 {
 	m_Name = other.m_Name;
-	m_Transform = other.m_Transform;
-	m_Components = std::move(other.m_Components);
 	m_Destroy = other.m_Destroy;
+	m_LocalTransform = other.m_LocalTransform;
+	m_WorldTransform = other.m_WorldTransform;
+	m_PositionIsDirty = other.m_PositionIsDirty;
+	m_Parent = other.m_Parent;
+	m_Children = std::move(other.m_Children);
+	m_Components = std::move(other.m_Components);
+	m_ComponentBuffer = std::move(other.m_ComponentBuffer);
 
-	other.m_Components.clear();
+	other.m_Parent = nullptr;
 
 	return *this;
 }
@@ -106,24 +117,66 @@ bool GameObject::DestroyFlagged() const
 	return m_Destroy;
 }
 
-const Transform& GameObject::GetTransform() const
+const glm::vec3& GameObject::GetWorldPosition()
 {
-	return m_Transform;
+	if (m_PositionIsDirty)
+		UpdateWorldPosition();
+	return m_WorldTransform.GetPosition();
 }
 
 void GameObject::SetPosition(float x, float y)
 {
-	m_Transform.SetPosition(x, y, 0.0f);
+	SetPosition({ x, y, m_LocalTransform.GetPosition().z });
 }
 
-void GameObject::SetParent(GameObject* parent)
+void GameObject::SetPosition(float x, float y, float z)
+{
+	SetPosition({ x, y, z });
+}
+
+void GameObject::SetPosition(const glm::vec3& position)
+{
+	m_LocalTransform.SetPosition(position);
+	FlagPositionDirty();
+}
+
+void GameObject::UpdateWorldPosition()
+{
+	if (!m_PositionIsDirty)
+		return;
+
+	if (m_Parent == nullptr)
+		m_WorldTransform.SetPosition(m_LocalTransform.GetPosition());
+	else
+		m_WorldTransform.SetPosition(m_Parent->GetWorldPosition() + m_LocalTransform.GetPosition());
+
+	m_PositionIsDirty = false;
+}
+
+void GameObject::FlagPositionDirty()
+{
+	m_PositionIsDirty = true;
+}
+
+void GameObject::SetParent(GameObject* parent, bool keepWorldPosition)
 {
 	if (m_Parent == parent || this == parent || IsChild(parent))
 		return;
-	if (parent == nullptr)
-		m_Transform;
 
+	if (parent == nullptr)
+		SetPosition(GetWorldPosition());
+	else
+	{
+		if (keepWorldPosition)
+			SetPosition(m_LocalTransform.GetPosition() - parent->GetWorldPosition());
+		FlagPositionDirty();
+	}
+
+	if (m_Parent != nullptr)
+		m_Parent->RemoveChild(this);
 	m_Parent = parent;
+	if (m_Parent != nullptr)
+		m_Parent->AddChild(this);
 }
 
 int GameObject::GetChildCount() const
