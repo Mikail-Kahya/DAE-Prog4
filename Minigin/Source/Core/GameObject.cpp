@@ -75,6 +75,22 @@ void GameObject::ComponentCleanup()
 	m_ComponentBuffer.clear();
 }
 
+void GameObject::AddChild(GameObject* child)
+{
+	m_Children.push_back(child);
+}
+
+void GameObject::RemoveChild(GameObject* child)
+{
+	m_Children.erase(std::ranges::find(m_Children, child));
+}
+
+bool GameObject::IsChild(GameObject* child) const
+{
+	const auto foundChild{ std::ranges::find(m_Children, child) };
+	return foundChild != m_Children.cend();
+}
+
 void GameObject::Destroy()
 {
 	m_Destroy = true;
@@ -98,4 +114,26 @@ const Transform& GameObject::GetTransform() const
 void GameObject::SetPosition(float x, float y)
 {
 	m_Transform.SetPosition(x, y, 0.0f);
+}
+
+void GameObject::SetParent(GameObject* parent)
+{
+	if (m_Parent == parent || this == parent || IsChild(parent))
+		return;
+	if (parent == nullptr)
+		m_Transform;
+
+	m_Parent = parent;
+}
+
+int GameObject::GetChildCount() const
+{
+	return static_cast<int>(m_Children.size());
+}
+
+GameObject* GameObject::GetChildAt(int index) const
+{
+	if (index > m_Children.size())
+		return nullptr;
+	return m_Children[index];
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <list>
 #include <string>
 #include <memory>
 #include <vector>
@@ -34,21 +35,37 @@ namespace mk
 
 		void SetPosition(float x, float y);
 
+		void SetParent(GameObject* parent);
+		int GetChildCount() const;
+		GameObject* GetChildAt(int index) const;
+
 		template <std::derived_from<Component> ComponentType>
 		[[nodiscard]] ComponentType* GetComponent() const;
 		template <std::derived_from<Component> ComponentType, typename... Args>
 		[[nodiscard]] ComponentType* AddComponent(const Args&... args);
 		void RemoveComponent(const std::unique_ptr<Component>& component);
 
-		std::string m_Name{};
 
 	private:
 		void ComponentCleanup();
 
-		Transform m_Transform{};
-		std::vector<std::unique_ptr<Component>> m_Components{};
-		std::vector<std::unique_ptr<Component>> m_ComponentBuffer{};
+		void AddChild(GameObject* child);
+		void RemoveChild(GameObject* child);
+
+		bool IsChild(GameObject* child) const;
+
+		// Common state
+		std::string m_Name{};
 		bool m_Destroy{};
+		Transform m_Transform{};
+
+		// Ownership
+		GameObject* m_Parent{};
+		std::vector<GameObject*> m_Children{};
+
+		// Components
+		std::list<std::unique_ptr<Component>> m_Components{};
+		std::list<std::unique_ptr<Component>> m_ComponentBuffer{};
 	};
 
 	template <std::derived_from<Component> ComponentType>
