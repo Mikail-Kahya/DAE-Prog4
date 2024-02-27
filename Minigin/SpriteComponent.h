@@ -8,10 +8,10 @@ namespace mk
 	class RenderComponent;
 	class Texture2D;
 
+	// Will transform to animated
 	class SpriteComponent final : public Component
 	{
 	public:
-		SpriteComponent(const std::string& file);
 		~SpriteComponent() override = default;
 
 		SpriteComponent(const SpriteComponent& other) = delete;
@@ -24,6 +24,7 @@ namespace mk
 		void SetTexture(const std::string& file);
 
 	private:
+		SpriteComponent(const std::string& file);
 		Texture2D* m_TexturePtr{};
 		RenderComponent* m_RendererPtr{};
 	};
