@@ -37,7 +37,7 @@ namespace mk
 		void SetPosition(float x, float y, float z);
 		void SetPosition(const glm::vec3& position);
 
-		void SetParent(GameObject* parent, bool keepWorldPosition = true);
+		void SetParent(GameObject* parentPtr, bool keepWorldPosition = false);
 		int GetChildCount() const;
 		GameObject* GetChildAt(int index) const;
 
@@ -52,10 +52,10 @@ namespace mk
 		void ComponentCleanup();
 		void UpdateWorldPosition();
 		void FlagPositionDirty();
-		void AddChild(GameObject* child);
-		void RemoveChild(GameObject* child);
+		void AddChild(GameObject* childPtr);
+		void RemoveChild(GameObject* childPtr);
 
-		bool IsChild(GameObject* child) const;
+		bool IsChild(GameObject* childPtr) const;
 
 		// Common state
 		std::string m_Name{};

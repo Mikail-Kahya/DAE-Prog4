@@ -86,30 +86,34 @@ void GameObject::ComponentCleanup()
 	m_ComponentBuffer.clear();
 }
 
-void GameObject::AddChild(GameObject* child)
+void GameObject::AddChild(GameObject* childPtr)
 {
-	m_Children.push_back(child);
+	m_Children.push_back(childPtr);
 }
 
-void GameObject::RemoveChild(GameObject* child)
+void GameObject::RemoveChild(GameObject* childPtr)
 {
-	m_Children.erase(std::ranges::find(m_Children, child));
+	m_Children.erase(std::ranges::find(m_Children, childPtr));
 }
 
-bool GameObject::IsChild(GameObject* child) const
+bool GameObject::IsChild(GameObject* childPtr) const
 {
-	const auto foundChild{ std::ranges::find(m_Children, child) };
+	const auto foundChild{ std::ranges::find(m_Children, childPtr) };
 	return foundChild != m_Children.cend();
 }
 
 void GameObject::Destroy()
 {
 	m_Destroy = true;
+	for (GameObject* childPtr : m_Children)
+		childPtr->Destroy();
 }
 
 void GameObject::ClearDestroy()
 {
 	m_Destroy = false;
+	for (GameObject* childPtr : m_Children)
+		childPtr->ClearDestroy();
 }
 
 bool GameObject::DestroyFlagged() const
@@ -158,23 +162,23 @@ void GameObject::FlagPositionDirty()
 	m_PositionIsDirty = true;
 }
 
-void GameObject::SetParent(GameObject* parent, bool keepWorldPosition)
+void GameObject::SetParent(GameObject* parentPtr, bool keepWorldPosition)
 {
-	if (m_Parent == parent || this == parent || IsChild(parent))
+	if (m_Parent == parentPtr || this == parentPtr || IsChild(parentPtr))
 		return;
 
-	if (parent == nullptr)
+	if (parentPtr == nullptr)
 		SetPosition(GetWorldPosition());
 	else
 	{
 		if (keepWorldPosition)
-			SetPosition(m_LocalTransform.GetPosition() - parent->GetWorldPosition());
+			SetPosition(m_LocalTransform.GetPosition() - parentPtr->GetWorldPosition());
 		FlagPositionDirty();
 	}
 
 	if (m_Parent != nullptr)
 		m_Parent->RemoveChild(this);
-	m_Parent = parent;
+	m_Parent = parentPtr;
 	if (m_Parent != nullptr)
 		m_Parent->AddChild(this);
 }

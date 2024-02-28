@@ -23,7 +23,6 @@ namespace mk
 
 		void Start() override;
 
-		const Transform& GetTransform() const;
 		Texture2D* GetTexture() const;
 		void SetTexture(Texture2D* texturePtr);
 

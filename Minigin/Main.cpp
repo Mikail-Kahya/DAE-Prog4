@@ -31,27 +31,29 @@ void load()
 
 	RenderComponent* spriteCompPtr{};
 
-	auto gameObject = std::make_shared<GameObject>();
-	scene.Add(gameObject);
-	spriteCompPtr = gameObject->AddComponent<RenderComponent>("background.tga");
+	auto gameObject1 = std::make_shared<GameObject>("1");
+	scene.Add(gameObject1);
+	spriteCompPtr = gameObject1->AddComponent<RenderComponent>("background.tga");
 	
-	gameObject = std::make_shared<GameObject>();
-	gameObject->SetPosition(100, 100);
-	scene.Add(gameObject);
-	spriteCompPtr = gameObject->AddComponent<RenderComponent>("logo.tga");
+	auto gameObject2 = std::make_shared<GameObject>("2");
+	gameObject2->SetPosition(100, 100);
+	scene.Add(gameObject2);
+	spriteCompPtr = gameObject2->AddComponent<RenderComponent>("logo.tga");
 	
-	gameObject = std::make_shared<GameObject>();
-	gameObject->SetPosition(100, 20);
-	scene.Add(gameObject);
-	auto testTextComponent = gameObject->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
+	auto gameObject3 = std::make_shared<GameObject>("3");
+	gameObject3->SetPosition(100, 100);
+	scene.Add(gameObject3);
+	auto testTextComponent = gameObject3->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
 	testTextComponent->SetText("Programming 4 assignment");
 
-	gameObject = std::make_shared<GameObject>();
-	gameObject->SetPosition(0, 20);
-	scene.Add(gameObject);
-	auto fpsComponent = gameObject->AddComponent<FPSComponent>();
+	auto gameObject4 = std::make_shared<GameObject>("4");
+	gameObject4->SetPosition(0, 20);
+	scene.Add(gameObject4);
+	auto fpsComponent = gameObject4->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
 
+	gameObject3->SetParent(gameObject2.get(), false);
+	gameObject2->Destroy();
 }
 
 int main(int, char*[]) {
