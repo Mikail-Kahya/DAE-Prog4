@@ -25,11 +25,10 @@ namespace mk
 		void ClearDestroy();
 
 		bool DestroyFlagged() const;
+		GameObject& GetOwner() const;
 
 	protected:
 		Component() = default;
-		GameObject& GetOwner() const;
-
 
 	private:
 		friend class GameObject;

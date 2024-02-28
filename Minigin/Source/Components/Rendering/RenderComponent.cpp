@@ -1,7 +1,5 @@
 #include "RenderComponent.h"
 
-#include <GameObject.h>
-
 #include "Renderer.h"
 #include "ResourceManager.h"
 
@@ -25,11 +23,6 @@ RenderComponent::~RenderComponent()
 void RenderComponent::Start()
 {
 	Renderer::GetInstance().RegisterRenderComponent(this);
-}
-
-const Transform& RenderComponent::GetTransform() const
-{
-	return GetOwner().GetTransform();
 }
 
 Texture2D* RenderComponent::GetTexture() const

@@ -4,6 +4,7 @@
 
 #include <algorithm>
 
+#include "GameObject.h"
 #include "RenderComponent.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
@@ -43,7 +44,9 @@ void Renderer::Render() const
 	std::vector<RenderComponent*> renderCompPtrs{ m_RenderComponentPtrs.begin(), m_RenderComponentPtrs.end() };
 	std::ranges::sort(renderCompPtrs, [](RenderComponent* a, RenderComponent* b)
 	{
-			return a->GetTransform().GetPosition().z > b->GetTransform().GetPosition().z;
+		const float aDepth{ a->GetOwner().GetWorldPosition().z };
+		const float bDepth{ b->GetOwner().GetWorldPosition().z };
+		return aDepth > bDepth;
 	});
 
 	for (RenderComponent* renderComponentPtr : renderCompPtrs)
@@ -51,7 +54,7 @@ void Renderer::Render() const
 		if (renderComponentPtr->GetTexture() == nullptr)
 			continue;
 
-		const glm::vec3 position{ renderComponentPtr->GetTransform().GetPosition() };
+		const glm::vec3 position{ renderComponentPtr->GetOwner().GetWorldPosition() };
 		RenderTexture(*renderComponentPtr->GetTexture(), position.x, position.y);
 	}
 
