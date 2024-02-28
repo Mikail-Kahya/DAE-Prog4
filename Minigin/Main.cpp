@@ -31,29 +31,24 @@ void load()
 
 	RenderComponent* spriteCompPtr{};
 
-	auto gameObject1 = std::make_shared<GameObject>("1");
-	scene.Add(gameObject1);
+	const auto gameObject1 = scene.SpawnObject("1");
 	spriteCompPtr = gameObject1->AddComponent<RenderComponent>("background.tga");
 	
-	auto gameObject2 = std::make_shared<GameObject>("2");
+	const auto gameObject2 = scene.SpawnObject("2");
 	gameObject2->SetPosition(100, 100);
-	scene.Add(gameObject2);
 	spriteCompPtr = gameObject2->AddComponent<RenderComponent>("logo.tga");
 	
-	auto gameObject3 = std::make_shared<GameObject>("3");
+	const auto gameObject3 = scene.SpawnObject("3");
 	gameObject3->SetPosition(100, 100);
-	scene.Add(gameObject3);
 	auto testTextComponent = gameObject3->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
 	testTextComponent->SetText("Programming 4 assignment");
 
-	auto gameObject4 = std::make_shared<GameObject>("4");
+	const auto gameObject4 = scene.SpawnObject("4");
 	gameObject4->SetPosition(0, 20);
-	scene.Add(gameObject4);
 	auto fpsComponent = gameObject4->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
 
-	gameObject3->SetParent(gameObject2.get(), false);
-	gameObject2->Destroy();
+	gameObject3->SetParent(gameObject2, false);
 }
 
 int main(int, char*[]) {

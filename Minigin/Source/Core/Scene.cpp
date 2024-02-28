@@ -5,47 +5,60 @@
 
 using namespace mk;
 
-unsigned int Scene::m_idCounter = 0;
+unsigned int Scene::m_IdCounter = 0;
 
-Scene::Scene(const std::string& name) : m_name(name) {}
+Scene::Scene(const std::string& name) : m_Name(name) {}
 
 Scene::~Scene() = default;
 
-void Scene::Add(std::shared_ptr<GameObject> object)
+void Scene::Start()
 {
-	m_objects.emplace_back(std::move(object));
-}
-
-void Scene::Remove(std::shared_ptr<GameObject> object)
-{
-	m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
-}
-
-void Scene::RemoveAll()
-{
-	m_objects.clear();
+	CleanupGameObjects();
 }
 
 void Scene::FixedUpdate()
 {
-	for (auto& object : m_objects)
-	{
+	for (auto& object : m_Objects)
 		object->FixedUpdate();
-	}
 }
 
 void Scene::Update()
 {
-	for(auto& object : m_objects)
-	{
+	for(auto& object : m_Objects)
 		object->Update();
-	}
 }
 
 void Scene::LateUpdate()
 {
-	for (auto& object : m_objects)
-	{
+	for (auto& object : m_Objects)
 		object->LateUpdate();
-	}
+	CleanupGameObjects();
+}
+
+GameObject* Scene::SpawnObject(const std::string& name)
+{
+	m_ObjectBuffer.emplace_back(std::make_unique<GameObject>(name));
+	return m_ObjectBuffer.back().get();
+}
+
+void Scene::RemoveAll()
+{
+	m_Objects.clear();
+}
+
+void Scene::CleanupGameObjects()
+{
+	// Remove destroy flagged components
+	auto eraseIt = std::stable_partition(m_Objects.begin(), m_Objects.end(), [](const std::unique_ptr<GameObject>& object)
+		{
+			return !object->DestroyFlagged();
+		});
+
+	m_Objects.erase(eraseIt, m_Objects.end());
+
+	// Move components and flush buffer
+	m_Objects.insert(m_Objects.end(),
+		std::make_move_iterator(m_ObjectBuffer.begin()),
+		std::make_move_iterator(m_ObjectBuffer.end()));
+	m_ObjectBuffer.clear();
 }

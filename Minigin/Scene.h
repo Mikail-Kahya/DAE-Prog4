@@ -1,34 +1,38 @@
 #pragma once
 #include "SceneManager.h"
+#include "GameObject.h"
 
 namespace mk
 {
-	class GameObject;
 	class Scene final
 	{
-		friend Scene& SceneManager::CreateScene(const std::string& name);
 	public:
-		void Add(std::shared_ptr<GameObject> object);
-		void Remove(std::shared_ptr<GameObject> object);
-		void RemoveAll();
+		~Scene();
+		Scene(const Scene& other)				= delete;
+		Scene(Scene&& other)					= delete;
+		Scene& operator=(const Scene& other)	= delete;
+		Scene& operator=(Scene&& other)			= delete;
+
+		void Start();
 		
 		void FixedUpdate();
 		void Update();
 		void LateUpdate();
 
-		~Scene();
-		Scene(const Scene& other) = delete;
-		Scene(Scene&& other) = delete;
-		Scene& operator=(const Scene& other) = delete;
-		Scene& operator=(Scene&& other) = delete;
+		GameObject* SpawnObject(const std::string& name = { "None" });
+		void RemoveAll();
 
 	private: 
 		explicit Scene(const std::string& name);
+		friend Scene& SceneManager::CreateScene(const std::string& name);
 
-		std::string m_name;
-		std::vector <std::shared_ptr<GameObject>> m_objects{};
+		void CleanupGameObjects();
 
-		static unsigned int m_idCounter; 
+		std::string m_Name;
+		std::vector <std::unique_ptr<GameObject>> m_Objects{};
+		std::vector <std::unique_ptr<GameObject>> m_ObjectBuffer{};
+
+		static unsigned int m_IdCounter; 
 	};
 
 }
