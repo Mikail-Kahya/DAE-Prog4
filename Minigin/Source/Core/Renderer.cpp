@@ -35,21 +35,26 @@ void Renderer::Init(SDL_Window* window)
 	}
 }
 
+void Renderer::Update()
+{
+	if (!m_DepthChanged)
+		return;
+
+	m_Renderers.sort([](RenderComponent* a, RenderComponent* b)
+		{
+			return a->GetOwner().GetWorldPosition().z > b->GetOwner().GetWorldPosition().z;
+		});
+
+	m_DepthChanged = false;
+}
+
 void Renderer::Render() const
 {
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_renderer);
 
-	std::vector<RenderComponent*> renderCompPtrs{ m_RenderComponentPtrs.begin(), m_RenderComponentPtrs.end() };
-	std::ranges::sort(renderCompPtrs, [](RenderComponent* a, RenderComponent* b)
-	{
-		const float aDepth{ a->GetOwner().GetWorldPosition().z };
-		const float bDepth{ b->GetOwner().GetWorldPosition().z };
-		return aDepth > bDepth;
-	});
-
-	for (RenderComponent* renderComponentPtr : renderCompPtrs)
+	for (RenderComponent* renderComponentPtr : m_Renderers)
 	{
 		if (renderComponentPtr->GetTexture() == nullptr)
 			continue;
@@ -101,10 +106,19 @@ SDL_Renderer* Renderer::GetSDLRenderer() const { return m_renderer; }
 
 void Renderer::RegisterRenderComponent(RenderComponent* renderComponentPtr)
 {
-	m_RenderComponentPtrs.insert(renderComponentPtr);
+	const auto foundIt = std::ranges::find(m_Renderers, renderComponentPtr);
+	if (foundIt != m_Renderers.end())
+		return;
+	m_Renderers.push_front(renderComponentPtr);
+	FlagDepthDirty();
 }
 
 void Renderer::UnregisterRenderComponent(RenderComponent* renderComponentPtr)
 {
-	m_RenderComponentPtrs.erase(renderComponentPtr);
+	std::erase(m_Renderers, renderComponentPtr);
+}
+
+void Renderer::FlagDepthDirty()
+{
+	m_DepthChanged = true;
 }

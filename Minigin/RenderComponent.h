@@ -23,10 +23,13 @@ namespace mk
 
 		void Start() override;
 
+		void LateUpdate() override;
+
 		Texture2D* GetTexture() const;
 		void SetTexture(Texture2D* texturePtr);
 
 	private:
 		Texture2D* m_TexturePtr{};
+		float m_OldDepth{};
 	};
 }

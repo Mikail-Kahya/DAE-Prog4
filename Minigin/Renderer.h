@@ -1,6 +1,6 @@
 #pragma once
+#include <forward_list>
 #include <SDL.h>
-#include <unordered_set>
 
 #include "Singleton.h"
 
@@ -16,11 +16,9 @@ namespace mk
 	{
 	public:
 		void Init(SDL_Window* window);
+		void Update();
 		void Render() const;
 		void Destroy();
-
-		void RenderTexture(const Texture2D& texture, float x, float y) const;
-		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
 
 		float GetNextDepth();
 		SDL_Renderer* GetSDLRenderer() const;
@@ -30,16 +28,20 @@ namespace mk
 
 		void RegisterRenderComponent(RenderComponent* renderComponentPtr);
 		void UnregisterRenderComponent(RenderComponent* renderComponentPtr);
+		void FlagDepthDirty();
 
 	private:
+		void RenderTexture(const Texture2D& texture, float x, float y) const;
+		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
 
-		// Set to avoid accidental double rendering
-		std::unordered_set<RenderComponent*> m_RenderComponentPtrs{};
+		// Sorts by float. Whenever the float changes
+		std::forward_list<RenderComponent*> m_Renderers{};
 
 		SDL_Renderer* m_renderer{};
 		SDL_Window* m_window{};
 		SDL_Color m_clearColor{};
 		float m_AutoDepth{};
+		bool m_DepthChanged{ false };
 	};
 }
 

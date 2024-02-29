@@ -1,5 +1,6 @@
 #include "RenderComponent.h"
 
+#include "GameObject.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 
@@ -23,6 +24,16 @@ RenderComponent::~RenderComponent()
 void RenderComponent::Start()
 {
 	Renderer::GetInstance().RegisterRenderComponent(this);
+}
+
+void RenderComponent::LateUpdate()
+{
+	const float newDepth{ GetOwner().GetWorldPosition().z };
+	if (abs(m_OldDepth - newDepth) < FLT_EPSILON)
+	{
+		m_OldDepth = newDepth;
+		Renderer::GetInstance().FlagDepthDirty();
+	}
 }
 
 Texture2D* RenderComponent::GetTexture() const

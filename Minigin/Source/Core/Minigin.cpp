@@ -116,6 +116,10 @@ void mk::Minigin::Run(const std::function<void()>& load)
 void mk::Minigin::RunOneFrame()
 {
 	using namespace std::chrono;
+	SceneManager& sceneManager{ SceneManager::GetInstance() };
+	Renderer& renderer{ Renderer::GetInstance() };
+
+
 	constexpr milliseconds msPerFrame{ static_cast<long long>(1.f / FPS * 1000.f) };
 
 	m_quit = !InputManager::GetInstance().ProcessInput();
@@ -126,7 +130,7 @@ void mk::Minigin::RunOneFrame()
 	m_Lag += deltaTime;
 
 	// Update global time
-	TimeManager& timeManager{ SceneManager::GetInstance().m_TimeManager };
+	TimeManager& timeManager{ sceneManager.m_TimeManager };
 	timeManager.deltaTime = deltaTime;
 
 	while (m_Lag >= FIXED_TIME_STEP)
@@ -135,9 +139,11 @@ void mk::Minigin::RunOneFrame()
 		m_Lag -= FIXED_TIME_STEP;
 	}
 
-	SceneManager::GetInstance().Update();
-	SceneManager::GetInstance().LateUpdate();
-	Renderer::GetInstance().Render();
+	sceneManager.Update();
+	sceneManager.LateUpdate();
+
+	renderer.Update();
+	renderer.Render();
 
 	const auto sleepTime{ currentTime + msPerFrame - high_resolution_clock::now() };
 
