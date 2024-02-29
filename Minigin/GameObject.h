@@ -31,6 +31,7 @@ namespace mk
 		void ClearDestroy();
 		bool DestroyFlagged() const;
 
+		const std::string& GetName() const;
 		const glm::vec3& GetWorldPosition();
 
 		void SetPosition(float x, float y);

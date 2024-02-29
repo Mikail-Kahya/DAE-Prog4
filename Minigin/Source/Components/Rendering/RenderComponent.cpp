@@ -1,5 +1,7 @@
 #include "RenderComponent.h"
 
+#include <windows.h>
+
 #include "GameObject.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
@@ -23,15 +25,17 @@ RenderComponent::~RenderComponent()
 
 void RenderComponent::Start()
 {
+	m_Depth = GetOwner().GetWorldPosition().z;
 	Renderer::GetInstance().RegisterRenderComponent(this);
 }
 
 void RenderComponent::LateUpdate()
 {
 	const float newDepth{ GetOwner().GetWorldPosition().z };
-	if (abs(m_OldDepth - newDepth) < FLT_EPSILON)
+	
+	if (abs(m_Depth - newDepth) > FLT_EPSILON)
 	{
-		m_OldDepth = newDepth;
+		m_Depth = newDepth;
 		Renderer::GetInstance().FlagDepthDirty();
 	}
 }
@@ -39,6 +43,11 @@ void RenderComponent::LateUpdate()
 Texture2D* RenderComponent::GetTexture() const
 {
 	return m_TexturePtr;
+}
+
+float RenderComponent::GetRenderDepth() const
+{
+	return m_Depth;
 }
 
 void RenderComponent::SetTexture(Texture2D* texturePtr)

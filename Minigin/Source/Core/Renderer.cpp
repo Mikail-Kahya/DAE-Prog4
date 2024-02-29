@@ -3,6 +3,7 @@
 #include "Renderer.h"
 
 #include <algorithm>
+#include <windows.h>
 
 #include "GameObject.h"
 #include "RenderComponent.h"
@@ -42,7 +43,7 @@ void Renderer::Update()
 
 	m_Renderers.sort([](RenderComponent* a, RenderComponent* b)
 		{
-			return a->GetOwner().GetWorldPosition().z > b->GetOwner().GetWorldPosition().z;
+			return a->GetRenderDepth() < b->GetRenderDepth();
 		});
 
 	m_DepthChanged = false;
@@ -98,7 +99,7 @@ float Renderer::GetNextDepth()
 {
 	constexpr float depthSlice{ 0.1f };
 	const float depth{ m_AutoDepth };
-	m_AutoDepth -= depthSlice;
+	m_AutoDepth += depthSlice;
 	return depth;
 }
 
@@ -109,8 +110,24 @@ void Renderer::RegisterRenderComponent(RenderComponent* renderComponentPtr)
 	const auto foundIt = std::ranges::find(m_Renderers, renderComponentPtr);
 	if (foundIt != m_Renderers.end())
 		return;
-	m_Renderers.push_front(renderComponentPtr);
-	FlagDepthDirty();
+
+	// Place in right order to avoid full resort
+	const float newDepth{ renderComponentPtr->GetRenderDepth() };
+
+	const auto lowerBoundIt = std::ranges::find_if(m_Renderers,
+		[newDepth](const RenderComponent* a)
+		{
+			const float aDepth{ a->GetRenderDepth() };
+			return aDepth < newDepth;
+		});
+	
+
+	if (lowerBoundIt == m_Renderers.end())
+		m_Renderers.push_front(renderComponentPtr);
+	else if (lowerBoundIt == m_Renderers.begin())
+		m_Renderers.push_back(renderComponentPtr);
+	else
+		m_Renderers.insert(std::prev(lowerBoundIt), renderComponentPtr);
 }
 
 void Renderer::UnregisterRenderComponent(RenderComponent* renderComponentPtr)

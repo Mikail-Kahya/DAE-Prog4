@@ -31,19 +31,20 @@ void load()
 
 	RenderComponent* spriteCompPtr{};
 
-	const auto gameObject1 = scene.SpawnObject("1");
+	const auto gameObject1 = scene.SpawnObject("bg");
 	spriteCompPtr = gameObject1->AddComponent<RenderComponent>("background.tga");
+	gameObject1->SetPosition(0, 0, 10);
 	
-	const auto gameObject2 = scene.SpawnObject("2");
+	const auto gameObject2 = scene.SpawnObject("logo");
 	gameObject2->SetPosition(100, 100);
 	spriteCompPtr = gameObject2->AddComponent<RenderComponent>("logo.tga");
 	
-	const auto gameObject3 = scene.SpawnObject("3");
+	const auto gameObject3 = scene.SpawnObject("text");
 	gameObject3->SetPosition(100, 100);
 	auto testTextComponent = gameObject3->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
 	testTextComponent->SetText("Programming 4 assignment");
 
-	const auto gameObject4 = scene.SpawnObject("4");
+	const auto gameObject4 = scene.SpawnObject("fps");
 	gameObject4->SetPosition(0, 20);
 	auto fpsComponent = gameObject4->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);

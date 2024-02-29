@@ -26,10 +26,11 @@ namespace mk
 		void LateUpdate() override;
 
 		Texture2D* GetTexture() const;
+		float GetRenderDepth() const;
 		void SetTexture(Texture2D* texturePtr);
 
 	private:
 		Texture2D* m_TexturePtr{};
-		float m_OldDepth{};
+		float m_Depth{};
 	};
 }

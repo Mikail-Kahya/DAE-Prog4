@@ -121,6 +121,11 @@ bool GameObject::DestroyFlagged() const
 	return m_Destroy;
 }
 
+const std::string& GameObject::GetName() const
+{
+	return m_Name;
+}
+
 const glm::vec3& GameObject::GetWorldPosition()
 {
 	if (m_PositionIsDirty)
