@@ -50,8 +50,8 @@ void load()
 	gameObject4->SetPosition(0, 20);
 	auto fpsComponent = gameObject4->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
-	auto movementComponent = gameObject4->AddComponent<MovementComponent>();
-	movementComponent->SetVelocity({ 50, 50, 0 });
+	auto movementComponent = gameObject4->AddComponent<MovementComponent>(100.f, 5.f, 0.1f, 0.1f);
+	movementComponent->SetDirection({ 1, 1, 0 });
 
 	gameObject3->SetParent(gameObject2, false);
 }

@@ -7,7 +7,7 @@ namespace mk
 	class MovementComponent final : public Component
 	{
 	public:
-		MovementComponent() = default;
+		MovementComponent(float maxLinearSpeed = 50.f, float maxAngularSpeed = 5.f, float acceleration = 1.f, float deceleration = 1.f);
 		~MovementComponent() override = default;
 
 		MovementComponent(const MovementComponent& other)				= delete;
@@ -17,12 +17,23 @@ namespace mk
 
 		void FixedUpdate() override;
 
-		void SetVelocity(const glm::vec3& velocity);
+		void SetDirection(const glm::vec3& velocity);
 
 		float GetSpeed() const;
 		float GetSpeedSqr() const;
 
 	private:
+		void Accelerate(float acceleration);
+		void Decelerate(float deceleration);
+
+		bool IsMoving() const;
+		bool ShouldMove() const;
+
+		float m_MaxLinearSpeed{};
+		float m_MaxAngularSpeed{};
+		float m_Acceleration{};
+		float m_Deceleration{};
 		glm::vec3 m_Velocity{};
+		glm::vec3 m_DesiredDirection{};
 	};
 }
