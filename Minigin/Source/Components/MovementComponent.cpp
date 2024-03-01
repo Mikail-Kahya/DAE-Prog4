@@ -23,11 +23,8 @@ void MovementComponent::FixedUpdate()
 		Accelerate(deltaSpeed * m_Acceleration);
 	else if (IsMoving())
 		Decelerate(deltaSpeed * m_Deceleration);
-
-	if (ShouldMove())
-		Print("Moving\n");
 	else
-		Print("Stopped\n");
+		return; // Avoid updating position if not moving
 
 	const glm::vec3 travelled{ m_Velocity * deltaTime };
 	GetOwner().AddOffset(travelled);
