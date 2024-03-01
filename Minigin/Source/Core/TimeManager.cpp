@@ -1,5 +1,7 @@
 #include "TimeManager.h"
 
+using namespace mk;
+
 TimeManager::TimeManager()
 	: start{ std::chrono::steady_clock::now() }
 {

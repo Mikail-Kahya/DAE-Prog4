@@ -7,11 +7,14 @@ mk::Transform::Transform()
 	m_Position.z = Renderer::GetInstance().GetNextDepth();
 }
 
+void mk::Transform::AddOffset(const glm::vec3& offset)
+{
+	m_Position += offset;
+}
+
 void mk::Transform::AddOffset(float x, float y, float z)
 {
-	m_Position.x += x;
-	m_Position.y += y;
-	m_Position.z += z;
+	AddOffset({ x, y, z });
 }
 
 void mk::Transform::AddRotation(float x, float y, float z)

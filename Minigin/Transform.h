@@ -12,6 +12,7 @@ namespace mk
 		const glm::vec3& GetRotation() const { return m_Rotation; }
 		const glm::vec3& GetScale() const { return m_Scale; }
 
+		void AddOffset(const glm::vec3& offset);
 		void AddOffset(float x = 0.f, float y = 0.f, float z = 0.f);
 		void AddRotation(float x = 0.f, float y = 0.f, float z = 0.f);
 		void AddScale(float x = 0.f, float y = 0.f, float z = 0.f);

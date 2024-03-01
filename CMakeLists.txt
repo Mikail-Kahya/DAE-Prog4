@@ -53,6 +53,9 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 
   "Minigin/Source/Components/Rendering/FPSComponent.cpp"
   "Minigin/FPSComponent.h"
+
+  "Minigin/Source/Components/MovementComponent.cpp"
+  "Minigin/MovementComponent.h"
 )
 
 # enable c++20 features

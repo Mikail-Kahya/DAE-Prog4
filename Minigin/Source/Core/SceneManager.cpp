@@ -26,7 +26,7 @@ void mk::SceneManager::LateUpdate()
 	}
 }
 
-const TimeManager& mk::SceneManager::GetTimeManager()
+const mk::TimeManager& mk::SceneManager::GetTimeManager()
 {
 	return m_TimeManager;
 }

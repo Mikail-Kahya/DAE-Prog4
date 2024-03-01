@@ -149,6 +149,17 @@ void GameObject::SetPosition(const glm::vec3& position)
 	FlagPositionDirty();
 }
 
+void GameObject::AddOffset(float x, float y, float z)
+{
+	AddOffset({ x, y, z });
+}
+
+void GameObject::AddOffset(const glm::vec3& offset)
+{
+	m_LocalTransform.AddOffset(offset);
+	FlagPositionDirty();
+}
+
 void GameObject::UpdateWorldPosition()
 {
 	if (!m_PositionIsDirty)

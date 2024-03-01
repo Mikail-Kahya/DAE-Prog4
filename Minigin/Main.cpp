@@ -19,8 +19,10 @@
 
 #include "GameObject.h"
 #include "FPSComponent.h"
+#include "MovementComponent.h"
 #include "TextComponent.h"
 #include "RenderComponent.h"
+#include "MovementComponent.h"
 
 namespace fs = std::filesystem;
 using namespace mk;
@@ -33,7 +35,7 @@ void load()
 
 	const auto gameObject1 = scene.SpawnObject("bg");
 	spriteCompPtr = gameObject1->AddComponent<RenderComponent>("background.tga");
-	gameObject1->SetPosition(0, 0, 10);
+	gameObject1->SetPosition(0, 0);
 	
 	const auto gameObject2 = scene.SpawnObject("logo");
 	gameObject2->SetPosition(100, 100);
@@ -48,6 +50,8 @@ void load()
 	gameObject4->SetPosition(0, 20);
 	auto fpsComponent = gameObject4->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
+	auto movementComponent = gameObject4->AddComponent<MovementComponent>();
+	movementComponent->SetVelocity({ 50, 50, 0 });
 
 	gameObject3->SetParent(gameObject2, false);
 }

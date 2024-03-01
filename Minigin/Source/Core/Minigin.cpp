@@ -104,6 +104,7 @@ void mk::Minigin::Run(const std::function<void()>& load)
 
 	using namespace std::chrono;
 	m_LastTime = high_resolution_clock::now();
+	SceneManager::GetInstance().m_TimeManager.fixedDeltaTime = FIXED_TIME_STEP;
 
 #ifndef __EMSCRIPTEN__
 	while (!m_quit)
@@ -118,9 +119,6 @@ void mk::Minigin::RunOneFrame()
 	using namespace std::chrono;
 	SceneManager& sceneManager{ SceneManager::GetInstance() };
 	Renderer& renderer{ Renderer::GetInstance() };
-
-
-	constexpr milliseconds msPerFrame{ static_cast<long long>(1.f / FPS * 1000.f) };
 
 	m_quit = !InputManager::GetInstance().ProcessInput();
 
@@ -145,7 +143,8 @@ void mk::Minigin::RunOneFrame()
 	renderer.Update();
 	renderer.Render();
 
-	const auto sleepTime{ currentTime + msPerFrame - high_resolution_clock::now() };
+	constexpr milliseconds msPerFrame{ static_cast<long long>(1.f / FPS * 1000.f) };
+	const auto sleepTime{ currentTime + msPerFrame - high_resolution_clock::now()};
 
 #undef max
 	std::this_thread::sleep_for(sleepTime);

@@ -37,6 +37,8 @@ namespace mk
 		void SetPosition(float x, float y);
 		void SetPosition(float x, float y, float z);
 		void SetPosition(const glm::vec3& position);
+		void AddOffset(float x = 0.f, float y = 0.f, float z = 0.f);
+		void AddOffset(const glm::vec3& offset);
 
 		void SetParent(GameObject* parentPtr, bool keepWorldPosition = false);
 		int GetChildCount() const;
