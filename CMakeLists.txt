@@ -56,7 +56,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 
   "Minigin/Source/Components/MovementComponent.cpp"
   "Minigin/MovementComponent.h"
-)
+ "Minigin/DebugUtils.h" "Minigin/Source/Core/DebugUtils.cpp")
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)

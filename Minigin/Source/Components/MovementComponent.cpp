@@ -1,7 +1,5 @@
 #include "MovementComponent.h"
 
-#include <windows.h>
-
 #include "GameObject.h"
 #include "SceneManager.h"
 
@@ -11,13 +9,6 @@ void MovementComponent::FixedUpdate()
 {
 	const glm::vec3 travelled{ m_Velocity * Time().fixedDeltaTime };
 	GetOwner().AddOffset(travelled);
-}
-
-void MovementComponent::Update()
-{
-	//const glm::vec3 travelled{ m_Velocity * Time().deltaTime };
-	//GetOwner().AddOffset(travelled);
-	OutputDebugString(std::to_string(1 / Time().GetFPS()).c_str());
 }
 
 void MovementComponent::SetVelocity(const glm::vec3& velocity)

@@ -16,7 +16,6 @@ namespace mk
 		MovementComponent& operator=(MovementComponent&& other)			= delete;
 
 		void FixedUpdate() override;
-		void Update() override;
 
 		void SetVelocity(const glm::vec3& velocity);
 
