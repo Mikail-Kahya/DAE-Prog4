@@ -31,26 +31,38 @@ void load()
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 
 	RenderComponent* spriteCompPtr{};
+	OrbitComponent* orbitCompPtr{};
 
-	const auto gameObject1 = scene.SpawnObject("bg");
-	spriteCompPtr = gameObject1->AddComponent<RenderComponent>("background.tga");
-	gameObject1->SetLocalPosition(0, 0);
+	GameObject* bg = scene.SpawnObject("bg");
+	spriteCompPtr = bg->AddComponent<RenderComponent>("background.tga");
+	bg->SetLocalPosition(0, 0);
 	
-	const auto gameObject2 = scene.SpawnObject("logo");
-	gameObject2->SetLocalPosition(100, 100);
-	spriteCompPtr = gameObject2->AddComponent<RenderComponent>("logo.tga");
+	GameObject* logo = scene.SpawnObject("logo");
+	logo->SetLocalPosition(200, 100);
+	spriteCompPtr = logo->AddComponent<RenderComponent>("logo.tga");
 	
-	const auto gameObject3 = scene.SpawnObject("text");
-	gameObject3->SetLocalPosition(100, 100);
-	auto testTextComponent = gameObject3->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
+	GameObject* text = scene.SpawnObject("text");
+	text->SetLocalPosition(80, 30);
+	auto testTextComponent = text->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
 	testTextComponent->SetText("Programming 4 assignment");
 
-	const auto gameObject4 = scene.SpawnObject("fps");
-	gameObject4->SetParent(gameObject2, false);
-	auto fpsComponent = gameObject4->AddComponent<FPSComponent>();
+	GameObject* fps = scene.SpawnObject("fps");
+	fps->SetLocalPosition(10, 10);
+	auto fpsComponent = fps->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
-	auto movementComponent = gameObject4->AddComponent<OrbitComponent>(100.f, 5.f);
-	movementComponent->SetAngle(100);
+
+	GameObject* tankWrapper = scene.SpawnObject("tankWrapper");
+	tankWrapper->SetLocalPosition(200, 200);
+
+	GameObject* tank1 = scene.SpawnObject("T1");
+	tank1->SetParent(tankWrapper);
+	spriteCompPtr = tank1->AddComponent<RenderComponent>("BlueTank.png");
+	orbitCompPtr = tank1->AddComponent<OrbitComponent>();
+
+	GameObject* tank2 = scene.SpawnObject("T2");
+	tank2->SetParent(tank1);
+	spriteCompPtr = tank2->AddComponent<RenderComponent>("BlueTank.png");
+	orbitCompPtr = tank2->AddComponent<OrbitComponent>(100.f, 10.f);
 }
 
 int main(int, char*[]) {
