@@ -33,12 +33,12 @@ namespace mk
 
 		const std::string& GetName() const;
 		const glm::vec3& GetWorldPosition();
+		const glm::vec3& GetLocalPosition() const;
 
-		void SetPosition(float x, float y);
-		void SetPosition(float x, float y, float z);
-		void SetPosition(const glm::vec3& position);
-		void AddOffset(float x = 0.f, float y = 0.f, float z = 0.f);
-		void AddOffset(const glm::vec3& offset);
+		void SetLocalPosition(float x, float y);
+		void SetLocalPosition(const glm::vec3& position);
+		void AddLocalOffset(float x = 0.f, float y = 0.f, float z = 0.f);
+		void AddLocalOffset(const glm::vec3& offset);
 
 		void SetParent(GameObject* parentPtr, bool keepWorldPosition = false);
 		int GetChildCount() const;

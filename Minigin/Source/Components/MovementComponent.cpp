@@ -27,10 +27,7 @@ void MovementComponent::FixedUpdate()
 		return; // Avoid updating position if not moving
 
 	const glm::vec3 travelled{ m_Velocity * deltaTime };
-	GetOwner().AddOffset(travelled);
-
-	if (Time().GetTotalTime() > 5)
-		SetDirection({});
+	GetOwner().AddLocalOffset(travelled);
 }
 
 void MovementComponent::SetDirection(const glm::vec3& direction)

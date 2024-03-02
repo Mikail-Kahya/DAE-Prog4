@@ -19,10 +19,9 @@
 
 #include "GameObject.h"
 #include "FPSComponent.h"
-#include "MovementComponent.h"
 #include "TextComponent.h"
 #include "RenderComponent.h"
-#include "MovementComponent.h"
+#include "OrbitComponent.h"
 
 namespace fs = std::filesystem;
 using namespace mk;
@@ -35,25 +34,23 @@ void load()
 
 	const auto gameObject1 = scene.SpawnObject("bg");
 	spriteCompPtr = gameObject1->AddComponent<RenderComponent>("background.tga");
-	gameObject1->SetPosition(0, 0);
+	gameObject1->SetLocalPosition(0, 0);
 	
 	const auto gameObject2 = scene.SpawnObject("logo");
-	gameObject2->SetPosition(100, 100);
+	gameObject2->SetLocalPosition(100, 100);
 	spriteCompPtr = gameObject2->AddComponent<RenderComponent>("logo.tga");
 	
 	const auto gameObject3 = scene.SpawnObject("text");
-	gameObject3->SetPosition(100, 100);
+	gameObject3->SetLocalPosition(100, 100);
 	auto testTextComponent = gameObject3->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
 	testTextComponent->SetText("Programming 4 assignment");
 
 	const auto gameObject4 = scene.SpawnObject("fps");
-	gameObject4->SetPosition(0, 20);
+	gameObject4->SetParent(gameObject2, false);
 	auto fpsComponent = gameObject4->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
-	auto movementComponent = gameObject4->AddComponent<MovementComponent>(100.f, 5.f, 0.1f, 0.1f);
-	movementComponent->SetDirection({ 1, 1, 0 });
-
-	gameObject3->SetParent(gameObject2, false);
+	auto movementComponent = gameObject4->AddComponent<OrbitComponent>(100.f, 5.f);
+	movementComponent->SetAngle(100);
 }
 
 int main(int, char*[]) {

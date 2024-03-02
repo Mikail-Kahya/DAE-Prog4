@@ -17,7 +17,7 @@ namespace mk
 
 		void FixedUpdate() override;
 
-		void SetDirection(const glm::vec3& velocity);
+		void SetDirection(const glm::vec3& direction);
 
 		float GetSpeed() const;
 		float GetSpeedSqr() const;
@@ -31,6 +31,7 @@ namespace mk
 
 		float m_MaxLinearSpeed{};
 		float m_MaxAngularSpeed{};
+		float m_AngularVelocity{};
 		float m_Acceleration{};
 		float m_Deceleration{};
 		glm::vec3 m_Velocity{};

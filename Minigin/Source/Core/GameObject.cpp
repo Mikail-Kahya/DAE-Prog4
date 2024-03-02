@@ -133,28 +133,28 @@ const glm::vec3& GameObject::GetWorldPosition()
 	return m_WorldTransform.GetPosition();
 }
 
-void GameObject::SetPosition(float x, float y)
+const glm::vec3& GameObject::GetLocalPosition() const
 {
-	SetPosition({ x, y, m_LocalTransform.GetPosition().z });
+	return m_LocalTransform.GetPosition();
 }
 
-void GameObject::SetPosition(float x, float y, float z)
+void GameObject::SetLocalPosition(float x, float y)
 {
-	SetPosition({ x, y, z });
+	SetLocalPosition({ x, y, m_LocalTransform.GetPosition().z });
 }
 
-void GameObject::SetPosition(const glm::vec3& position)
+void GameObject::SetLocalPosition(const glm::vec3& position)
 {
 	m_LocalTransform.SetPosition(position);
 	FlagPositionDirty();
 }
 
-void GameObject::AddOffset(float x, float y, float z)
+void GameObject::AddLocalOffset(float x, float y, float z)
 {
-	AddOffset({ x, y, z });
+	AddLocalOffset({ x, y, z });
 }
 
-void GameObject::AddOffset(const glm::vec3& offset)
+void GameObject::AddLocalOffset(const glm::vec3& offset)
 {
 	m_LocalTransform.AddOffset(offset);
 	FlagPositionDirty();
@@ -184,11 +184,11 @@ void GameObject::SetParent(GameObject* parentPtr, bool keepWorldPosition)
 		return;
 
 	if (parentPtr == nullptr)
-		SetPosition(GetWorldPosition());
+		SetLocalPosition(GetWorldPosition());
 	else
 	{
 		if (keepWorldPosition)
-			SetPosition(m_LocalTransform.GetPosition() - parentPtr->GetWorldPosition());
+			SetLocalPosition(m_LocalTransform.GetPosition() - parentPtr->GetWorldPosition());
 		FlagPositionDirty();
 	}
 
