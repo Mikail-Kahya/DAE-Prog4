@@ -35,7 +35,6 @@ void load()
 
 	GameObject* bg = scene.SpawnObject("bg");
 	spriteCompPtr = bg->AddComponent<RenderComponent>("background.tga");
-	bg->SetLocalPosition(0, 0);
 	
 	GameObject* logo = scene.SpawnObject("logo");
 	logo->SetLocalPosition(200, 100);
@@ -57,12 +56,14 @@ void load()
 	GameObject* tank1 = scene.SpawnObject("T1");
 	tank1->SetParent(tankWrapper);
 	spriteCompPtr = tank1->AddComponent<RenderComponent>("BlueTank.png");
-	orbitCompPtr = tank1->AddComponent<OrbitComponent>();
+	orbitCompPtr = tank1->AddComponent<OrbitComponent>(40.f, 10.f);
+	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 
 	GameObject* tank2 = scene.SpawnObject("T2");
 	tank2->SetParent(tank1);
 	spriteCompPtr = tank2->AddComponent<RenderComponent>("BlueTank.png");
-	orbitCompPtr = tank2->AddComponent<OrbitComponent>(100.f, 10.f);
+	orbitCompPtr = tank2->AddComponent<OrbitComponent>(60.f, 8.5f);
+	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 }
 
 int main(int, char*[]) {

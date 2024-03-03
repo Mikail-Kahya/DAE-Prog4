@@ -26,11 +26,18 @@ namespace mk
 		void LateUpdate() override;
 
 		Texture2D* GetTexture() const;
+		glm::vec2 GetRenderPosition() const;
 		float GetRenderDepth() const;
+
 		void SetTexture(Texture2D* texturePtr);
+		void SetAnchor(const glm::vec2& anchor);
 
 	private:
+		int GetTextureWidth() const;
+		int GetTextureHeight() const;
+
 		Texture2D* m_TexturePtr{};
 		float m_Depth{};
+		glm::vec2 m_Anchor{};
 	};
 }

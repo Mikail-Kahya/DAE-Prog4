@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Component.h"
+#include "glm/vec2.hpp"
 
 namespace mk
 {
@@ -27,6 +28,7 @@ namespace mk
 
 		void SetText(const std::string& text);
 		void SetFont(const std::string& fontPath, unsigned int size);
+		void SetAnchor(const glm::vec2& anchor);
 
 	private:
 		bool m_NeedsUpdate{ false };

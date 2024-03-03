@@ -60,7 +60,7 @@ void Renderer::Render() const
 		if (renderComponentPtr->GetTexture() == nullptr)
 			continue;
 
-		const glm::vec3 position{ renderComponentPtr->GetOwner().GetWorldPosition() };
+		const glm::vec2 position{ renderComponentPtr->GetRenderPosition() };
 		RenderTexture(*renderComponentPtr->GetTexture(), position.x, position.y);
 	}
 

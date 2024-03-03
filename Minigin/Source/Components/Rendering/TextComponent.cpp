@@ -58,3 +58,8 @@ void TextComponent::SetFont(const std::string& fontPath, unsigned int size)
 	m_NeedsUpdate = m_FontPtr != fontPtr;
 	m_FontPtr = fontPtr;
 }
+
+void TextComponent::SetAnchor(const glm::vec2& anchor)
+{
+	m_RendererPtr->SetAnchor(anchor);
+}
