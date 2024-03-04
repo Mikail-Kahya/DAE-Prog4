@@ -176,6 +176,8 @@ void GameObject::UpdateWorldPosition()
 void GameObject::FlagPositionDirty()
 {
 	m_PositionIsDirty = true;
+	for (GameObject* childPtr : m_Children)
+		childPtr->FlagPositionDirty();
 }
 
 void GameObject::SetParent(GameObject* parentPtr, bool keepWorldPosition)
@@ -188,7 +190,7 @@ void GameObject::SetParent(GameObject* parentPtr, bool keepWorldPosition)
 	else
 	{
 		if (keepWorldPosition)
-			SetLocalPosition(m_LocalTransform.GetPosition() - parentPtr->GetWorldPosition());
+			SetLocalPosition(m_WorldTransform.GetPosition() - parentPtr->GetWorldPosition());
 		FlagPositionDirty();
 	}
 

@@ -1,6 +1,5 @@
 #pragma once
 #include "Component.h"
-#include "glm/vec3.hpp"
 
 namespace mk
 {
@@ -15,7 +14,7 @@ namespace mk
 		OrbitComponent& operator=(const OrbitComponent& other)		= delete;
 		OrbitComponent& operator=(OrbitComponent&& other) noexcept	= delete;
 
-		void Update() override;
+		void FixedUpdate() override;
 
 		void SetAngle(float angleDegree);
 
@@ -23,6 +22,5 @@ namespace mk
 		float m_OrbitRadius{};
 		float m_RotationSpeed{};
 		float m_Angle{};
-		glm::vec3 m_Offset{};
 	};
 }

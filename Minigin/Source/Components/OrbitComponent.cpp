@@ -1,8 +1,10 @@
 #include "OrbitComponent.h"
 
+#include <numbers>
+#include "glm/trigonometric.hpp"
+
 #include "GameObject.h"
 #include "SceneManager.h"
-#include "glm/trigonometric.hpp"
 
 using namespace mk;
 
@@ -12,11 +14,16 @@ OrbitComponent::OrbitComponent(float orbitRadius, float rotationSpeed)
 {
 }
 
-void OrbitComponent::Update()
+void OrbitComponent::FixedUpdate()
 {
-	m_Angle += m_RotationSpeed * Time().deltaTime;
-	m_Offset = { glm::cos(m_Angle) * m_OrbitRadius, glm::sin(m_Angle) * m_OrbitRadius, 0.f };
-	GetOwner().SetLocalPosition(m_Offset);
+	constexpr float fullRot{ 2.f * std::numbers::pi_v<float> };
+
+	m_Angle += m_RotationSpeed * Time().fixedDeltaTime;
+	if (m_Angle > fullRot)
+		m_Angle -= fullRot;
+
+	const glm::vec3 offset{ glm::cos(m_Angle) * m_OrbitRadius, glm::sin(m_Angle) * m_OrbitRadius, 0.f };
+	GetOwner().SetLocalPosition(offset);
 }
 
 void OrbitComponent::SetAngle(float angleDegree)
