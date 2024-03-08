@@ -1,23 +1,25 @@
 #pragma once
 #include <filesystem>
-#include <map>
 #include <string>
 #include <memory>
+#include <map>
+
+#include "Texture2D.h"
+#include "Font.h"
 #include "Singleton.h"
 
-namespace dae
+namespace mk
 {
-	class Texture2D;
-	class Font;
+
 	class ResourceManager final : public Singleton<ResourceManager>
 	{
 	public:
 		~ResourceManager() override = default;
 
-		ResourceManager(const ResourceManager& other) = delete;
-		ResourceManager(ResourceManager&& other) = delete;
-		ResourceManager& operator=(const ResourceManager& other) = delete;
-		ResourceManager& operator=(ResourceManager&& other) = delete;
+		ResourceManager(const ResourceManager& other)				= delete;
+		ResourceManager(ResourceManager&& other)					= delete;
+		ResourceManager& operator=(const ResourceManager& other)	= delete;
+		ResourceManager& operator=(ResourceManager&& other)			= delete;
 
 		void Init(const std::filesystem::path& data);
 

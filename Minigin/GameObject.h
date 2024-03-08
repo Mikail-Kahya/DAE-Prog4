@@ -1,4 +1,5 @@
 #pragma once
+#include <list>
 #include <string>
 #include <memory>
 #include <vector>
@@ -6,67 +7,102 @@
 #include "Transform.h"
 #include "Component.h"
 
-namespace dae
+namespace mk
 {
 	class Texture2D;
+
 	class GameObject final
 	{
 	public:
 		GameObject(const std::string& name = {});
 		~GameObject();
 
-		GameObject(const GameObject& other) = delete;
-		GameObject(GameObject&& other) = delete;
-		GameObject& operator=(const GameObject& other) = delete;
-		GameObject& operator=(GameObject&& other) = delete;
+		// TODO fix
+		GameObject(const GameObject& other)				= delete;
+		GameObject(GameObject&& other)					noexcept;
+		GameObject& operator=(const GameObject& other)	= delete;
+		GameObject& operator=(GameObject&& other)		noexcept;
 
 		void Update();
 		void FixedUpdate();
 		void LateUpdate();
-		void Render() const;
-		void ComponentCleanup();
 
 		void Destroy();
 		void ClearDestroy();
 		bool DestroyFlagged() const;
 
-		void SetTexture(const std::string& filename);
-		void SetPosition(float x, float y);
+		const std::string& GetName() const;
+		const glm::vec3& GetWorldPosition();
+		const glm::vec3& GetLocalPosition() const;
 
-		template <typename ComponentType>
-		requires std::derived_from<ComponentType, Component>
-		Component* GetComponent();
-		template <typename ComponentType, typename... Args>
-		requires std::derived_from<ComponentType, Component>
-		void AddComponent(const std::string& name, Args... arguments);
+		void SetLocalPosition(float x, float y);
+		void SetLocalPosition(const glm::vec3& position);
+		void AddLocalOffset(float x = 0.f, float y = 0.f, float z = 0.f);
+		void AddLocalOffset(const glm::vec3& offset);
+
+		void SetParent(GameObject* parentPtr, bool keepWorldPosition = false);
+		int GetChildCount() const;
+		GameObject* GetChildAt(int index) const;
+
+		template <std::derived_from<Component> ComponentType>
+		[[nodiscard]] ComponentType* GetComponent() const;
+		template <std::derived_from<Component> ComponentType, typename... Args>
+		[[nodiscard]] ComponentType* AddComponent(const Args&... args);
 		void RemoveComponent(const std::unique_ptr<Component>& component);
 
-		std::string m_Name{};
 
 	private:
-		Transform m_transform{};
-		std::shared_ptr<Texture2D> m_texture{};
+		void ComponentCleanup();
+		void UpdateWorldPosition();
+		void FlagPositionDirty();
+		void AddChild(GameObject* childPtr);
+		void RemoveChild(GameObject* childPtr);
 
-		std::vector<std::unique_ptr<Component>> m_Components{};
+		bool IsChild(GameObject* childPtr) const;
+
+		// Common state
+		std::string m_Name{};
 		bool m_Destroy{};
+		Transform m_LocalTransform{};
+		Transform m_WorldTransform{};
+		bool m_PositionIsDirty{ false };
+
+		// Ownership
+		GameObject* m_Parent{};
+		std::vector<GameObject*> m_Children{};
+
+		// Components
+		std::list<std::unique_ptr<Component>> m_Components{};
+		std::list<std::unique_ptr<Component>> m_ComponentBuffer{};
 	};
 
-	template <typename ComponentType>
-	requires std::derived_from<ComponentType, Component>
-	Component* GameObject::GetComponent()
+	template <std::derived_from<Component> ComponentType>
+	ComponentType* GameObject::GetComponent() const
 	{
 		auto componentIt = std::ranges::find_if(m_Components, [](const std::unique_ptr<Component>& component)
 			{
-				return dynamic_cast<ComponentType>(component.get());
+				return dynamic_cast<ComponentType*>(component.get());
 			});
 
-		return (componentIt != m_Components.end()) ? *componentIt : nullptr;
+		if (componentIt == m_Components.end())
+			return nullptr;
+
+		return dynamic_cast<ComponentType*>(componentIt->get());
 	}
 
-	template <typename ComponentType, typename... Args>
-	requires std::derived_from<ComponentType, Component>
-	void GameObject::AddComponent(const std::string& name, Args... arguments)
+	template <std::derived_from<Component> ComponentType, typename... Args>
+	ComponentType* GameObject::AddComponent(const Args&... args)
 	{
-		m_Components.emplace_back(std::make_unique<ComponentType>(name, arguments));
+		ComponentType* componentPtr{ GetComponent<ComponentType>() };
+		if (componentPtr != nullptr)
+			return componentPtr;
+
+		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>(args...) };
+		component->SetOwner(this);
+		component->Start();
+
+		componentPtr = component.get();
+		m_ComponentBuffer.emplace_back(std::move(component));
+		return componentPtr;
 	}
 }

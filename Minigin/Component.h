@@ -1,31 +1,42 @@
 #pragma once
-#include <string>
+#include <memory>
 
-class Component
+namespace mk
 {
-public:
-	virtual ~Component(){}
+	class GameObject;
 
-	Component(const Component& other)				= delete;
-	Component(Component&& other)					= delete;
-	Component& operator=(const Component& other)	= delete;
-	Component& operator=(Component&& other)			= delete;
+	class Component
+	{
+	public:
+		virtual ~Component() = default;
 
-	virtual void Update(){}
-	virtual void FixedUpdate(){}
-	virtual void LateUpdate(){}
-	virtual void Render() const{}
+		Component(const Component& other) = delete;
+		Component(Component&& other) = delete;
+		Component& operator=(const Component& other) = delete;
+		Component& operator=(Component&& other) = delete;
 
-	void Destroy();
-	void ClearDestroy();
+		virtual void Start() {}
 
-	bool DestroyFlagged() const;
+		virtual void Update() {}
+		virtual void FixedUpdate() {}
+		virtual void LateUpdate() {}
 
-protected:
-	Component(const std::string& name);
+		void Destroy();
+		void ClearDestroy();
 
-	std::string m_Name{};
+		bool DestroyFlagged() const;
+		GameObject& GetOwner() const;
 
-private:
-	bool m_Destroy{};
-};
+	protected:
+		Component() = default;
+
+	private:
+		friend class GameObject;
+		void SetOwner(GameObject* ownerPtr);
+
+		GameObject* m_OwnerPtr{};
+		bool m_Destroy{};
+	};
+}
+
+

@@ -7,7 +7,7 @@ Minigin is a very small project using [SDL2](https://www.libsdl.org/) and [glm](
 
 # Goal
 
-Minigin can/may be used as a start project for the exam assignment in the course 'Programming 4' at DAE. In that assignment students need to recreate a popular 80's arcade game with a game engine they need to program themselves. During the course we discuss several game programming patterns, using the book '[Game Programming Patterns](https://gameprogrammingpatterns.com/)' by Robert Nystrom as reading material. 
+Minigin can/may be used as a start project for the exam assignment in the course 'Programming 4' at mk. In that assignment students need to recreate a popular 80's arcade game with a game engine they need to program themselves. During the course we discuss several game programming patterns, using the book '[Game Programming Patterns](https://gameprogrammingpatterns.com/)' by Robert Nystrom as reading material. 
 
 # Disclaimer
 

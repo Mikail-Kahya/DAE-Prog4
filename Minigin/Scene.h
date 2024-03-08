@@ -2,36 +2,37 @@
 #include "SceneManager.h"
 #include "GameObject.h"
 
-namespace dae
+namespace mk
 {
-	class GameObject;
 	class Scene final
 	{
-		friend Scene& SceneManager::CreateScene(const std::string& name);
 	public:
 		~Scene();
+		Scene(const Scene& other)				= delete;
+		Scene(Scene&& other)					= delete;
+		Scene& operator=(const Scene& other)	= delete;
+		Scene& operator=(Scene&& other)			= delete;
 
-		Scene(const Scene& other) = delete;
-		Scene(Scene&& other) = delete;
-		Scene& operator=(const Scene& other) = delete;
-		Scene& operator=(Scene&& other) = delete;
-
-		GameObject& CreateGameObject(const std::string& name);
-		void RemoveAll();
+		void Start();
 		
-		void Update();
 		void FixedUpdate();
+		void Update();
 		void LateUpdate();
-		void ObjectCleanup();
-		void Render() const;
+
+		GameObject* SpawnObject(const std::string& name = { "None" });
+		void RemoveAll();
 
 	private: 
 		explicit Scene(const std::string& name);
-		void RemoveDestroyed();
+		friend Scene& SceneManager::CreateScene(const std::string& name);
 
-		std::string m_name;
-		std::vector <GameObject> m_objects{};
+		void CleanupGameObjects();
 
-		static unsigned int m_idCounter; 
+		std::string m_Name;
+		std::vector <std::unique_ptr<GameObject>> m_Objects{};
+		std::vector <std::unique_ptr<GameObject>> m_ObjectBuffer{};
+
+		static unsigned int m_IdCounter; 
 	};
+
 }

@@ -15,33 +15,65 @@ endif()
 
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
-  Minigin/Font.cpp
+  "Minigin/Source/Core/Font.cpp"
   Minigin/Font.h
-  Minigin/GameObject.cpp
+  "Minigin/Source/Core/GameObject.cpp"
   Minigin/GameObject.h
-  Minigin/InputManager.cpp
+  "Minigin/Source/Core/InputManager.cpp"
   Minigin/InputManager.h
   Minigin/Main.cpp
-  Minigin/Minigin.cpp
+  "Minigin/Source/Core/Minigin.cpp"
   Minigin/Minigin.h
-  Minigin/Renderer.cpp
+  "Minigin/Source/Core/Renderer.cpp"
   Minigin/Renderer.h
-  Minigin/ResourceManager.cpp
+  "Minigin/Source/Core/ResourceManager.cpp"
   Minigin/ResourceManager.h
-  Minigin/Scene.cpp
+  "Minigin/Source/Core/Scene.cpp"
   Minigin/Scene.h
-  Minigin/SceneManager.cpp
+  "Minigin/Source/Core/SceneManager.cpp"
   Minigin/SceneManager.h
-  Minigin/TimeManager.cpp
-  "Minigin/TimeManager.h"
-  Minigin/TextComponent.cpp
-  "Minigin/TextComponent.h"
-  Minigin/Texture2D.cpp
+  "Minigin/Source/Core/TimeManager.cpp"
+  Minigin/TimeManager.h
+  "Minigin/Source/Core/Texture2D.cpp"
   Minigin/Texture2D.h
-  Minigin/Transform.cpp
+  "Minigin/Source/Core/Transform.cpp"
   Minigin/Transform.h
-   "Minigin/Component.h" 
-   "Minigin/Component.cpp")
+  
+  "Minigin/Source/Components/Component.cpp"
+  "Minigin/Component.h" 
+
+  "Minigin/Source/Components/Rendering/TextComponent.cpp"
+  "Minigin/TextComponent.h"
+
+  "Minigin/Source/Components/Rendering/RenderComponent.cpp"
+  "Minigin/RenderComponent.h" 
+
+  "Minigin/Source/Components/Rendering/SpriteComponent.cpp"
+  "Minigin/SpriteComponent.h" 
+
+  "Minigin/Source/Components/Rendering/FPSComponent.cpp"
+  "Minigin/FPSComponent.h"
+
+  "Minigin/Source/Components/MovementComponent.cpp"
+  "Minigin/MovementComponent.h"
+
+  "Minigin/Source/Components/OrbitComponent.cpp"
+  "Minigin/OrbitComponent.h"
+ 
+  "Minigin/DebugUtils.h"
+  "Minigin/Source/Core/DebugUtils.cpp"
+
+  "Minigin/GUI.h"
+  "Minigin/Source/Core/GUI.cpp"
+
+    # Mat help
+    external/imgui/imgui.cpp
+    external/imgui/imgui_draw.cpp
+    external/imgui/imgui_widgets.cpp
+    external/imgui/imgui_tables.cpp
+    external/imgui/backends/imgui_impl_sdl2.cpp
+    external/imgui/backends/imgui_impl_sdlrenderer2.cpp
+)
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
@@ -192,6 +224,8 @@ endif()
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${glm_SOURCE_DIR}
+  external
+  external/imgui
 )
 
 # compile at max warning level + treat warnings as errors

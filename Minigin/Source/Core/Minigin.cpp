@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <thread>
 
 #if WIN32
 #define WIN32_LEAN_AND_MEAN 
@@ -34,7 +35,7 @@ void LogSDLVersion(const std::string& message, const SDL_version& v)
 
 void LoopCallback(void* arg)
 {
-	static_cast<dae::Minigin*>(arg)->RunOneFrame();
+	static_cast<mk::Minigin*>(arg)->RunOneFrame();
 }
 #endif
 
@@ -63,7 +64,7 @@ void PrintSDLVersion()
 	LogSDLVersion("We linked against SDL_ttf version ", version);
 }
 
-dae::Minigin::Minigin(const std::filesystem::path &dataPath)
+mk::Minigin::Minigin(const std::filesystem::path &dataPath)
 {
 	PrintSDLVersion();
 	
@@ -89,7 +90,7 @@ dae::Minigin::Minigin(const std::filesystem::path &dataPath)
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
-dae::Minigin::~Minigin()
+mk::Minigin::~Minigin()
 {
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(g_window);
@@ -97,12 +98,13 @@ dae::Minigin::~Minigin()
 	SDL_Quit();
 }
 
-void dae::Minigin::Run(const std::function<void()>& load)
+void mk::Minigin::Run(const std::function<void()>& load)
 {
 	load();
 
 	using namespace std::chrono;
 	m_LastTime = high_resolution_clock::now();
+	SceneManager::GetInstance().m_TimeManager.fixedDeltaTime = FIXED_TIME_STEP;
 
 #ifndef __EMSCRIPTEN__
 	while (!m_quit)
@@ -112,11 +114,11 @@ void dae::Minigin::Run(const std::function<void()>& load)
 #endif
 }
 
-void dae::Minigin::RunOneFrame()
+void mk::Minigin::RunOneFrame()
 {
 	using namespace std::chrono;
-	constexpr int msPerFrame{ static_cast<int>((1.f / FPS) * 1000.f) };
-	//constexpr float timeTransform{ 1.f / (1000 * 1000) };
+	SceneManager& sceneManager{ SceneManager::GetInstance() };
+	Renderer& renderer{ Renderer::GetInstance() };
 
 	m_quit = !InputManager::GetInstance().ProcessInput();
 
@@ -126,7 +128,7 @@ void dae::Minigin::RunOneFrame()
 	m_Lag += deltaTime;
 
 	// Update global time
-	TimeManager& timeManager{ SceneManager::GetInstance().m_TimeManager };
+	TimeManager& timeManager{ sceneManager.m_TimeManager };
 	timeManager.deltaTime = deltaTime;
 
 	while (m_Lag >= FIXED_TIME_STEP)
@@ -135,13 +137,15 @@ void dae::Minigin::RunOneFrame()
 		m_Lag -= FIXED_TIME_STEP;
 	}
 
-	SceneManager::GetInstance().Update();
-	SceneManager::GetInstance().LateUpdate();
-	SceneManager::GetInstance().SceneCleanup();
-	Renderer::GetInstance().Render();
+	sceneManager.Update();
+	sceneManager.LateUpdate();
 
-	//const auto sleepTime{ currentTime + milliseconds(msPerFrame) - high_resolution_clock::now() };
-	//Sleep(static_cast<DWORD>(sleepTime.count() * timeTransform));
-	const auto sleepTime{ duration<float>(currentTime + milliseconds(msPerFrame) - high_resolution_clock::now()).count() };
-	Sleep(static_cast<DWORD>(sleepTime * 1000));
+	renderer.Update();
+	renderer.Render();
+
+	constexpr milliseconds msPerFrame{ static_cast<long long>(1.f / FPS * 1000.f) };
+	const auto sleepTime{ currentTime + msPerFrame - high_resolution_clock::now()};
+
+#undef max
+	std::this_thread::sleep_for(sleepTime);
 }
