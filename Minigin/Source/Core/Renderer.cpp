@@ -1,9 +1,8 @@
 #include <stdexcept>
 #include <cstring>
-#include "Renderer.h"
+#include "imgui.h"
 
-#include <algorithm>
-#include <windows.h>
+#include "Renderer.h"
 
 #include "GameObject.h"
 #include "RenderComponent.h"
@@ -28,12 +27,13 @@ int GetOpenGLDriverIndex()
 
 void Renderer::Init(SDL_Window* window)
 {
-	m_window = window;
-	m_renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (m_renderer == nullptr) 
+	m_Window = window;
+	m_Renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (m_Renderer == nullptr) 
 	{
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 	}
+	m_Gui.Init(window, GetSDLRenderer());
 }
 
 void Renderer::Update()
@@ -52,8 +52,8 @@ void Renderer::Update()
 void Renderer::Render() const
 {
 	const auto& color = GetBackgroundColor();
-	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
-	SDL_RenderClear(m_renderer);
+	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+	SDL_RenderClear(m_Renderer);
 
 	for (RenderComponent* renderComponentPtr : m_Renderers)
 	{
@@ -64,15 +64,25 @@ void Renderer::Render() const
 		RenderTexture(*renderComponentPtr->GetTexture(), position.x, position.y);
 	}
 
-	SDL_RenderPresent(m_renderer);
+	// Render ImGui
+	m_Gui.BeginFrame();
+	
+	ImGui::Begin("A Window");
+	ImGui::Text("Hi!");
+	ImGui::End();
+
+	m_Gui.EndFrame();
+
+	SDL_RenderPresent(m_Renderer);
 }
 
 void Renderer::Destroy()
 {
-	if (m_renderer != nullptr)
+	m_Gui.Destroy();
+	if (m_Renderer != nullptr)
 	{
-		SDL_DestroyRenderer(m_renderer);
-		m_renderer = nullptr;
+		SDL_DestroyRenderer(m_Renderer);
+		m_Renderer = nullptr;
 	}
 }
 
@@ -103,7 +113,7 @@ float Renderer::GetNextDepth()
 	return depth;
 }
 
-SDL_Renderer* Renderer::GetSDLRenderer() const { return m_renderer; }
+SDL_Renderer* Renderer::GetSDLRenderer() const { return m_Renderer; }
 
 void Renderer::RegisterRenderComponent(RenderComponent* renderComponentPtr)
 {

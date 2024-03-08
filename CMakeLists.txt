@@ -61,7 +61,19 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/OrbitComponent.h"
  
   "Minigin/DebugUtils.h"
-  "Minigin/Source/Core/DebugUtils.cpp")
+  "Minigin/Source/Core/DebugUtils.cpp"
+
+  "Minigin/GUI.h"
+  "Minigin/Source/Core/GUI.cpp"
+
+    # Mat help
+    external/imgui/imgui.cpp
+    external/imgui/imgui_draw.cpp
+    external/imgui/imgui_widgets.cpp
+    external/imgui/imgui_tables.cpp
+    external/imgui/backends/imgui_impl_sdl2.cpp
+    external/imgui/backends/imgui_impl_sdlrenderer2.cpp
+)
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
@@ -69,19 +81,6 @@ target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
 
 include(FetchContent)
-# add ImGui
-FetchContent_Declare(
-    ImGui
-    URL https://github.com/ocornut/imgui/archive/refs/tags/v1.90.4.zip
-    DOWNLOAD_NO_PROGRESS ON
-    DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
-)
-
-FetchContent_GetProperties(ImGui)
-if(NOT ImGui_POPULATED)
-  FetchContent_Populate(ImGui)
-endif()
-
 # add glm
 FetchContent_Declare(
   glm
@@ -225,11 +224,8 @@ endif()
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${glm_SOURCE_DIR}
-)
-
-target_include_directories(${TARGET_NAME} PRIVATE
-  ${CMAKE_SOURCE_DIR}/Minigin/
-  ${ImGui_SOURCE_DIR}
+  external
+  external/imgui
 )
 
 # compile at max warning level + treat warnings as errors

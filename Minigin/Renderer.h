@@ -1,7 +1,9 @@
 #pragma once
 #include <list>
+#include <memory>
 #include <SDL.h>
 
+#include "GUI.h"
 #include "Singleton.h"
 
 namespace mk
@@ -23,8 +25,8 @@ namespace mk
 		float GetNextDepth();
 		SDL_Renderer* GetSDLRenderer() const;
 
-		const SDL_Color& GetBackgroundColor() const { return m_clearColor; }
-		void SetBackgroundColor(const SDL_Color& color) { m_clearColor = color; }
+		const SDL_Color& GetBackgroundColor() const { return m_ClearColor; }
+		void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
 
 		void RegisterRenderComponent(RenderComponent* renderComponentPtr);
 		void UnregisterRenderComponent(RenderComponent* renderComponentPtr);
@@ -37,9 +39,11 @@ namespace mk
 		// Sorts by float. Whenever the float changes
 		std::list<RenderComponent*> m_Renderers{};
 
-		SDL_Renderer* m_renderer{};
-		SDL_Window* m_window{};
-		SDL_Color m_clearColor{};
+		SDL_Renderer* m_Renderer{};
+		SDL_Window* m_Window{};
+		SDL_Color m_ClearColor{};
+		GUI m_Gui{};
+
 		float m_AutoDepth{};
 		bool m_DepthChanged{ false };
 	};
