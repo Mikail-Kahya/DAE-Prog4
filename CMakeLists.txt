@@ -69,6 +69,19 @@ target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
 
 include(FetchContent)
+# add ImGui
+FetchContent_Declare(
+    ImGui
+    URL https://github.com/ocornut/imgui/archive/refs/tags/v1.90.4.zip
+    DOWNLOAD_NO_PROGRESS ON
+    DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
+)
+
+FetchContent_GetProperties(ImGui)
+if(NOT ImGui_POPULATED)
+  FetchContent_Populate(ImGui)
+endif()
+
 # add glm
 FetchContent_Declare(
   glm
@@ -212,6 +225,11 @@ endif()
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${glm_SOURCE_DIR}
+)
+
+target_include_directories(${TARGET_NAME} PRIVATE
+  ${CMAKE_SOURCE_DIR}/Minigin/
+  ${ImGui_SOURCE_DIR}
 )
 
 # compile at max warning level + treat warnings as errors

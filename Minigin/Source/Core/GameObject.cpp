@@ -29,10 +29,10 @@ GameObject::GameObject(GameObject&& other) noexcept
 
 GameObject& GameObject::operator=(GameObject&& other) noexcept
 {
-	m_Name = other.m_Name;
+	m_Name = std::move(other.m_Name);
 	m_Destroy = other.m_Destroy;
-	m_LocalTransform = other.m_LocalTransform;
-	m_WorldTransform = other.m_WorldTransform;
+	m_LocalTransform = std::move(other.m_LocalTransform);
+	m_WorldTransform = std::move(other.m_WorldTransform);
 	m_PositionIsDirty = other.m_PositionIsDirty;
 	m_Parent = other.m_Parent;
 	m_Children = std::move(other.m_Children);
