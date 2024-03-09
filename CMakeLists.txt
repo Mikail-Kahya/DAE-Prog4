@@ -64,9 +64,15 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Core/DebugUtils.cpp"
 
   "Minigin/GUI.h"
-  "Minigin/Source/Core/GUI.cpp"
+  "Minigin/Source/Widgets/GUI.cpp"
 
   "Minigin/GUIWidget.h"
+
+  "Minigin/GraphWidget.h"
+  "Minigin/Source/Widgets/GraphWidget.cpp"
+
+  "Minigin/MeasureWidget.h"
+  "Minigin/Source/Widgets/MeasureWidget.cpp"
   
 
     # Mat help
