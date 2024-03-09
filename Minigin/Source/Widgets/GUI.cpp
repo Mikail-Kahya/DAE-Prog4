@@ -21,6 +21,11 @@ void mk::GUI::Init(SDL_Window* windowPtr, SDL_Renderer* rendererPtr)
 	ImGui::StyleColorsDark();
 }
 
+void mk::GUI::AddSdlEvents(const SDL_Event& event)
+{
+	ImGui_ImplSDL2_ProcessEvent(&event);
+}
+
 void mk::GUI::Render()
 {
 	BeginFrame();

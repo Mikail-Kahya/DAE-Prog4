@@ -1,6 +1,8 @@
 #include <SDL.h>
 #include "InputManager.h"
 
+#include "GUI.h"
+
 bool mk::InputManager::ProcessInput()
 {
 	SDL_Event e;
@@ -14,7 +16,8 @@ bool mk::InputManager::ProcessInput()
 		if (e.type == SDL_MOUSEBUTTONDOWN) {
 			
 		}
-		// etc...
+
+		GUI::GetInstance().AddSdlEvents(e);
 	}
 
 	return true;

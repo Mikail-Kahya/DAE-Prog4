@@ -5,6 +5,7 @@
 
 #include "Singleton.h"
 #include "GUIWidget.h"
+#include "SDL_events.h"
 
 // design inspired by Matias Devred
 
@@ -26,6 +27,7 @@ namespace mk
 		GUI& operator=(GUI&& other)	noexcept	= delete;
 
 		void Init(SDL_Window* windowPtr, SDL_Renderer* rendererPtr);
+		void AddSdlEvents(const SDL_Event& event);
 		void Render();
 		void Destroy();
 

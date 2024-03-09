@@ -5,7 +5,6 @@
 
 void mk::MeasureWidget::Render()
 {
-	//bool submitButton{};
 	ImGui::Begin("Exercise 2: Trash the cache");
 
 	if (ImGui::Button("Button"))
