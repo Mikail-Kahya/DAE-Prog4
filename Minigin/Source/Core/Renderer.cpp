@@ -50,7 +50,7 @@ void Renderer::Update()
 	m_DepthChanged = false;
 }
 
-void Renderer::Render()
+void Renderer::Render() const
 {
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
@@ -65,7 +65,6 @@ void Renderer::Render()
 		RenderTexture(*renderComponentPtr->GetTexture(), position.x, position.y);
 	}
 
-	// Render ImGui
 	GUI::GetInstance().Render();
 
 	SDL_RenderPresent(m_Renderer);
