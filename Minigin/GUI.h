@@ -1,28 +1,51 @@
 #pragma once
+#include <concepts>
+#include <memory>
+#include <vector>
+
+#include "Singleton.h"
+#include "GUIWidget.h"
 
 // design inspired by Matias Devred
 
+struct ImGuiIO;
 struct SDL_Window;
 struct SDL_Renderer;
 
 namespace mk
 {
-	class GUI final
+	class GUI final : public Singleton<GUI>
 	{
 	public:
 		GUI() = default;
-		~GUI() = default;
+		~GUI() override = default;
 
-		GUI(const GUI& other)				= delete;
-		GUI(GUI&& other)					= delete;
-		GUI& operator=(const GUI& other)	= delete;
-		GUI& operator=(GUI&& other)			= delete;
+		GUI(const GUI& other)					= delete;
+		GUI(GUI&& other) noexcept				= delete;
+		GUI& operator=(const GUI& other)		= delete;
+		GUI& operator=(GUI&& other)	noexcept	= delete;
 
-		void Init(SDL_Window* windowPtr, SDL_Renderer* rendererPtr) const;
-		void BeginFrame() const;
-		void EndFrame() const;
+		void Init(SDL_Window* windowPtr, SDL_Renderer* rendererPtr);
+		void Render() const;
 		void Destroy();
 
+		template<class WidgetType, typename... Args>
+		requires(std::derived_from<WidgetType, GUIWidget>)
+		[[nodiscard]] WidgetType* Add(const Args&... args);
+		void Remove(GUIWidget* widgetPtr);
+
 	private:
+		void BeginFrame() const;
+		void EndFrame() const;
+
+		std::vector<std::unique_ptr<GUIWidget>> m_Widgets{};
+		ImGuiIO* m_Io{};
 	};
+
+	template <class WidgetType, typename ... Args> requires (std::derived_from<WidgetType, GUIWidget>)
+	WidgetType* GUI::Add(const Args&... args)
+	{
+		m_Widgets.emplace(std::make_unique<WidgetType>(args...));
+		return m_Widgets.back();
+	}
 }

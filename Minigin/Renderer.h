@@ -1,9 +1,7 @@
 #pragma once
 #include <list>
-#include <memory>
 #include <SDL.h>
 
-#include "GUI.h"
 #include "Singleton.h"
 
 namespace mk
@@ -42,7 +40,6 @@ namespace mk
 		SDL_Renderer* m_Renderer{};
 		SDL_Window* m_Window{};
 		SDL_Color m_ClearColor{};
-		GUI m_Gui{};
 
 		float m_AutoDepth{};
 		bool m_DepthChanged{ false };

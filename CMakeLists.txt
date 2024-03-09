@@ -66,6 +66,9 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/GUI.h"
   "Minigin/Source/Core/GUI.cpp"
 
+  "Minigin/GUIWidget.h"
+  
+
     # Mat help
     external/imgui/imgui.cpp
     external/imgui/imgui_draw.cpp
