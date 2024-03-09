@@ -27,8 +27,8 @@ namespace mk
 		GUI& operator=(GUI&& other)	noexcept	= delete;
 
 		void Init(SDL_Window* windowPtr, SDL_Renderer* rendererPtr);
-		void AddSdlEvents(const SDL_Event& event);
-		void Render();
+		void AddSdlEvents(SDL_Event event);
+		void Render() const;
 		void Destroy();
 
 		template<class WidgetType, typename... Args>
