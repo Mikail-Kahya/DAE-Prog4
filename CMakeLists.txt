@@ -82,6 +82,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
     external/imgui/imgui_tables.cpp
     external/imgui/backends/imgui_impl_sdl2.cpp
     external/imgui/backends/imgui_impl_sdlrenderer2.cpp
+    external/imgui/imgui_plot.cpp
 )
 
 # enable c++20 features
