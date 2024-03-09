@@ -19,6 +19,8 @@
 
 #include "GameObject.h"
 #include "FPSComponent.h"
+#include "GUI.h"
+#include "MeasureWidget.h"
 #include "TextComponent.h"
 #include "RenderComponent.h"
 #include "OrbitComponent.h"
@@ -64,6 +66,12 @@ void load()
 	spriteCompPtr = tank2->AddComponent<RenderComponent>("BlueTank.png");
 	orbitCompPtr = tank2->AddComponent<OrbitComponent>(60.f, 4.f);
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
+
+
+
+	// GUI exercise week 3
+	MeasureWidget* measurer{};
+	measurer = GUI::GetInstance().Add<MeasureWidget>();
 }
 
 int main(int, char*[]) {

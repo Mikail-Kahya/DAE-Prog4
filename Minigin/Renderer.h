@@ -17,7 +17,7 @@ namespace mk
 	public:
 		void Init(SDL_Window* window);
 		void Update();
-		void Render() const;
+		void Render();
 		void Destroy();
 
 		float GetNextDepth();

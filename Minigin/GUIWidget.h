@@ -12,7 +12,7 @@ namespace mk
 		GUIWidget& operator=(const GUIWidget& other)		= delete;
 		GUIWidget& operator=(GUIWidget&& other) noexcept	= delete;
 
-		virtual void Render() const = 0;
+		virtual void Render() = 0;
 
 	protected:
 		GUIWidget() = default;

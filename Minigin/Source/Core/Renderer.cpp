@@ -50,7 +50,7 @@ void Renderer::Update()
 	m_DepthChanged = false;
 }
 
-void Renderer::Render() const
+void Renderer::Render()
 {
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);

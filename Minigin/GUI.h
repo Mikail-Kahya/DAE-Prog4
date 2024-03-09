@@ -26,7 +26,7 @@ namespace mk
 		GUI& operator=(GUI&& other)	noexcept	= delete;
 
 		void Init(SDL_Window* windowPtr, SDL_Renderer* rendererPtr);
-		void Render() const;
+		void Render();
 		void Destroy();
 
 		template<class WidgetType, typename... Args>
@@ -45,7 +45,10 @@ namespace mk
 	template <class WidgetType, typename ... Args> requires (std::derived_from<WidgetType, GUIWidget>)
 	WidgetType* GUI::Add(const Args&... args)
 	{
-		m_Widgets.emplace(std::make_unique<WidgetType>(args...));
-		return m_Widgets.back();
+		std::unique_ptr<WidgetType> widget{ std::make_unique<WidgetType>(args...) };
+		WidgetType* widgetPtr{ widget.get() };
+
+		m_Widgets.emplace_back(std::move(widget));
+		return widgetPtr;
 	}
 }
