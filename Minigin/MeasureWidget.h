@@ -3,9 +3,10 @@
 #include <chrono>
 #include <numeric>
 #include <vector>
-#include <iostream>
 
 #include "GUIWidget.h"
+#include "GUI.h"
+#include "PlotWidget.h"
 
 namespace mk
 {
@@ -49,20 +50,21 @@ namespace mk
 		};
 
 		template <typename ObjType>
-		void Measure(const std::string& plotName) const;
+		void Measure(std::vector<float>& measures);
 
 		int m_BufferSize{ 10'000'000 };
 		int m_NrSamples{ 50 };
+		PlotWidget* m_GameObjectPlot{};
+		PlotWidget* m_AltObjectPlot{};
+		PlotWidget* m_CombinedObjectPlot{};
 	};
 
 	template <typename ObjType>
-	void MeasureWidget::Measure(const std::string& plotName) const
+	void MeasureWidget::Measure(std::vector<float>& measures)
 	{
 		using namespace std::chrono;
 
 		std::vector<ObjType> buffer(m_BufferSize);
-
-		std::vector<double> endTimes{};
 
 		for (int stepSize{ 1 }; stepSize <= 1024; stepSize *= 2)
 		{
@@ -80,9 +82,7 @@ namespace mk
 			}
 
 			std::ranges::sort(samples);
-			endTimes.push_back(std::accumulate(std::next(samples.begin()), std::prev(samples.end()), 0.0) / (m_NrSamples - 2));
+			measures.push_back(std::accumulate(std::next(samples.begin()), std::prev(samples.end()), 0.f) / (m_NrSamples - 2));
 		}
-
-		std::cout << plotName;
 	}
 }

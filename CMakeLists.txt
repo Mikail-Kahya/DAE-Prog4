@@ -68,8 +68,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 
   "Minigin/GUIWidget.h"
 
-  "Minigin/GraphWidget.h"
-  "Minigin/Source/Widgets/GraphWidget.cpp"
+  "Minigin/PlotWidget.h"
+  "Minigin/Source/Widgets/PlotWidget.cpp"
 
   "Minigin/MeasureWidget.h"
   "Minigin/Source/Widgets/MeasureWidget.cpp"

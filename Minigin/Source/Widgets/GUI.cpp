@@ -21,7 +21,7 @@ void mk::GUI::Init(SDL_Window* windowPtr, SDL_Renderer* rendererPtr)
 	ImGui::StyleColorsDark();
 }
 
-void mk::GUI::AddSdlEvents(SDL_Event event)
+void mk::GUI::AddSdlEvents(const SDL_Event& event)
 {
 	ImGui_ImplSDL2_ProcessEvent(&event);
 }
@@ -61,5 +61,6 @@ void mk::GUI::Remove(GUIWidget* widgetPtr)
 		return widget.get() == widgetPtr;
 	});
 
-	m_Widgets.erase(foundWidget);
+	if (foundWidget != m_Widgets.end())
+		m_Widgets.erase(foundWidget);
 }
