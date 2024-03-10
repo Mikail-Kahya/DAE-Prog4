@@ -104,7 +104,7 @@ void mk::Minigin::Run(const std::function<void()>& load)
 
 	using namespace std::chrono;
 	m_LastTime = high_resolution_clock::now();
-	SceneManager::GetInstance().m_TimeManager.fixedDeltaTime = FIXED_TIME_STEP;
+	SceneManager::GetInstance().GetTimeManager().fixedDeltaTime = FIXED_TIME_STEP;
 
 #ifndef __EMSCRIPTEN__
 	while (!m_quit)
@@ -128,7 +128,7 @@ void mk::Minigin::RunOneFrame()
 	m_Lag += deltaTime;
 
 	// Update global time
-	TimeManager& timeManager{ sceneManager.m_TimeManager };
+	TimeManager& timeManager{ sceneManager.GetTimeManager() };
 	timeManager.deltaTime = deltaTime;
 
 	while (m_Lag >= FIXED_TIME_STEP)

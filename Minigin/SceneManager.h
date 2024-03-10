@@ -12,20 +12,17 @@ namespace mk
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
+		SceneManager() = default;
 		Scene& CreateScene(const std::string& name);
 
 		void FixedUpdate();
 		void Update();
 		void LateUpdate();
 
-		const TimeManager& GetTimeManager();
+		TimeManager& GetTimeManager();
 
 	private:
-		friend class Singleton<SceneManager>;
-		friend class Minigin;
-		SceneManager() = default;
 		std::vector<std::shared_ptr<Scene>> m_scenes;
-
 		TimeManager m_TimeManager{};
 	};
 

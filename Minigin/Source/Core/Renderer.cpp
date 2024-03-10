@@ -8,6 +8,7 @@
 #include "RenderComponent.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
+#include "GUI.h"
 
 using namespace mk;
 
@@ -33,11 +34,13 @@ void Renderer::Init(SDL_Window* window)
 	{
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 	}
-	m_Gui.Init(window, GetSDLRenderer());
+	GUI::GetInstance().Init(window, GetSDLRenderer());
 }
 
 void Renderer::Update()
 {
+	GUI::GetInstance().Update();
+
 	if (!m_DepthChanged)
 		return;
 
@@ -64,21 +67,14 @@ void Renderer::Render() const
 		RenderTexture(*renderComponentPtr->GetTexture(), position.x, position.y);
 	}
 
-	// Render ImGui
-	m_Gui.BeginFrame();
-	
-	ImGui::Begin("A Window");
-	ImGui::Text("Hi!");
-	ImGui::End();
-
-	m_Gui.EndFrame();
+	GUI::GetInstance().Render();
 
 	SDL_RenderPresent(m_Renderer);
 }
 
 void Renderer::Destroy()
 {
-	m_Gui.Destroy();
+	GUI::GetInstance().Destroy();
 	if (m_Renderer != nullptr)
 	{
 		SDL_DestroyRenderer(m_Renderer);

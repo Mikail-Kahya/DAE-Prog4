@@ -208,7 +208,7 @@ int GameObject::GetChildCount() const
 
 GameObject* GameObject::GetChildAt(int index) const
 {
-	if (index > m_Children.size())
+	if (index > GetChildCount())
 		return nullptr;
 	return m_Children[index];
 }

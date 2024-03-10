@@ -64,15 +64,15 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Core/DebugUtils.cpp"
 
   "Minigin/GUI.h"
-  "Minigin/Source/Core/GUI.cpp"
+  "Minigin/Source/Widgets/GUI.cpp"
 
-    # Mat help
-    external/imgui/imgui.cpp
-    external/imgui/imgui_draw.cpp
-    external/imgui/imgui_widgets.cpp
-    external/imgui/imgui_tables.cpp
-    external/imgui/backends/imgui_impl_sdl2.cpp
-    external/imgui/backends/imgui_impl_sdlrenderer2.cpp
+  "Minigin/GUIWidget.h"
+
+  "Minigin/PlotWidget.h"
+  "Minigin/Source/Widgets/PlotWidget.cpp"
+
+  "Minigin/MeasureWidget.h"
+  "Minigin/Source/Widgets/MeasureWidget.cpp"
 )
 
 # enable c++20 features
@@ -221,11 +221,16 @@ elseif(NOT EMSCRIPTEN)
   )
 endif()
 
+
+add_subdirectory(includes/imgui)
+target_link_libraries(${TARGET_NAME} PUBLIC imguiLib)
+target_include_directories(imguiLib PRIVATE
+  ${SDL2_INCLUDE_DIR}
+)
 target_include_directories(${TARGET_NAME} PRIVATE
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${glm_SOURCE_DIR}
-  external
-  external/imgui
+  ${CMAKE_SOURCE_DIR}/includes/imgui
 )
 
 # compile at max warning level + treat warnings as errors
