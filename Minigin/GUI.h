@@ -1,6 +1,7 @@
 #pragma once
 #include <concepts>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "Singleton.h"
@@ -34,7 +35,7 @@ namespace mk
 
 		template<class WidgetType, typename... Args>
 		requires(std::derived_from<WidgetType, GUIWidget>)
-		[[nodiscard]] WidgetType* Add(const Args&... args);
+		[[nodiscard]] WidgetType* Add(const std::string& widgetName, const Args&... args);
 
 	private:
 		void FlushBuffer();
@@ -49,9 +50,9 @@ namespace mk
 
 	template <class WidgetType, typename ... Args>
 	requires (std::derived_from<WidgetType, GUIWidget>)
-	WidgetType* GUI::Add(const Args&... args)
+	WidgetType* GUI::Add(const std::string& widgetName, const Args&... args)
 	{
-		std::unique_ptr<WidgetType> widget{ std::make_unique<WidgetType>(args...) };
+		std::unique_ptr<WidgetType> widget{ std::make_unique<WidgetType>(widgetName, args...) };
 		WidgetType* widgetPtr{ widget.get() };
 
 		m_WidgetBuffer.emplace_back(std::move(widget));

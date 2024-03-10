@@ -12,7 +12,7 @@ namespace mk
 	public:
 		using Graph = std::vector<float>;
 
-		PlotWidget(const std::string& graphName, float width = 100.f, float height = 100.f);
+		PlotWidget(const std::string& widgetName, float width = 100.f, float height = 100.f);
 		~PlotWidget() override = default;
 
 		PlotWidget(const PlotWidget& other)						= delete;
@@ -31,7 +31,6 @@ namespace mk
 		ImColor GetRandomColor() const;
 
 		std::vector<Graph> m_Graphs{};
-		const std::string m_Name{};
 		ImGui::PlotConfig m_Config{};
 		std::vector<ImU32> m_Colors{};
 		std::vector<const float*> m_DataList{};

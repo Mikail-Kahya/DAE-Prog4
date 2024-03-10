@@ -2,6 +2,8 @@
 
 #include "imgui.h"
 
+mk::MeasureWidget::MeasureWidget(const std::string& name):GUIWidget(name){}
+
 void mk::MeasureWidget::Render()
 {
 	Exercise1();
@@ -10,7 +12,7 @@ void mk::MeasureWidget::Render()
 
 void mk::MeasureWidget::Exercise1()
 {
-	ImGui::Begin("Exercise 1: Trash the cache", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Begin(("Exercise 1: " + GetName()).c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	RenderInput();
 
 	if (ImGui::Button("Trash the cache with int"))
@@ -24,7 +26,7 @@ void mk::MeasureWidget::Exercise1()
 
 void mk::MeasureWidget::Exercise2()
 {
-	ImGui::Begin("Exercise 2: Trash the cache", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Begin(("Exercise 2: " + GetName()).c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	RenderInput();
 
 	bool reploted{};

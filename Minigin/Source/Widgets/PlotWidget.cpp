@@ -4,8 +4,8 @@
 
 #include "imgui.h"
 
-mk::PlotWidget::PlotWidget(const std::string& graphName, float width, float height)
-	: m_Name{ graphName }
+mk::PlotWidget::PlotWidget(const std::string& widgetName, float width, float height)
+	: GUIWidget(widgetName)
 {
 	m_Config.scale.min = 0;
 	m_Config.frame_size = ImVec2(width, height);
@@ -50,7 +50,7 @@ void mk::PlotWidget::SetXAxis(std::vector<float>&& axis)
 
 void mk::PlotWidget::Plot() const
 {
-	ImGui::Plot(m_Name.c_str(), m_Config);
+	ImGui::Plot(GetName().c_str(), m_Config);
 }
 
 const mk::PlotWidget::Graph& mk::PlotWidget::GetData(int graphIdx)

@@ -18,9 +18,11 @@ namespace mk
 		bool DestroyFlagged() const { return m_Destroy; }
 
 	protected:
-		GUIWidget() = default;
+		GUIWidget(const std::string& widgetName) : m_WidgetName{ widgetName } {}
+		const std::string& GetName() const { return m_WidgetName; }
 
 	private:
+		const std::string m_WidgetName{};
 		bool m_Destroy{};
 	};
 }

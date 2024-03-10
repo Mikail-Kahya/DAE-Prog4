@@ -71,7 +71,8 @@ void load()
 
 	// GUI exercise week 3
 	MeasureWidget* measurer{};
-	measurer = GUI::GetInstance().Add<MeasureWidget>();
+	measurer = GUI::GetInstance().Add<MeasureWidget>("Trash the cache");
+	measurer = GUI::GetInstance().Add<MeasureWidget>("Cache the trash");
 }
 
 int main(int, char*[]) {
