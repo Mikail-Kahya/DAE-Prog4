@@ -35,9 +35,10 @@ namespace mk
 		template<class WidgetType, typename... Args>
 		requires(std::derived_from<WidgetType, GUIWidget>)
 		[[nodiscard]] WidgetType* Add(const Args&... args);
-		void Remove(GUIWidget* widgetPtr);
 
 	private:
+		void FlushBuffer();
+		void DestroyWidgets();
 		void BeginFrame() const;
 		void EndFrame() const;
 

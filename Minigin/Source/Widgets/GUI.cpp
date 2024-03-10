@@ -1,5 +1,7 @@
 #include "GUI.h"
 
+#include <algorithm>
+
 #include "imgui.h"
 #include "SDL_video.h"
 #include "SDL_render.h"
@@ -28,6 +30,20 @@ void mk::GUI::AddSdlEvents(const SDL_Event& event)
 
 void mk::GUI::Update()
 {
+	FlushBuffer();
+	DestroyWidgets();
+}
+
+void mk::GUI::Render() const
+{
+	BeginFrame();
+	for (const auto& widget : m_Widgets)
+		widget->Render();
+	EndFrame();
+}
+
+void mk::GUI::FlushBuffer()
+{
 	if (m_WidgetBuffer.empty())
 		return;
 
@@ -37,12 +53,15 @@ void mk::GUI::Update()
 	m_WidgetBuffer.clear();
 }
 
-void mk::GUI::Render() const
+void mk::GUI::DestroyWidgets()
 {
-	BeginFrame();
-	for (const auto& widget : m_Widgets)
-		widget->Render();
-	EndFrame();
+	// Remove destroy flagged components
+	auto eraseIt = std::stable_partition(m_Widgets.begin(), m_Widgets.end(), [](const std::unique_ptr<GUIWidget>& widget)
+		{
+			return !widget->DestroyFlagged();
+		});
+
+	m_Widgets.erase(eraseIt, m_Widgets.end());
 }
 
 void mk::GUI::BeginFrame() const
@@ -63,24 +82,4 @@ void mk::GUI::Destroy()
 	ImGui_ImplSDLRenderer2_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
-}
-
-void mk::GUI::Remove(GUIWidget* widgetPtr)
-{
-	auto findWidget{ [widgetPtr](const std::unique_ptr<GUIWidget>& widget)
-		{
-			return widget.get() == widgetPtr;
-		}
-	};
-
-	auto foundWidget = std::ranges::find_if(m_Widgets, findWidget);
-
-	if (foundWidget != m_Widgets.end())
-		m_Widgets.erase(foundWidget);
-
-	// In case buffer has not been flushed yet
-	foundWidget = std::ranges::find_if(m_WidgetBuffer, findWidget);
-
-	if (foundWidget != m_Widgets.end())
-		m_Widgets.erase(foundWidget);
 }

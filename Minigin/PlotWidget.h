@@ -22,8 +22,9 @@ namespace mk
 
 		void Render() override{}
 
-		void AddGraph(Graph&& newGraph);
+		void AddGraph(const Graph& newGraph, ImColor color = {});
 		void Plot();
+		const Graph& GetData(int graphIdx);
 
 	private:
 		ImColor GetRandomColor() const;

@@ -4,7 +4,7 @@
 
 void mk::MeasureWidget::Render()
 {
-	ImGui::Begin("Exercise 2: Trash the cache");
+	ImGui::Begin("Exercise 2: Trash the cache", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
 	constexpr int bufferIncrease{ 1'000'000 };
 	ImGui::InputInt("Buffer size", &m_BufferSize, bufferIncrease);
@@ -14,30 +14,50 @@ void mk::MeasureWidget::Render()
 
 	constexpr float plotWidth{ 200.f };
 	constexpr float plotHeight{ 100.f };
+	bool reploted{};
     if (ImGui::Button("Trash the cache with GameObject3D"))
     {
+		if (m_GameObjectPlot)
+			m_GameObjectPlot->Destroy();
+
 		std::vector<float> measures{};
-		Measure<GameObject3DAlt>(measures);
-		if (m_GameObjectPlot == nullptr)
-			m_GameObjectPlot = GUI::GetInstance().Add<PlotWidget>("GameObject3D", plotWidth, plotHeight);
-    	m_GameObjectPlot->AddGraph(std::move(measures));
+		Measure<GameObject3D>(measures);
+    	m_GameObjectPlot = GUI::GetInstance().Add<PlotWidget>("GameObject3D", plotWidth, plotHeight);
+    	m_GameObjectPlot->AddGraph(measures);
+		reploted = true;
     }
 
-	if (m_GameObjectPlot)
+	if (m_GameObjectPlot != nullptr)
 		m_GameObjectPlot->Plot();
         
 
 	if (ImGui::Button("Trash the cache with GameObject3DAlt"))
 	{
+		if (m_AltObjectPlot)
+			m_AltObjectPlot->Destroy();
+
 		std::vector<float> measures{};
 		Measure<GameObject3DAlt>(measures);
-		if (m_AltObjectPlot == nullptr)
-			m_AltObjectPlot = GUI::GetInstance().Add<PlotWidget>("GameObject3DAlt", plotWidth, plotHeight);
-		m_AltObjectPlot->AddGraph(std::move(measures));
+		m_AltObjectPlot = GUI::GetInstance().Add<PlotWidget>("GameObject3DAlt", plotWidth, plotHeight);
+		m_AltObjectPlot->AddGraph(measures);
+		reploted = true;
 	}
 
-	if (m_AltObjectPlot)
+	if (m_AltObjectPlot != nullptr)
 		m_AltObjectPlot->Plot();
+
+	if (m_GameObjectPlot != nullptr && m_AltObjectPlot != nullptr && reploted)
+	{
+		if (m_CombinedObjectPlot)
+			m_CombinedObjectPlot->Destroy();
+
+		m_CombinedObjectPlot = GUI::GetInstance().Add<PlotWidget>("Combined", plotWidth, plotHeight);
+		m_CombinedObjectPlot->AddGraph(m_AltObjectPlot->GetData(0));
+		m_CombinedObjectPlot->AddGraph(m_GameObjectPlot->GetData(0));
+	}
+
+	if (m_CombinedObjectPlot != nullptr)
+		m_CombinedObjectPlot->Plot();
 
 	ImGui::End();
 }

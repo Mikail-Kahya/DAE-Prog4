@@ -20,15 +20,22 @@ mk::PlotWidget::PlotWidget(const std::string& graphName, float width, float heig
 	m_Config.grid_y.show = true;
 }
 
-void mk::PlotWidget::AddGraph(Graph&& newGraph)
+void mk::PlotWidget::AddGraph(const Graph& newGraph, ImColor color)
 {
 	const float maxScale{ *std::ranges::max_element(newGraph) };
 	const int nrValues{ std::max(m_Config.values.count, static_cast<int>(newGraph.size())) };
 
-	m_Colors.push_back(GetRandomColor());
-	m_DataList.push_back(newGraph.data());
+	if (color.Value.x < FLT_EPSILON
+		&& color.Value.y < FLT_EPSILON
+		&& color.Value.z < FLT_EPSILON)
+		color = GetRandomColor();
 
-	m_Graphs.push_back(std::move(newGraph));
+	m_Graphs.push_back(newGraph);
+
+	m_Colors.push_back(color);
+	m_DataList.push_back(m_Graphs.back().data());
+
+	
 
 	m_Config.scale.max = std::max(m_Config.scale.max, maxScale);
 	m_Config.values.count = nrValues;
@@ -40,6 +47,17 @@ void mk::PlotWidget::AddGraph(Graph&& newGraph)
 void mk::PlotWidget::Plot()
 {
 	ImGui::Plot(m_Name.c_str(), m_Config);
+}
+
+const mk::PlotWidget::Graph& mk::PlotWidget::GetData(int graphIdx)
+{
+	if (static_cast<int>(m_Graphs.size() - 1) < graphIdx)
+	{
+		assert(false && "Out of plot range");
+		throw;
+	}
+
+	return m_Graphs[graphIdx];
 }
 
 ImColor mk::PlotWidget::GetRandomColor() const
