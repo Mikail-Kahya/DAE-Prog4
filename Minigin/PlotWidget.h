@@ -12,17 +12,18 @@ namespace mk
 	public:
 		using Graph = std::vector<float>;
 
-		PlotWidget(const std::string& graphName);
+		PlotWidget(const std::string& graphName, float width = 100.f, float height = 100.f);
 		~PlotWidget() override = default;
 
-		PlotWidget(const PlotWidget& other)					= delete;
-		PlotWidget(PlotWidget&& other) noexcept				= delete;
-		PlotWidget& operator=(const PlotWidget& other)		= delete;
+		PlotWidget(const PlotWidget& other)						= delete;
+		PlotWidget(PlotWidget&& other) noexcept					= delete;
+		PlotWidget& operator=(const PlotWidget& other)			= delete;
 		PlotWidget& operator=(PlotWidget&& other)	noexcept	= delete;
 
-		void Render() override;
+		void Render() override{}
 
 		void AddGraph(Graph&& newGraph);
+		void Plot();
 
 	private:
 		ImColor GetRandomColor() const;

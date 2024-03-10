@@ -28,6 +28,7 @@ namespace mk
 
 		void Init(SDL_Window* windowPtr, SDL_Renderer* rendererPtr);
 		void AddSdlEvents(const SDL_Event& event);
+		void Update();
 		void Render() const;
 		void Destroy();
 
@@ -41,16 +42,18 @@ namespace mk
 		void EndFrame() const;
 
 		std::vector<std::unique_ptr<GUIWidget>> m_Widgets{};
+		std::vector<std::unique_ptr<GUIWidget>> m_WidgetBuffer{};
 		ImGuiIO* m_Io{};
 	};
 
-	template <class WidgetType, typename ... Args> requires (std::derived_from<WidgetType, GUIWidget>)
+	template <class WidgetType, typename ... Args>
+	requires (std::derived_from<WidgetType, GUIWidget>)
 	WidgetType* GUI::Add(const Args&... args)
 	{
 		std::unique_ptr<WidgetType> widget{ std::make_unique<WidgetType>(args...) };
 		WidgetType* widgetPtr{ widget.get() };
 
-		m_Widgets.emplace_back(std::move(widget));
+		m_WidgetBuffer.emplace_back(std::move(widget));
 		return widgetPtr;
 	}
 }

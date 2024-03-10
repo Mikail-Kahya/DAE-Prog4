@@ -4,11 +4,11 @@
 
 #include "imgui.h"
 
-mk::PlotWidget::PlotWidget(const std::string& graphName)
+mk::PlotWidget::PlotWidget(const std::string& graphName, float width, float height)
 	: m_Name{ graphName }
 {
 	m_Config.scale.min = 0;
-	m_Config.frame_size = ImVec2(400, 400);
+	m_Config.frame_size = ImVec2(width, height);
 	m_Config.line_thickness = 2.f;
 
 	m_Config.v_lines.show = true;
@@ -18,14 +18,6 @@ mk::PlotWidget::PlotWidget(const std::string& graphName)
 	m_Config.tooltip.format = "x=%.2f, y=%.2f";
 	m_Config.grid_x.show = true;
 	m_Config.grid_y.show = true;
-}
-
-void mk::PlotWidget::Render()
-{
-	ImGui::Begin(m_Name.c_str());
-	
-	ImGui::Plot(m_Name.c_str(), m_Config);
-	ImGui::End();
 }
 
 void mk::PlotWidget::AddGraph(Graph&& newGraph)
@@ -43,6 +35,11 @@ void mk::PlotWidget::AddGraph(Graph&& newGraph)
 	m_Config.values.colors = m_Colors.data();
 	m_Config.values.ys_list = m_DataList.data();
 	m_Config.values.ys_count = static_cast<int>(m_Graphs.size());
+}
+
+void mk::PlotWidget::Plot()
+{
+	ImGui::Plot(m_Name.c_str(), m_Config);
 }
 
 ImColor mk::PlotWidget::GetRandomColor() const

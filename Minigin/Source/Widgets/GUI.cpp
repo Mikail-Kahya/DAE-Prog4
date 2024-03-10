@@ -26,6 +26,17 @@ void mk::GUI::AddSdlEvents(const SDL_Event& event)
 	ImGui_ImplSDL2_ProcessEvent(&event);
 }
 
+void mk::GUI::Update()
+{
+	if (m_WidgetBuffer.empty())
+		return;
+
+	for (std::unique_ptr<GUIWidget>& bufferedWidget : m_WidgetBuffer)
+		m_Widgets.emplace_back(std::move(bufferedWidget));
+
+	m_WidgetBuffer.clear();
+}
+
 void mk::GUI::Render() const
 {
 	BeginFrame();
@@ -56,10 +67,19 @@ void mk::GUI::Destroy()
 
 void mk::GUI::Remove(GUIWidget* widgetPtr)
 {
-	const auto foundWidget = std::ranges::find_if(m_Widgets, [widgetPtr](const std::unique_ptr<GUIWidget>& widget)
-	{
-		return widget.get() == widgetPtr;
-	});
+	auto findWidget{ [widgetPtr](const std::unique_ptr<GUIWidget>& widget)
+		{
+			return widget.get() == widgetPtr;
+		}
+	};
+
+	auto foundWidget = std::ranges::find_if(m_Widgets, findWidget);
+
+	if (foundWidget != m_Widgets.end())
+		m_Widgets.erase(foundWidget);
+
+	// In case buffer has not been flushed yet
+	foundWidget = std::ranges::find_if(m_WidgetBuffer, findWidget);
 
 	if (foundWidget != m_Widgets.end())
 		m_Widgets.erase(foundWidget);

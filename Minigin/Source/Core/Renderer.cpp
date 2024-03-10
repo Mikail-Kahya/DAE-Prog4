@@ -39,6 +39,8 @@ void Renderer::Init(SDL_Window* window)
 
 void Renderer::Update()
 {
+	GUI::GetInstance().Update();
+
 	if (!m_DepthChanged)
 		return;
 

@@ -12,27 +12,32 @@ void mk::MeasureWidget::Render()
 	ImGui::InputInt("Number of samples", &m_NrSamples, 1);
 	m_NrSamples = std::max(0, m_NrSamples);
 
+	constexpr float plotWidth{ 200.f };
+	constexpr float plotHeight{ 100.f };
     if (ImGui::Button("Trash the cache with GameObject3D"))
     {
-		//GUI::GetInstance().Remove(m_GameObjectPlot);
 		std::vector<float> measures{};
 		Measure<GameObject3DAlt>(measures);
 		if (m_GameObjectPlot == nullptr)
-			m_GameObjectPlot = GUI::GetInstance().Add<PlotWidget>("GameObject3D");
+			m_GameObjectPlot = GUI::GetInstance().Add<PlotWidget>("GameObject3D", plotWidth, plotHeight);
     	m_GameObjectPlot->AddGraph(std::move(measures));
     }
+
+	if (m_GameObjectPlot)
+		m_GameObjectPlot->Plot();
         
 
 	if (ImGui::Button("Trash the cache with GameObject3DAlt"))
 	{
-		//GUI::GetInstance().Remove(m_GameObjectPlot);
 		std::vector<float> measures{};
 		Measure<GameObject3DAlt>(measures);
 		if (m_AltObjectPlot == nullptr)
-			m_AltObjectPlot = GUI::GetInstance().Add<PlotWidget>("GameObject3DAlt");
+			m_AltObjectPlot = GUI::GetInstance().Add<PlotWidget>("GameObject3DAlt", plotWidth, plotHeight);
 		m_AltObjectPlot->AddGraph(std::move(measures));
 	}
-		
+
+	if (m_AltObjectPlot)
+		m_AltObjectPlot->Plot();
 
 	ImGui::End();
 }
