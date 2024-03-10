@@ -8,6 +8,8 @@ add_library(imguiLib
     ./imgui_plot.cpp
 )
 
+target_compile_features(imguiLib PUBLIC cxx_std_20)
+
 target_include_directories(imguiLib PRIVATE
   "."
 )

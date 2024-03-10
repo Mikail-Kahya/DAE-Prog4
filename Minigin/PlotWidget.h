@@ -21,9 +21,10 @@ namespace mk
 		PlotWidget& operator=(PlotWidget&& other)	noexcept	= delete;
 
 		void Render() override{}
+		void Plot() const;
 
 		void AddGraph(const Graph& newGraph, ImColor color = {});
-		void Plot();
+		void SetXAxis(std::vector<float>&& axis);
 		const Graph& GetData(int graphIdx);
 
 	private:
@@ -34,5 +35,6 @@ namespace mk
 		ImGui::PlotConfig m_Config{};
 		std::vector<ImU32> m_Colors{};
 		std::vector<const float*> m_DataList{};
+		std::vector<float> m_XAxis{};
 	};
 }

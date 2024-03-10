@@ -22,7 +22,7 @@ mk::PlotWidget::PlotWidget(const std::string& graphName, float width, float heig
 
 void mk::PlotWidget::AddGraph(const Graph& newGraph, ImColor color)
 {
-	const float maxScale{ *std::ranges::max_element(newGraph) };
+	
 	const int nrValues{ std::max(m_Config.values.count, static_cast<int>(newGraph.size())) };
 
 	if (color.Value.x < FLT_EPSILON
@@ -35,16 +35,20 @@ void mk::PlotWidget::AddGraph(const Graph& newGraph, ImColor color)
 	m_Colors.push_back(color);
 	m_DataList.push_back(m_Graphs.back().data());
 
-	
-
-	m_Config.scale.max = std::max(m_Config.scale.max, maxScale);
+	m_Config.scale.max = std::max(m_Config.scale.max, *std::ranges::max_element(newGraph));
 	m_Config.values.count = nrValues;
 	m_Config.values.colors = m_Colors.data();
 	m_Config.values.ys_list = m_DataList.data();
 	m_Config.values.ys_count = static_cast<int>(m_Graphs.size());
 }
 
-void mk::PlotWidget::Plot()
+void mk::PlotWidget::SetXAxis(std::vector<float>&& axis)
+{
+	m_XAxis = std::move(axis);
+	m_Config.values.xs = m_XAxis.data();
+}
+
+void mk::PlotWidget::Plot() const
 {
 	ImGui::Plot(m_Name.c_str(), m_Config);
 }
