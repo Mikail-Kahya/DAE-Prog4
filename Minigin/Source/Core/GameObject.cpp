@@ -2,11 +2,14 @@
 #include <algorithm>
 
 #include "GameObject.h"
+#include "Component.h"
 
 using namespace mk;
 
 GameObject::GameObject(const std::string& name)
 	: m_Name{ name }
+	, m_Components{}
+	, m_ComponentBuffer{}
 {
 }
 

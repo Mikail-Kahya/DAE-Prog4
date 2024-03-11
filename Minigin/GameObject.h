@@ -5,10 +5,11 @@
 #include <vector>
 
 #include "Transform.h"
-#include "Component.h"
 
 namespace mk
 {
+
+	class Component;
 	class Texture2D;
 
 	class GameObject final
@@ -18,10 +19,10 @@ namespace mk
 		~GameObject();
 
 		// TODO fix
-		GameObject(const GameObject& other)				= delete;
-		GameObject(GameObject&& other)					noexcept;
-		GameObject& operator=(const GameObject& other)	= delete;
-		GameObject& operator=(GameObject&& other)		noexcept;
+		GameObject(const GameObject& other)					= delete;
+		GameObject(GameObject&& other) noexcept;
+		GameObject& operator=(const GameObject& other)		= delete;
+		GameObject& operator=(GameObject&& other) noexcept;
 
 		void Update();
 		void FixedUpdate();
@@ -63,8 +64,8 @@ namespace mk
 		// Common state
 		std::string m_Name{};
 		bool m_Destroy{};
-		Transform m_LocalTransform{};
-		Transform m_WorldTransform{};
+		Transform m_LocalTransform;
+		Transform m_WorldTransform;
 		bool m_PositionIsDirty{ false };
 
 		// Ownership
@@ -72,8 +73,8 @@ namespace mk
 		std::vector<GameObject*> m_Children{};
 
 		// Components
-		std::list<std::unique_ptr<Component>> m_Components{};
-		std::list<std::unique_ptr<Component>> m_ComponentBuffer{};
+		std::list<std::unique_ptr<Component>> m_Components;
+		std::list<std::unique_ptr<Component>> m_ComponentBuffer;
 	};
 
 	template <std::derived_from<Component> ComponentType>

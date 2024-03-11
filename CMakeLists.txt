@@ -73,6 +73,9 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 
   "Minigin/MeasureWidget.h"
   "Minigin/Source/Widgets/MeasureWidget.cpp"
+
+  
+  
 )
 
 # enable c++20 features

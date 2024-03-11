@@ -1,5 +1,4 @@
 #pragma once
-#include "SceneManager.h"
 #include "GameObject.h"
 
 namespace mk
@@ -7,6 +6,7 @@ namespace mk
 	class Scene final
 	{
 	public:
+		explicit Scene(const std::string& name);
 		~Scene();
 		Scene(const Scene& other)				= delete;
 		Scene(Scene&& other)					= delete;
@@ -23,9 +23,6 @@ namespace mk
 		void RemoveAll();
 
 	private: 
-		explicit Scene(const std::string& name);
-		friend Scene& SceneManager::CreateScene(const std::string& name);
-
 		void CleanupGameObjects();
 
 		std::string m_Name;

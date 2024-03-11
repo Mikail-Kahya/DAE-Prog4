@@ -4,15 +4,24 @@
 #include <memory>
 #include "Singleton.h"
 #include "TimeManager.h"
-
+#include "Scene.h"
 
 namespace mk
 {
-	class Scene;
+	// Design for future when loading from files
+		// Load scene with file, allow preloading, and hold one current scene 
+
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
-		SceneManager() = default;
+		SceneManager()				= default;
+		~SceneManager() override	= default;
+
+		SceneManager(const SceneManager& other)					= delete;
+		SceneManager(SceneManager&& other) noexcept				= delete;
+		SceneManager& operator=(const SceneManager& other)		= delete;
+		SceneManager& operator=(SceneManager&& other) noexcept	= delete;
+
 		Scene& CreateScene(const std::string& name);
 
 		void FixedUpdate();
@@ -22,12 +31,9 @@ namespace mk
 		TimeManager& GetTimeManager();
 
 	private:
-		std::vector<std::shared_ptr<Scene>> m_scenes;
+		std::vector<std::unique_ptr<Scene>> m_Scenes{};
 		TimeManager m_TimeManager{};
 	};
 
-	inline const TimeManager& Time()
-	{
-		return SceneManager::GetInstance().GetTimeManager();
-	}
+	const TimeManager& Time();
 }
