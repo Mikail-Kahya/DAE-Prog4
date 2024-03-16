@@ -76,8 +76,14 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 
   "Minigin/Controller.h"
 
+  "Minigin/Keyboard.h"
+  "Minigin/Source/Input/Keyboard.cpp"
+
   "Minigin/XController.h"
   "Minigin/Source/Input/XController.cpp"
+
+  "Minigin/InputMapping.h"
+  "Minigin/Source/Input/InputMapping.cpp"
 
   "Minigin/Command.h"
   "Minigin/Source/Input/Command.cpp"

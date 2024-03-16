@@ -2,17 +2,18 @@
 
 namespace mk
 {
-	class X
+	class InputMapping
 	{
 	public:
-		X() = default;
-		~X() = default;
+		InputMapping() = default;
+		~InputMapping() = default;
 
-		X(const X& other)					= delete;
-		X(X&& other) noexcept				= delete;
-		X& operator=(const X& other)		= delete;
-		X& operator=(X&& other)	noexcept	= delete;
+		InputMapping(const InputMapping& other)					= delete;
+		InputMapping(InputMapping&& other) noexcept				= delete;
+		InputMapping& operator=(const InputMapping& other)		= delete;
+		InputMapping& operator=(InputMapping&& other) noexcept	= delete;
 
 	private:
+		
 	};
 }

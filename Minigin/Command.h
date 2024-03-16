@@ -16,7 +16,7 @@ namespace mk
 		virtual void Execute() = 0;
 	};
 
-	class GameActorCommand : public Command
+	/*class GameActorCommand : public Command
 	{
 	public:
 		GameActorCommand() = default;
@@ -26,5 +26,5 @@ namespace mk
 		GameActorCommand(GameActorCommand&& other) noexcept = delete;
 		GameActorCommand& operator=(const GameActorCommand& other) = delete;
 		GameActorCommand& operator=(GameActorCommand&& other)	noexcept = delete;
-	};
+	};*/
 }

@@ -38,7 +38,7 @@ glm::vec2 XController::GetRightStickInput() const noexcept
 	return GetStickInput(m_CurrentState.Gamepad.sThumbRX, m_CurrentState.Gamepad.sThumbRY);
 }
 
-bool XController::ButtonPressed(Input input) const noexcept
+bool XController::ButtonDown(Input input) const noexcept
 {
 	return XHandleInput([this](int input)
 		{
@@ -46,7 +46,7 @@ bool XController::ButtonPressed(Input input) const noexcept
 		}, input);
 }
 
-bool XController::ButtonDown(Input input) const noexcept
+bool XController::ButtonHold(Input input) const noexcept
 {
 	return XHandleInput([this](int input)
 		{
@@ -54,7 +54,7 @@ bool XController::ButtonDown(Input input) const noexcept
 		}, input);
 }
 
-bool XController::ButtonReleased(Input input) const noexcept
+bool XController::ButtonUp(Input input) const noexcept
 {
 	return XHandleInput([this](int xInput)
 		{

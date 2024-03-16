@@ -25,9 +25,9 @@ namespace mk
 
 		glm::vec2 GetLeftStickInput() const noexcept override;
 		glm::vec2 GetRightStickInput() const noexcept override;
-		bool ButtonPressed(Input input) const noexcept override;
 		bool ButtonDown(Input input) const noexcept override;
-		bool ButtonReleased(Input input) const noexcept override;
+		bool ButtonHold(Input input) const noexcept override;
+		bool ButtonUp(Input input) const noexcept override;
 
 	private:
 		glm::vec2 GetStickInput(SHORT xInput, SHORT yInput) const noexcept;

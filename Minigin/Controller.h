@@ -41,23 +41,23 @@ namespace mk
 		virtual glm::vec2 GetDPadInput() const noexcept
 		{
 			glm::vec2 input{};
-			if (ButtonDown(Input::dPadLeft))
+			if (ButtonHold(Input::dPadLeft))
 				--input.x;
 			
-			if (ButtonDown(Input::dPadRight))
+			if (ButtonHold(Input::dPadRight))
 				++input.x;
 			
-			if (ButtonDown(Input::dPadDown))
+			if (ButtonHold(Input::dPadDown))
 				--input.y;
 			
-			if (ButtonDown(Input::dPadUp))
+			if (ButtonHold(Input::dPadUp))
 				++input.y;
 
 			return input;
 		}
 
-		virtual bool ButtonPressed(Input input) const noexcept = 0;
 		virtual bool ButtonDown(Input input) const noexcept = 0;
-		virtual bool ButtonReleased(Input input) const noexcept = 0;
+		virtual bool ButtonHold(Input input) const noexcept = 0;
+		virtual bool ButtonUp(Input input) const noexcept = 0;
 	};
 }
