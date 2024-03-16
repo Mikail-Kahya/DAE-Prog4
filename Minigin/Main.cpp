@@ -67,12 +67,10 @@ void load()
 	orbitCompPtr = tank2->AddComponent<OrbitComponent>(60.f, 4.f);
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 
-
-
 	// GUI exercise week 3
-	MeasureWidget* measurer{};
-	measurer = GUI::GetInstance().Add<MeasureWidget>("Trash the cache");
-	measurer = GUI::GetInstance().Add<MeasureWidget>("Cache the trash");
+	//MeasureWidget* measurer{};
+	//measurer = GUI::GetInstance().Add<MeasureWidget>("Trash the cache");
+	//measurer = GUI::GetInstance().Add<MeasureWidget>("Cache the trash");
 }
 
 int main(int, char*[]) {

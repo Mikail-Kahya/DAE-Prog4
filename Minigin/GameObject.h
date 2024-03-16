@@ -73,8 +73,8 @@ namespace mk
 		std::vector<GameObject*> m_Children{};
 
 		// Components
-		std::list<std::unique_ptr<Component>> m_Components;
-		std::list<std::unique_ptr<Component>> m_ComponentBuffer;
+		std::vector<std::unique_ptr<Component>> m_Components;
+		std::vector<std::unique_ptr<Component>> m_ComponentBuffer;
 	};
 
 	template <std::derived_from<Component> ComponentType>

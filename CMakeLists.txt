@@ -74,9 +74,16 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/MeasureWidget.h"
   "Minigin/Source/Widgets/MeasureWidget.cpp"
 
-  
+  "Minigin/Controller.h"
+
   "Minigin/XController.h"
-  "Minigin/XController.cpp"
+  "Minigin/Source/Input/XController.cpp"
+
+  "Minigin/Command.h"
+  "Minigin/Source/Input/Command.cpp"
+
+  "Minigin/Action.h"
+  "Minigin/Source/Input/Action.cpp"
 )
 
 # enable c++20 features
@@ -169,6 +176,8 @@ if (WIN32)
     endif()
   endif()
 
+  SET(XINPUT_LIB XInput)
+
   # set all include directories
   target_include_directories(${TARGET_NAME} PRIVATE
     ${VLD_INCLUDE_DIR}
@@ -182,6 +191,7 @@ if (WIN32)
     ${SDL2_IMAGE_LIBRARIES} 
     ${SDL2_TTF_LIBRARIES} 
     ${VLD_LIBRARY}
+    ${XINPUT_LIB} 
   )
 
 elseif(NOT EMSCRIPTEN)
