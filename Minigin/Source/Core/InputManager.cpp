@@ -2,6 +2,7 @@
 #include "InputManager.h"
 
 #include "GUI.h"
+#include "XController.h"
 
 bool mk::InputManager::ProcessInput()
 {
@@ -19,6 +20,8 @@ bool mk::InputManager::ProcessInput()
 
 		GUI::GetInstance().AddSdlEvents(e);
 	}
+
+	m_Controller->UpdateInput();
 
 	return true;
 }
