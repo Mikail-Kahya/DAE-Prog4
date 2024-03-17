@@ -1,30 +1,24 @@
 #pragma once
-#include <map>
 #include <memory>
 #include <vector>
 
 #include "Singleton.h"
-
-#include "XController.h"
-#include "Keyboard.h"
+#include "Controller.h"
 
 namespace mk
 {
-	class Action;
-	class Controller;
-	class Command;
-	class Keyboard;
+	//class Controller;
 
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
-		InputManager();
+		InputManager() = default;
 
 		bool ProcessInput();
+		void AddController();
 
 	private:
-		std::unique_ptr<Controller> m_Controller;
-		Keyboard m_Keyboard{};
+		std::vector<std::unique_ptr<Controller>> m_Controllers;
 	};
 
 }

@@ -74,13 +74,17 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/MeasureWidget.h"
   "Minigin/Source/Widgets/MeasureWidget.cpp"
 
+  "Minigin/ControllerInput.h"
+  "Minigin/Source/Input/ControllerInput.cpp" 
+
   "Minigin/Controller.h"
+  "Minigin/Source/Input/Controller.cpp"
 
-  "Minigin/Keyboard.h"
-  "Minigin/Source/Input/Keyboard.cpp"
+  "Minigin/KeyboardInput.h"
+  "Minigin/Source/Input/KeyboardInput.cpp"
 
-  "Minigin/XController.h"
-  "Minigin/Source/Input/XController.cpp"
+  "Minigin/XControllerInput.h"
+  "Minigin/Source/Input/XControllerInput.cpp"
 
   "Minigin/InputMapping.h"
   "Minigin/Source/Input/InputMapping.cpp"
@@ -90,6 +94,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
 
   "Minigin/Action.h"
   "Minigin/Source/Input/Action.cpp"
+ 
+ "Minigin/Input.h"
 )
 
 # enable c++20 features

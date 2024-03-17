@@ -1,11 +1,12 @@
 #include "Action.h"
 
-#include "Keyboard.h"
+#include "ControllerInput.h"
+#include "KeyboardInput.h"
 #include "SDL_keycode.h"
 
 using namespace mk;
 
-void Action::SetControllerInput(Controller::Input button)
+void Action::SetControllerInput(Input button)
 {
 	m_ControllerInput = button;
 }
@@ -20,7 +21,7 @@ void Action::SetType(Type inputType)
 	m_Type = inputType;
 }
 
-bool Action::Triggered(const Controller& controller, const Keyboard& keyboard) const
+bool Action::Triggered(const ControllerInput& controller, const KeyboardInput& keyboard) const
 {
 	switch (m_Type)
 	{

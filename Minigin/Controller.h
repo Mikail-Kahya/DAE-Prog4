@@ -1,63 +1,35 @@
 #pragma once
-#include "glm/vec2.hpp"
+#include <memory>
+#include "ControllerInput.h"
+#include "KeyboardInput.h"
+#include "InputMapping.h"
 
 namespace mk
 {
-	class Controller
+	class Controller final
 	{
 	public:
-		enum class Input : uint8_t
-		{
-			a,
-			b,
-			y,
-			x,
-			dPadLeft,
-			dPadRight,
-			dPadDown,
-			dPadUp,
-			stickLeft,
-			stickRight,
-			triggerLeft,
-			triggerRight,
-			bumperLeft,
-			bumperRight
-		};
+		Controller(int idx);
+		~Controller() = default;
 
-		Controller() = default;
-		virtual ~Controller() = default;
+		Controller(const Controller& other)					= default;
+		Controller(Controller&& other) noexcept				= default;
+		Controller& operator=(const Controller& other)		= default;
+		Controller& operator=(Controller&& other) noexcept	= default;
 
-		Controller(const Controller& other)					= delete;
-		Controller(Controller&& other) noexcept				= delete;
-		Controller& operator=(const Controller& other)		= delete;
-		Controller& operator=(Controller&& other) noexcept	= delete;
+		void PollKeyboard(const SDL_Event& event);
+		void HandleInput();
 
-		virtual void UpdateInput() = 0;
-		// Deadzone is in a range between 0 and 1
-		virtual void SetDeadzone(float deadzone) = 0;
+		int GetIdx() const;
+		InputMapping& GetInputMapping();
 
-		virtual glm::vec2 GetLeftStickInput() const noexcept = 0;
-		virtual glm::vec2 GetRightStickInput() const noexcept = 0;
-		virtual glm::vec2 GetDPadInput() const noexcept
-		{
-			glm::vec2 input{};
-			if (ButtonHold(Input::dPadLeft))
-				--input.x;
-			
-			if (ButtonHold(Input::dPadRight))
-				++input.x;
-			
-			if (ButtonHold(Input::dPadDown))
-				--input.y;
-			
-			if (ButtonHold(Input::dPadUp))
-				++input.y;
+		void SetInputMapping(InputMapping map);
 
-			return input;
-		}
+	private:
+		int m_Idx{};
 
-		virtual bool ButtonDown(Input input) const noexcept = 0;
-		virtual bool ButtonHold(Input input) const noexcept = 0;
-		virtual bool ButtonUp(Input input) const noexcept = 0;
+		KeyboardInput m_Keyboard{};
+		ControllerInput m_Controller{};
+		InputMapping m_InputMapping{};
 	};
 }

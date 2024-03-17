@@ -5,16 +5,16 @@
 
 namespace mk
 {
-	class Keyboard final
+	class KeyboardInput final
 	{
 	public:
-		Keyboard();
-		~Keyboard() = default;
+		KeyboardInput();
+		~KeyboardInput() = default;
 
-		Keyboard(const Keyboard& other)					= default;
-		Keyboard(Keyboard&& other) noexcept				= default;
-		Keyboard& operator=(const Keyboard& other)		= default;
-		Keyboard& operator=(Keyboard&& other) noexcept	= default;
+		KeyboardInput(const KeyboardInput& other)					= default;
+		KeyboardInput(KeyboardInput&& other) noexcept				= default;
+		KeyboardInput& operator=(const KeyboardInput& other)		= default;
+		KeyboardInput& operator=(KeyboardInput&& other) noexcept	= default;
 
 		void Flush();
 		void Update(const SDL_Event& sdlEvent);
