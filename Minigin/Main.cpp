@@ -89,7 +89,7 @@ void load()
 	tank1->SetLocalPosition(200, 200);
 	spriteCompPtr = tank1->AddComponent<RenderComponent>("BlueTank.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
-	moveCompPtr = tank1->AddComponent<MovementComponent>(1000.f, 100.f, 100000.f, 100.f);
+	moveCompPtr = tank1->AddComponent<MovementComponent>(50.f, 10.f, 10.f, 10.f);
 
 	controller = InputManager::GetInstance().AddController();
 	InputMapping mapping{};

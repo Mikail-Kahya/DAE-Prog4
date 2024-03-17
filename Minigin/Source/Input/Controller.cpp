@@ -18,7 +18,7 @@ void Controller::HandleInput()
 	m_Controller.UpdateInput();
 	for (const auto& mapping : m_InputMapping.GetMappings())
 	{
-		if (mapping.first->Triggered(m_Controller, keyboard))
+		if (mapping.first.Triggered(m_Controller, keyboard))
 			mapping.second->Execute();
 	}
 }

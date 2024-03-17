@@ -1,8 +1,6 @@
 #pragma once
 #include "Input.h"
 #include "SDL_scancode.h"
-//#include "KeyboardInput.h"
-//#include "ControllerInput.h"
 
 namespace mk
 {
