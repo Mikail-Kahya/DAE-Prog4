@@ -1,8 +1,8 @@
 #pragma once
-#include <memory>
 #include "ControllerInput.h"
 #include "KeyboardInput.h"
 #include "InputMapping.h"
+#include "SDL_events.h"
 
 namespace mk
 {
@@ -12,9 +12,9 @@ namespace mk
 		Controller(int idx);
 		~Controller() = default;
 
-		Controller(const Controller& other)					= default;
+		Controller(const Controller& other)					= delete;
 		Controller(Controller&& other) noexcept				= default;
-		Controller& operator=(const Controller& other)		= default;
+		Controller& operator=(const Controller& other)		= delete;
 		Controller& operator=(Controller&& other) noexcept	= default;
 
 		void PollKeyboard(const SDL_Event& event);
@@ -23,7 +23,7 @@ namespace mk
 		int GetIdx() const;
 		InputMapping& GetInputMapping();
 
-		void SetInputMapping(InputMapping map);
+		void SetInputMapping(InputMapping&& map);
 
 	private:
 		int m_Idx{};

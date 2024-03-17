@@ -18,3 +18,11 @@ enum class Input : uint8_t
 	bumperLeft,
 	bumperRight
 };
+
+
+enum class ActionType : uint8_t
+{
+	hold,
+	down,
+	up
+};

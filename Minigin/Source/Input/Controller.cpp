@@ -2,6 +2,7 @@
 
 #include "Command.h"
 
+
 using namespace mk;
 
 Controller::Controller(int idx)
@@ -35,7 +36,7 @@ InputMapping& Controller::GetInputMapping()
 	return m_InputMapping;
 }
 
-void Controller::SetInputMapping(InputMapping map)
+void Controller::SetInputMapping(InputMapping&& map)
 {
-	m_InputMapping = map;
+	m_InputMapping = std::move(map);
 }

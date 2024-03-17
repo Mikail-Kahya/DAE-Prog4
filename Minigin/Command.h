@@ -2,6 +2,8 @@
 
 namespace mk
 {
+	class GameObject;
+
 	class Command
 	{
 	public:
@@ -16,15 +18,33 @@ namespace mk
 		virtual void Execute() = 0;
 	};
 
-	/*class GameActorCommand : public Command
+	class GameObjectCommand : public Command
 	{
 	public:
-		GameActorCommand() = default;
-		~GameActorCommand() override = default;
+		GameObjectCommand(GameObject* object) : m_GameObject{ object }{}
+		~GameObjectCommand() override = default;
 
-		GameActorCommand(const GameActorCommand& other) = delete;
-		GameActorCommand(GameActorCommand&& other) noexcept = delete;
-		GameActorCommand& operator=(const GameActorCommand& other) = delete;
-		GameActorCommand& operator=(GameActorCommand&& other)	noexcept = delete;
-	};*/
+		GameObjectCommand(const GameObjectCommand& other)					= delete;
+		GameObjectCommand(GameObjectCommand&& other) noexcept				= delete;
+		GameObjectCommand& operator=(const GameObjectCommand& other)		= delete;
+		GameObjectCommand& operator=(GameObjectCommand&& other) noexcept	= delete;
+
+	protected:
+		GameObject& GetGameObject() const { return *m_GameObject; }
+
+	private:
+		GameObject* m_GameObject{};
+	};
+
+	class EditorCommand : public Command
+	{
+	public:
+		EditorCommand() = default;
+		~EditorCommand() override = default;
+
+		EditorCommand(const EditorCommand& other) = delete;
+		EditorCommand(EditorCommand&& other) noexcept = delete;
+		EditorCommand& operator=(const EditorCommand& other) = delete;
+		EditorCommand& operator=(EditorCommand&& other) noexcept = delete;
+	};
 }

@@ -30,7 +30,8 @@ bool InputManager::ProcessInput()
 	return true;
 }
 
-void InputManager::AddController()
+Controller* InputManager::AddController()
 {
 	m_Controllers.emplace_back(std::make_unique<Controller>(0));
+	return m_Controllers.back().get();
 }

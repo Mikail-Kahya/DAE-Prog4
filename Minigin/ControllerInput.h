@@ -14,9 +14,9 @@ namespace mk
 		ControllerInput();
 		~ControllerInput() = default;
 
-		ControllerInput(const ControllerInput& other)					= default;
+		ControllerInput(const ControllerInput& other)					= delete;
 		ControllerInput(ControllerInput&& other) noexcept				= default;
-		ControllerInput& operator=(const ControllerInput& other)		= default;
+		ControllerInput& operator=(const ControllerInput& other)		= delete;
 		ControllerInput& operator=(ControllerInput&& other) noexcept	= default;
 
 		void UpdateInput();

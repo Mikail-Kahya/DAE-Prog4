@@ -1,23 +1,17 @@
 #pragma once
 #include "Input.h"
 #include "SDL_scancode.h"
+//#include "KeyboardInput.h"
+//#include "ControllerInput.h"
 
 namespace mk
 {
 	class KeyboardInput;
 	class ControllerInput;
-	class Command;
 
 	class Action final
 	{
 	public:
-		enum class Type : uint8_t
-		{
-			hold,
-			down,
-			up
-		};
-
 		Action() = default;
 		~Action() = default;
 
@@ -28,12 +22,12 @@ namespace mk
 
 		void SetControllerInput(Input button);
 		void SetKeyboardInput(SDL_Scancode button);
-		void SetType(Type inputType);
+		void SetType(ActionType inputType);
 		bool Triggered(const ControllerInput& controller, const KeyboardInput& keyboard) const;
 
 	private:
 		Input m_ControllerInput{};
 		SDL_Scancode m_KeyboardInput{};
-		Type m_Type{};
+		ActionType m_Type{};
 	};
 }

@@ -16,7 +16,7 @@ void Action::SetKeyboardInput(SDL_Scancode button)
 	m_KeyboardInput = button;
 }
 
-void Action::SetType(Type inputType)
+void Action::SetType(ActionType inputType)
 {
 	m_Type = inputType;
 }
@@ -25,11 +25,11 @@ bool Action::Triggered(const ControllerInput& controller, const KeyboardInput& k
 {
 	switch (m_Type)
 	{
-	case Type::down:
+	case ActionType::down:
 		return keyboard.ButtonDown(m_KeyboardInput) || controller.ButtonDown(m_ControllerInput);
-	case Type::hold:
+	case ActionType::hold:
 		return keyboard.ButtonHold(m_KeyboardInput) || controller.ButtonHold(m_ControllerInput);
-	case Type::up:
+	case ActionType::up:
 		return keyboard.ButtonUp(m_KeyboardInput) || controller.ButtonUp(m_ControllerInput);
 	}
 	return false;

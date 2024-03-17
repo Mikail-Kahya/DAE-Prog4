@@ -90,13 +90,13 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Input/InputMapping.cpp"
 
   "Minigin/Command.h"
-  "Minigin/Source/Input/Command.cpp"
+  "Minigin/Source/Input/PlayerCommand.cpp"
 
   "Minigin/Action.h"
   "Minigin/Source/Input/Action.cpp"
  
  "Minigin/Input.h"
-)
+ "Minigin/PlayerCommand.h")
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)

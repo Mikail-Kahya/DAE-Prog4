@@ -20,10 +20,12 @@
 #include "GameObject.h"
 #include "FPSComponent.h"
 #include "GUI.h"
+#include "InputManager.h"
 #include "MeasureWidget.h"
 #include "TextComponent.h"
 #include "RenderComponent.h"
 #include "OrbitComponent.h"
+#include "PlayerCommand.h"
 
 namespace fs = std::filesystem;
 using namespace mk;
@@ -32,8 +34,8 @@ void load()
 {
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 
+	Controller* controller{};
 	RenderComponent* spriteCompPtr{};
-	OrbitComponent* orbitCompPtr{};
 
 	GameObject* bg = scene.SpawnObject("bg");
 	spriteCompPtr = bg->AddComponent<RenderComponent>("background.tga");
@@ -55,17 +57,28 @@ void load()
 	GameObject* tankWrapper = scene.SpawnObject("tankWrapper");
 	tankWrapper->SetLocalPosition(200, 200);
 
-	GameObject* tank1 = scene.SpawnObject("T1");
+	GameObject* tank1 = scene.SpawnObject("Player1");
 	tank1->SetParent(tankWrapper);
 	spriteCompPtr = tank1->AddComponent<RenderComponent>("BlueTank.png");
-	orbitCompPtr = tank1->AddComponent<OrbitComponent>(50.f, 4.f);
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 
-	GameObject* tank2 = scene.SpawnObject("T2");
-	tank2->SetParent(tank1);
-	spriteCompPtr = tank2->AddComponent<RenderComponent>("BlueTank.png");
-	orbitCompPtr = tank2->AddComponent<OrbitComponent>(60.f, 4.f);
-	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
+	// controls
+	controller = InputManager::GetInstance().AddController();
+
+	Action up{};
+	up.SetControllerInput(Input::dPadUp);
+	up.SetKeyboardInput(SDL_SCANCODE_W);
+	up.SetType(ActionType::hold);
+
+	InputMapping mapping{};
+	mapping.AddInput<MoveUpCommand>(up, tankWrapper);
+
+	controller->SetInputMapping(std::move(mapping));
+
+	//GameObject* tank2 = scene.SpawnObject("T2");
+	//tank2->SetParent(tank1);
+	//spriteCompPtr = tank2->AddComponent<RenderComponent>("BlueTank.png");
+	//spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 
 	// GUI exercise week 3
 	//MeasureWidget* measurer{};

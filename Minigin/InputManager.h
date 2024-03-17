@@ -15,7 +15,7 @@ namespace mk
 		InputManager() = default;
 
 		bool ProcessInput();
-		void AddController();
+		Controller* AddController();
 
 	private:
 		std::vector<std::unique_ptr<Controller>> m_Controllers;
