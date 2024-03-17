@@ -4,7 +4,8 @@
 
 using namespace mk;
 
-XControllerInput::XControllerInput()
+XControllerInput::XControllerInput(uint8_t idx)
+	: m_ControllerIdx(idx)
 {
 	constexpr float defaultDeadZone{ 0.05f };
 	SetDeadzone(defaultDeadZone);
@@ -42,7 +43,7 @@ bool XControllerInput::ButtonDown(Input input) const noexcept
 {
 	return XHandleInput([this](int input)
 		{
-			return XButtonPressed(input);
+			return XButtonDown(input);
 		}, input);
 }
 
@@ -50,7 +51,7 @@ bool XControllerInput::ButtonHold(Input input) const noexcept
 {
 	return XHandleInput([this](int input)
 		{
-			return XButtonDown(input);
+			return XButtonHold(input);
 		}, input);
 }
 
@@ -58,7 +59,7 @@ bool XControllerInput::ButtonUp(Input input) const noexcept
 {
 	return XHandleInput([this](int xInput)
 		{
-			return XButtonReleased(xInput);
+			return XButtonUp(xInput);
 		}, input);
 }
 
@@ -102,18 +103,18 @@ bool XControllerInput::XHandleInput(const std::function<bool(int)>& press, Input
 	return false;
 }
 
-bool XControllerInput::XButtonPressed(int input) const noexcept
+bool XControllerInput::XButtonDown(int input) const noexcept
 {
 	return !(m_PreviousState.Gamepad.wButtons & input) *
 			(m_CurrentState.Gamepad.wButtons & input);
 }
 
-bool XControllerInput::XButtonDown(int input) const noexcept
+bool XControllerInput::XButtonHold(int input) const noexcept
 {
 	return m_CurrentState.Gamepad.wButtons & input;
 }
  
-bool XControllerInput::XButtonReleased(int input) const noexcept
+bool XControllerInput::XButtonUp(int input) const noexcept
 {
 	return	 (m_PreviousState.Gamepad.wButtons & input) *
 			!(m_CurrentState.Gamepad.wButtons & input);

@@ -26,15 +26,26 @@ int GetOpenGLDriverIndex()
 	return openglIndex;
 }
 
-void Renderer::Init(SDL_Window* window)
+void Renderer::Init(int width, int height)
 {
-	m_Window = window;
-	m_Renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	m_Window = SDL_CreateWindow(
+		"Programming 4 assignment",
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		width,
+		height,
+		SDL_WINDOW_OPENGL
+	);
+	m_Width = width;
+	m_Height = height;
+
+	if (m_Window == nullptr)
+		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
+
+	m_Renderer = SDL_CreateRenderer(m_Window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (m_Renderer == nullptr) 
-	{
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
-	}
-	GUI::GetInstance().Init(window, GetSDLRenderer());
+	GUI::GetInstance().Init(m_Window, GetSDLRenderer());
 }
 
 void Renderer::Update()
@@ -80,24 +91,19 @@ void Renderer::Destroy()
 		SDL_DestroyRenderer(m_Renderer);
 		m_Renderer = nullptr;
 	}
+	if (m_Window != nullptr)
+	{
+		SDL_DestroyWindow(m_Window);
+		m_Window = nullptr;
+	}
 }
 
 void Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
-	dst.y = static_cast<int>(y);
+	dst.y = m_Height - static_cast<int>(y) - texture.GetSize().y;
 	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
-}
-
-void Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
-{
-	SDL_Rect dst{};
-	dst.x = static_cast<int>(x);
-	dst.y = static_cast<int>(y);
-	dst.w = static_cast<int>(width);
-	dst.h = static_cast<int>(height);
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
@@ -110,6 +116,16 @@ float Renderer::GetNextDepth()
 }
 
 SDL_Renderer* Renderer::GetSDLRenderer() const { return m_Renderer; }
+
+int Renderer::GetHeight() const noexcept
+{
+	return m_Height;
+}
+
+int Renderer::GetWidth() const noexcept
+{
+	return m_Width;
+}
 
 void Renderer::RegisterRenderComponent(RenderComponent* renderComponentPtr)
 {

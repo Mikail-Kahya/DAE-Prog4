@@ -4,6 +4,7 @@
 #include "Controller.h"
 #include "DebugUtils.h"
 #include "GUI.h"
+#include "KeyboardInput.h"
 
 
 using namespace mk;
@@ -11,11 +12,11 @@ using namespace mk;
 bool InputManager::ProcessInput()
 {
 	SDL_Event e;
+	KeyboardInput& keyboard{ KeyboardInput::GetInstance() };
 
 	while (SDL_PollEvent(&e)) 
 	{
-		for (const auto& controller : m_Controllers)
-			controller->PollKeyboard(e);
+		keyboard.Update(e);
 
 		if (GUI::GetInstance().ProcessSDLEvents(e))
 			return true;
@@ -27,11 +28,14 @@ bool InputManager::ProcessInput()
 	for (const auto& controller : m_Controllers)
 		controller->HandleInput();
 
+	keyboard.Flush();
+
 	return true;
 }
 
 Controller* InputManager::AddController()
 {
-	m_Controllers.emplace_back(std::make_unique<Controller>(0));
+	m_Controllers.emplace_back(std::make_unique<Controller>(m_Idx));
+	++m_Idx;
 	return m_Controllers.back().get();
 }

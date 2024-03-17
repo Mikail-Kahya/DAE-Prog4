@@ -13,7 +13,7 @@ namespace mk
 	class XControllerInput final
 	{
 	public:
-		XControllerInput();
+		XControllerInput(uint8_t idx);
 		~XControllerInput();
 
 		XControllerInput(const XControllerInput& other)					= delete;
@@ -35,15 +35,15 @@ namespace mk
 		glm::vec2 GetStickInput(SHORT xInput, SHORT yInput) const noexcept;
 
 		bool XHandleInput(const std::function<bool(int)>& func, Input input) const noexcept;
-		bool XButtonPressed(int input) const noexcept;
 		bool XButtonDown(int input) const noexcept;
-		bool XButtonReleased(int input) const noexcept;
+		bool XButtonHold(int input) const noexcept;
+		bool XButtonUp(int input) const noexcept;
 
 		static constexpr int MAX_STICK_INPUT { 32767 };
 		float m_Deadzone{};
 
 		XINPUT_STATE m_PreviousState{};
 		XINPUT_STATE m_CurrentState{};
-		int m_ControllerIdx{};
+		uint8_t m_ControllerIdx{};
 	};
 }

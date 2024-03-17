@@ -17,8 +17,6 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 
-SDL_Window* g_window{};
-
 void LogSDLVersion(const std::string& message, const SDL_version& v)
 {
 #if WIN32
@@ -69,39 +67,21 @@ mk::Minigin::Minigin(const std::filesystem::path &dataPath)
 	PrintSDLVersion();
 	
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
-	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
-	}
 
-	g_window = SDL_CreateWindow(
-		"Programming 4 assignment",
-		SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED,
-		640,
-		480,
-		SDL_WINDOW_OPENGL
-	);
-	if (g_window == nullptr) 
-	{
-		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
-	}
-
-	Renderer::GetInstance().Init(g_window);
+	Renderer::GetInstance().Init(640, 480);
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
 mk::Minigin::~Minigin()
 {
 	Renderer::GetInstance().Destroy();
-	SDL_DestroyWindow(g_window);
-	g_window = nullptr;
 	SDL_Quit();
 }
 
 void mk::Minigin::Run(const std::function<void()>& load)
 {
 	load();
-
 	using namespace std::chrono;
 	m_LastTime = high_resolution_clock::now();
 	SceneManager::GetInstance().GetTimeManager().fixedDeltaTime = FIXED_TIME_STEP;
@@ -146,6 +126,5 @@ void mk::Minigin::RunOneFrame()
 	constexpr milliseconds msPerFrame{ static_cast<long long>(1.f / FPS * 1000.f) };
 	const auto sleepTime{ currentTime + msPerFrame - high_resolution_clock::now()};
 
-#undef max
 	std::this_thread::sleep_for(sleepTime);
 }

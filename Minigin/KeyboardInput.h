@@ -2,19 +2,20 @@
 #include <vector>
 
 #include "SDL_events.h"
+#include "Singleton.h"
 
 namespace mk
 {
-	class KeyboardInput final
+	class KeyboardInput final : public Singleton<KeyboardInput>
 	{
 	public:
 		KeyboardInput();
-		~KeyboardInput() = default;
+		~KeyboardInput() override = default;
 
-		KeyboardInput(const KeyboardInput& other)					= default;
-		KeyboardInput(KeyboardInput&& other) noexcept				= default;
-		KeyboardInput& operator=(const KeyboardInput& other)		= default;
-		KeyboardInput& operator=(KeyboardInput&& other) noexcept	= default;
+		KeyboardInput(const KeyboardInput& other)					= delete;
+		KeyboardInput(KeyboardInput&& other) noexcept				= delete;
+		KeyboardInput& operator=(const KeyboardInput& other)		= delete;
+		KeyboardInput& operator=(KeyboardInput&& other) noexcept	= delete;
 
 		void Flush();
 		void Update(const SDL_Event& sdlEvent);

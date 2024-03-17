@@ -1,32 +1,29 @@
 #include "Controller.h"
 
 #include "Command.h"
-
+#include "KeyboardInput.h"
 
 using namespace mk;
 
-Controller::Controller(int idx)
+Controller::Controller(uint8_t idx)
 	: m_Idx{ idx }
+	, m_Controller{ idx }
 {
-}
-
-void Controller::PollKeyboard(const SDL_Event& event)
-{
-	m_Keyboard.Update(event);
 }
 
 void Controller::HandleInput()
 {
+	const KeyboardInput& keyboard{ KeyboardInput::GetInstance() };
+
+	m_Controller.UpdateInput();
 	for (const auto& mapping : m_InputMapping.GetMappings())
 	{
-		if (mapping.second.Triggered(m_Controller, m_Keyboard))
-			mapping.first->Execute();
+		if (mapping.first->Triggered(m_Controller, keyboard))
+			mapping.second->Execute();
 	}
-
-	m_Keyboard.Flush();
 }
 
-int Controller::GetIdx() const
+uint8_t Controller::GetIdx() const
 {
 	return m_Idx;
 }

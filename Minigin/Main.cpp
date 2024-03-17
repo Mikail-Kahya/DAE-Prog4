@@ -25,7 +25,9 @@
 #include "TextComponent.h"
 #include "RenderComponent.h"
 #include "OrbitComponent.h"
+#include "MovementComponent.h"
 #include "PlayerCommand.h"
+#include "Renderer.h"
 
 namespace fs = std::filesystem;
 using namespace mk;
@@ -33,57 +35,82 @@ using namespace mk;
 void load()
 {
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
+	const Renderer& renderer{ Renderer::GetInstance() };
+	const int screenWidth{ renderer.GetWidth() };
+	const int screenHeight{ renderer.GetHeight() };
 
 	Controller* controller{};
 	RenderComponent* spriteCompPtr{};
+	MovementComponent* moveCompPtr{};
 
 	GameObject* bg = scene.SpawnObject("bg");
 	spriteCompPtr = bg->AddComponent<RenderComponent>("background.tga");
 	
 	GameObject* logo = scene.SpawnObject("logo");
-	logo->SetLocalPosition(200, 100);
+	logo->SetLocalPosition(screenWidth * 0.5f, screenHeight * 0.5f);
 	spriteCompPtr = logo->AddComponent<RenderComponent>("logo.tga");
+	spriteCompPtr->SetAnchor({ 0.5f, 0.5f });
 	
 	GameObject* text = scene.SpawnObject("text");
-	text->SetLocalPosition(80, 30);
 	auto testTextComponent = text->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
 	testTextComponent->SetText("Programming 4 assignment");
+	testTextComponent->SetAnchor({ 0.5f, 0.5f });
+	text->SetLocalPosition(screenWidth * 0.5f, screenHeight * 0.9f);
+
 
 	GameObject* fps = scene.SpawnObject("fps");
-	fps->SetLocalPosition(10, 10);
+	fps->SetLocalPosition(0, screenHeight * 0.95f);
 	auto fpsComponent = fps->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
 
-	GameObject* tankWrapper = scene.SpawnObject("tankWrapper");
-	tankWrapper->SetLocalPosition(200, 200);
-
-	GameObject* tank1 = scene.SpawnObject("Player1");
-	tank1->SetParent(tankWrapper);
-	spriteCompPtr = tank1->AddComponent<RenderComponent>("BlueTank.png");
-	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
-
 	// controls
-	controller = InputManager::GetInstance().AddController();
-
 	Action up{};
 	up.SetControllerInput(Input::dPadUp);
 	up.SetKeyboardInput(SDL_SCANCODE_W);
 	up.SetType(ActionType::hold);
 
-	InputMapping mapping{};
-	mapping.AddInput<MoveUpCommand>(up, tankWrapper);
+	Action down{};
+	down.SetControllerInput(Input::dPadDown);
+	down.SetKeyboardInput(SDL_SCANCODE_S);
+	down.SetType(ActionType::hold);
+	
+	Action left{};
+	left.SetControllerInput(Input::dPadLeft);
+	left.SetKeyboardInput(SDL_SCANCODE_A);
+	left.SetType(ActionType::hold);
+	
+	Action right{};
+	right.SetControllerInput(Input::dPadRight);
+	right.SetKeyboardInput(SDL_SCANCODE_D);
+	right.SetType(ActionType::hold);
 
+	// Player 1
+	GameObject* tank1 = scene.SpawnObject("Player1");
+	tank1->SetLocalPosition(200, 200);
+	spriteCompPtr = tank1->AddComponent<RenderComponent>("BlueTank.png");
+	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
+	moveCompPtr = tank1->AddComponent<MovementComponent>(1000.f, 100.f, 100000.f, 100.f);
+
+	controller = InputManager::GetInstance().AddController();
+	InputMapping mapping{};
+	mapping.AddMapping<MoveCommand>(up, tank1, glm::vec2{ 0, 1 });
+	mapping.AddMapping<MoveCommand>(down, tank1, glm::vec2{ 0, -1 });
+	mapping.AddMapping<MoveCommand>(left, tank1, glm::vec2{ -1, 0 });
+	mapping.AddMapping<MoveCommand>(right, tank1, glm::vec2{ 1, 0 });
 	controller->SetInputMapping(std::move(mapping));
 
-	//GameObject* tank2 = scene.SpawnObject("T2");
-	//tank2->SetParent(tank1);
-	//spriteCompPtr = tank2->AddComponent<RenderComponent>("BlueTank.png");
-	//spriteCompPtr->SetAnchor({ 0.5f,0.5f });
+	// Player 2
+	GameObject* tank2 = scene.SpawnObject("Player2");
+	tank2->SetLocalPosition(200, 100);
+	spriteCompPtr = tank2->AddComponent<RenderComponent>("BlueTank.png");
+	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 
-	// GUI exercise week 3
-	//MeasureWidget* measurer{};
-	//measurer = GUI::GetInstance().Add<MeasureWidget>("Trash the cache");
-	//measurer = GUI::GetInstance().Add<MeasureWidget>("Cache the trash");
+	controller = InputManager::GetInstance().AddController();
+	mapping.AddMapping<MoveCommand>(up, tank2, glm::vec2{ 0, 1 });
+	mapping.AddMapping<MoveCommand>(down, tank2, glm::vec2{ 0, -1 });
+	mapping.AddMapping<MoveCommand>(left, tank2, glm::vec2{ -1, 0 });
+	mapping.AddMapping<MoveCommand>(right, tank2, glm::vec2{ 1, 0 });
+	controller->SetInputMapping(std::move(mapping));
 }
 
 int main(int, char*[]) {

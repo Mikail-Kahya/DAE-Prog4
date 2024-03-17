@@ -15,13 +15,15 @@ namespace mk
 	class Renderer final : public Singleton<Renderer>
 	{
 	public:
-		void Init(SDL_Window* window);
+		void Init(int width, int height);
 		void Update();
 		void Render() const;
 		void Destroy();
 
 		float GetNextDepth();
 		SDL_Renderer* GetSDLRenderer() const;
+		int GetHeight() const noexcept;
+		int GetWidth() const noexcept;
 
 		const SDL_Color& GetBackgroundColor() const { return m_ClearColor; }
 		void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
@@ -32,7 +34,6 @@ namespace mk
 
 	private:
 		void RenderTexture(const Texture2D& texture, float x, float y) const;
-		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
 
 		// Sorts by float. Whenever the float changes
 		std::list<RenderComponent*> m_Renderers{};
@@ -43,6 +44,8 @@ namespace mk
 
 		float m_AutoDepth{};
 		bool m_DepthChanged{ false };
+		int m_Width{};
+		int m_Height{};
 	};
 }
 

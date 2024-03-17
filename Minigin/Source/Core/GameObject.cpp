@@ -152,14 +152,9 @@ void GameObject::SetLocalPosition(const glm::vec3& position)
 	FlagPositionDirty();
 }
 
-void GameObject::AddLocalOffset(float x, float y, float z)
+void GameObject::AddLocalOffset(const glm::vec2& offset)
 {
-	AddLocalOffset({ x, y, z });
-}
-
-void GameObject::AddLocalOffset(const glm::vec3& offset)
-{
-	m_LocalTransform.AddOffset(offset);
+	m_LocalTransform.AddOffset({ offset.x, offset.y, 0 });
 	FlagPositionDirty();
 }
 

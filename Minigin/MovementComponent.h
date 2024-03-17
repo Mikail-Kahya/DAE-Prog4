@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "glm/vec3.hpp"
+#include "glm/vec2.hpp"
 
 namespace mk
 {
@@ -17,8 +17,9 @@ namespace mk
 
 		void FixedUpdate() override;
 
-		void SetDirection(const glm::vec3& direction);
+		void SetDirection(const glm::vec2& direction);
 
+		const glm::vec2& GetDirection() const;
 		float GetSpeed() const;
 		float GetSpeedSqr() const;
 
@@ -34,7 +35,7 @@ namespace mk
 		float m_AngularVelocity{};
 		float m_Acceleration{};
 		float m_Deceleration{};
-		glm::vec3 m_Velocity{};
-		glm::vec3 m_DesiredDirection{};
+		glm::vec2 m_Velocity{};
+		glm::vec2 m_DesiredDirection{};
 	};
 }

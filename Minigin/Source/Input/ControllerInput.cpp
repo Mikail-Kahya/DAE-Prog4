@@ -1,8 +1,14 @@
 #include "ControllerInput.h"
+#include "XControllerInput.h"
 
-mk::ControllerInput::ControllerInput()
-	: m_XInputImpl{ std::make_unique<XControllerInput>() }
+mk::ControllerInput::ControllerInput(uint8_t idx)
+	: m_XInputImpl{new XControllerInput(idx) }
 {
+}
+
+mk::ControllerInput::~ControllerInput()
+{
+	delete m_XInputImpl;
 }
 
 void mk::ControllerInput::UpdateInput()

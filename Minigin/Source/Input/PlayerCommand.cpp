@@ -1,11 +1,19 @@
 #include "PlayerCommand.h"
 
 #include "GameObject.h"
+#include "MovementComponent.h"
 
-mk::MoveUpCommand::MoveUpCommand(GameObject* gameObject)
-	: GameObjectCommand(gameObject) {}
+using namespace mk;
 
-void mk::MoveUpCommand::Execute()
+MoveCommand::MoveCommand(GameObject* gameObject, const glm::vec2& direction)
+	: GameObjectCommand(gameObject)
+	, m_Direction{ direction }
 {
-	GetGameObject().AddLocalOffset(10.f, 0, 0);
+	m_MoveComp = gameObject->AddComponent<MovementComponent>();
+}
+
+void MoveCommand::Execute()
+{
+	const glm::vec2 newDirection{ m_MoveComp->GetDirection() + m_Direction };
+	m_MoveComp->SetDirection(glm::normalize(newDirection));
 }

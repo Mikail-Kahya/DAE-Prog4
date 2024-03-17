@@ -19,7 +19,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/Font.h
   "Minigin/Source/Core/GameObject.cpp"
   Minigin/GameObject.h
-  "Minigin/Source/Core/InputManager.cpp"
+  "Minigin/Source/Input/InputManager.cpp"
   Minigin/InputManager.h
   Minigin/Main.cpp
   "Minigin/Source/Core/Minigin.cpp"
@@ -87,7 +87,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Input/XControllerInput.cpp"
 
   "Minigin/InputMapping.h"
-  "Minigin/Source/Input/InputMapping.cpp"
+  
 
   "Minigin/Command.h"
   "Minigin/Source/Input/PlayerCommand.cpp"
@@ -96,7 +96,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Input/Action.cpp"
  
  "Minigin/Input.h"
- "Minigin/PlayerCommand.h")
+ "Minigin/PlayerCommand.h"
+)
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)

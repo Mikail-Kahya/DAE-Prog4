@@ -18,6 +18,7 @@ namespace mk
 		Controller* AddController();
 
 	private:
+		uint8_t m_Idx{};
 		std::vector<std::unique_ptr<Controller>> m_Controllers;
 	};
 

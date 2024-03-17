@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <unordered_map>
+#include <map>
 
 #include "Action.h"
 #include "Command.h"
@@ -13,8 +13,8 @@ namespace mk
 	class InputMapping final
 	{
 	public:
-		using Mapping = std::pair<std::unique_ptr<Command>, Action>;
-		using Mappings = std::unordered_map <std::unique_ptr<Command>, Action>;
+		//using Mapping = std::pair<std::unique_ptr<Command>, Action>;
+		using Mappings = std::map<std::unique_ptr<Action>, std::unique_ptr<Command>>;
 
 		InputMapping() = default;
 		~InputMapping() = default;
@@ -25,17 +25,14 @@ namespace mk
 		InputMapping& operator=(InputMapping&& other) noexcept	= default;
 
 		template<std::derived_from<Command> CommandType, typename... Args>
-		void AddInput(const Action& action, const Args&...);
+		void AddMapping(const Action& action, const Args&... args)
+		{
+			m_Mappings.emplace(std::make_unique<Action>(action), std::make_unique<CommandType>(args...));
+		}
 
-		const Mappings& GetMappings() const;
+		const Mappings& GetMappings() const { return m_Mappings; }
 
 	private:
 		Mappings m_Mappings{};
 	};
-
-	template <std::derived_from<Command>  CommandType, typename ... Args>
-	void InputMapping::AddInput(const Action& action, const Args&... args)
-	{
-		m_Mappings.insert({ std::make_unique<CommandType>(args...), action });
-	}
 }
