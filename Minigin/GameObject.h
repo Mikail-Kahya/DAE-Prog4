@@ -84,10 +84,18 @@ namespace mk
 				return dynamic_cast<ComponentType*>(component.get());
 			});
 
-		if (componentIt == m_Components.end())
-			return nullptr;
+		if (componentIt != m_Components.end())
+			return dynamic_cast<ComponentType*>(componentIt->get());
 
-		return dynamic_cast<ComponentType*>(componentIt->get());
+		componentIt = std::ranges::find_if(m_ComponentBuffer, [](const std::unique_ptr<Component>& component)
+			{
+				return dynamic_cast<ComponentType*>(component.get());
+			});
+
+		if (componentIt != m_ComponentBuffer.end())
+			return dynamic_cast<ComponentType*>(componentIt->get());
+
+		return nullptr;
 	}
 
 	template <std::derived_from<Component> ComponentType, typename... Args>
