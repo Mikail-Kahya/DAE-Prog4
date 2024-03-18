@@ -17,6 +17,7 @@ namespace mk
 
 		void FixedUpdate() override;
 
+		// Normalizes in this function
 		void SetDirection(const glm::vec2& direction);
 
 		const glm::vec2& GetDirection() const;

@@ -36,6 +36,7 @@ void load()
 {
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 	const Renderer& renderer{ Renderer::GetInstance() };
+	InputManager& inputManager{ InputManager::GetInstance() };
 	const int screenWidth{ renderer.GetWidth() };
 	const int screenHeight{ renderer.GetHeight() };
 
@@ -89,9 +90,9 @@ void load()
 	tank1->SetLocalPosition(200, 200);
 	spriteCompPtr = tank1->AddComponent<RenderComponent>("BlueTank.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
-	moveCompPtr = tank1->AddComponent<MovementComponent>(50.f, 10.f, 10.f, 10.f);
+	moveCompPtr = tank1->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
 
-	controller = InputManager::GetInstance().AddController();
+	controller = inputManager.AddController();
 	InputMapping mapping{};
 	mapping.AddMapping<MoveCommand>(up, tank1, glm::vec2{ 0, 1 });
 	mapping.AddMapping<MoveCommand>(down, tank1, glm::vec2{ 0, -1 });
@@ -105,7 +106,7 @@ void load()
 	spriteCompPtr = tank2->AddComponent<RenderComponent>("BlueTank.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 
-	controller = InputManager::GetInstance().AddController();
+	controller = inputManager.AddController();
 	mapping.AddMapping<MoveCommand>(up, tank2, glm::vec2{ 0, 1 });
 	mapping.AddMapping<MoveCommand>(down, tank2, glm::vec2{ 0, -1 });
 	mapping.AddMapping<MoveCommand>(left, tank2, glm::vec2{ -1, 0 });

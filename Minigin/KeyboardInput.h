@@ -6,11 +6,11 @@
 
 namespace mk
 {
-	class KeyboardInput final : public Singleton<KeyboardInput>
+	class KeyboardInput final
 	{
 	public:
 		KeyboardInput();
-		~KeyboardInput() override = default;
+		~KeyboardInput() = default;
 
 		KeyboardInput(const KeyboardInput& other)					= delete;
 		KeyboardInput(KeyboardInput&& other) noexcept				= delete;

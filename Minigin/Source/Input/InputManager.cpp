@@ -12,14 +12,14 @@ using namespace mk;
 bool InputManager::ProcessInput()
 {
 	SDL_Event e;
-	KeyboardInput& keyboard{ KeyboardInput::GetInstance() };
 
 	while (SDL_PollEvent(&e)) 
 	{
-		keyboard.Update(e);
+		GUI::GetInstance().ProcessSDLEvents(e);
+		//if (GUI::GetInstance().ProcessSDLEvents(e))
+		//	return true;
 
-		if (GUI::GetInstance().ProcessSDLEvents(e))
-			return true;
+		Controller::PollKeyboard(e);
 
 		if (e.type == SDL_QUIT)
 			return false;
@@ -28,7 +28,7 @@ bool InputManager::ProcessInput()
 	for (const auto& controller : m_Controllers)
 		controller->HandleInput();
 
-	keyboard.Flush();
+	Controller::FlushKeyboard();
 
 	return true;
 }

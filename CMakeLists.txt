@@ -20,7 +20,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Core/GameObject.cpp"
   Minigin/GameObject.h
   "Minigin/Source/Input/InputManager.cpp"
-  Minigin/InputManager.h
+  "Minigin/InputManager.h"
   Minigin/Main.cpp
   "Minigin/Source/Core/Minigin.cpp"
   Minigin/Minigin.h

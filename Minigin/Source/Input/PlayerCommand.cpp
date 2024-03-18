@@ -14,6 +14,5 @@ MoveCommand::MoveCommand(GameObject* gameObject, const glm::vec2& direction)
 
 void MoveCommand::Execute()
 {
-	const glm::vec2 newDirection{ m_MoveComp->GetDirection() + m_Direction };
-	m_MoveComp->SetDirection(glm::normalize(newDirection));
+	m_MoveComp->SetDirection(m_MoveComp->GetDirection() + m_Direction);
 }
