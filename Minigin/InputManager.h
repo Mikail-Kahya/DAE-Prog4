@@ -16,10 +16,11 @@ namespace mk
 
 		bool ProcessInput();
 		Controller* AddController();
+		void RemoveController(Controller* controllerPtr);
 
 	private:
 		uint8_t m_Idx{};
-		std::vector<std::unique_ptr<Controller>> m_Controllers;
+		std::vector<Controller> m_Controllers;
 	};
 
 }

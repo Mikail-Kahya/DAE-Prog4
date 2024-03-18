@@ -25,7 +25,8 @@ void mk::GUI::Init(SDL_Window* windowPtr, SDL_Renderer* rendererPtr)
 
 bool mk::GUI::ProcessSDLEvents(const SDL_Event& event)
 {
-	return ImGui_ImplSDL2_ProcessEvent(&event);
+	ImGui_ImplSDL2_ProcessEvent(&event);
+	return m_Io->WantCaptureMouse || m_Io->WantCaptureKeyboard;
 }
 
 void mk::GUI::Update()
