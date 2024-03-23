@@ -6,18 +6,18 @@
 
 namespace mk
 {
-	class Minigin final
+	class MkUltra final
 	{
 	public:
-		explicit Minigin(const std::filesystem::path& dataPath);
-		~Minigin();
+		explicit MkUltra(const std::filesystem::path& dataPath);
+		~MkUltra();
 		void Run(const std::function<void()>& load);
 		void RunOneFrame();
 
-		Minigin(const Minigin& other) = delete;
-		Minigin(Minigin&& other) = delete;
-		Minigin& operator=(const Minigin& other) = delete;
-		Minigin& operator=(Minigin&& other) = delete;
+		MkUltra(const MkUltra& other) = delete;
+		MkUltra(MkUltra&& other) = delete;
+		MkUltra& operator=(const MkUltra& other) = delete;
+		MkUltra& operator=(MkUltra&& other) = delete;
 
 	private:
 		bool m_quit{};

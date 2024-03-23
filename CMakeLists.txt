@@ -13,91 +13,50 @@ else()
   set(TARGET_PARAM WIN32)
 endif()
 
+set(USE_STEAMWORKS TRUE)
+
 # list source files here
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
-  "Minigin/Source/Core/Font.cpp"
-  Minigin/Font.h
+  
+
   "Minigin/Source/Core/GameObject.cpp"
-  Minigin/GameObject.h
-  "Minigin/Source/Input/InputManager.cpp"
-  "Minigin/InputManager.h"
-  Minigin/Main.cpp
-  "Minigin/Source/Core/Minigin.cpp"
-  Minigin/Minigin.h
-  "Minigin/Source/Core/Renderer.cpp"
-  Minigin/Renderer.h
-  "Minigin/Source/Core/ResourceManager.cpp"
-  Minigin/ResourceManager.h
-  "Minigin/Source/Core/Scene.cpp"
-  Minigin/Scene.h
-  "Minigin/Source/Core/SceneManager.cpp"
-  Minigin/SceneManager.h
-  "Minigin/Source/Core/TimeManager.cpp"
-  Minigin/TimeManager.h
-  "Minigin/Source/Core/Texture2D.cpp"
-  Minigin/Texture2D.h
   "Minigin/Source/Core/Transform.cpp"
-  Minigin/Transform.h
+
+  "Minigin/Source/Input/InputManager.cpp"
+  Minigin/Main.cpp
+  "Minigin/Source/Core/MkUltra.cpp"
+
+  "Minigin/Source/Core/Renderer.cpp"
+  "Minigin/Source/Core/ResourceManager.cpp"
+  "Minigin/Source/Core/Texture2D.cpp"
+  "Minigin/Source/Core/Font.cpp"
+
+  "Minigin/Source/Core/Scene.cpp"
+  "Minigin/Source/Core/SceneManager.cpp"
+  "Minigin/Source/Core/TimeManager.cpp"
+ 
   
   "Minigin/Source/Components/Component.cpp"
-  "Minigin/Component.h" 
-
   "Minigin/Source/Components/Rendering/TextComponent.cpp"
-  "Minigin/TextComponent.h"
-
   "Minigin/Source/Components/Rendering/RenderComponent.cpp"
-  "Minigin/RenderComponent.h" 
-
   "Minigin/Source/Components/Rendering/SpriteComponent.cpp"
-  "Minigin/SpriteComponent.h" 
-
   "Minigin/Source/Components/Rendering/FPSComponent.cpp"
-  "Minigin/FPSComponent.h"
-
   "Minigin/Source/Components/MovementComponent.cpp"
-  "Minigin/MovementComponent.h"
-
   "Minigin/Source/Components/OrbitComponent.cpp"
-  "Minigin/OrbitComponent.h"
- 
-  "Minigin/DebugUtils.h"
+
   "Minigin/Source/Core/DebugUtils.cpp"
 
-  "Minigin/GUI.h"
   "Minigin/Source/Widgets/GUI.cpp"
-
-  "Minigin/GUIWidget.h"
-
-  "Minigin/PlotWidget.h"
   "Minigin/Source/Widgets/PlotWidget.cpp"
-
-  "Minigin/MeasureWidget.h"
   "Minigin/Source/Widgets/MeasureWidget.cpp"
 
-  "Minigin/ControllerInput.h"
   "Minigin/Source/Input/ControllerInput.cpp" 
-
-  "Minigin/Controller.h"
   "Minigin/Source/Input/Controller.cpp"
-
-  "Minigin/KeyboardInput.h"
   "Minigin/Source/Input/KeyboardInput.cpp"
-
-  "Minigin/XControllerInput.h"
   "Minigin/Source/Input/XControllerInput.cpp"
-
-  "Minigin/InputMapping.h"
-  
-
-  "Minigin/Command.h"
   "Minigin/Source/Input/PlayerCommand.cpp"
-
-  "Minigin/Action.h"
   "Minigin/Source/Input/Action.cpp"
- 
- "Minigin/Input.h"
- "Minigin/PlayerCommand.h"
-)
+ "Minigin/Source/Core/FileInterface.cpp")
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
@@ -116,6 +75,58 @@ FetchContent_Declare(
 FetchContent_GetProperties(glm)
 if(NOT glm_POPULATED)
   FetchContent_Populate(glm)
+endif()
+
+# Add steamworks
+if(USE_STEAMWORKS)
+    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/includes/steamworks")
+        message(FATAL_ERROR "Steamworks directory not found. Please place the contents of the Steamworks zip file at external/steamworks")
+    else()
+        file(GLOB STEAMWORKS_FILES "${CMAKE_SOURCE_DIR}/includes/steamworks/*")
+        if(NOT STEAMWORKS_FILES)
+            message(FATAL_ERROR "Steamworks directory is empty. Please make sure it contains the necessary files.")
+        endif()
+    endif()
+
+
+    set(STEAMWORKS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/includes/steamworks/public/steam)
+    set(STEAMWORKS_LIB_DIR ${CMAKE_SOURCE_DIR}/includes/steamworks/redistributable_bin)
+
+    if(WIN32)
+        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+            set(STEAMWORKS_LIB ${STEAMWORKS_LIB_DIR}/win64/steam_api64.lib)
+
+            add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy
+                           ${STEAMWORKS_LIB_DIR}/win64/steam_api64.dll
+                           $<TARGET_FILE_DIR:${TARGET_NAME}>)
+
+        else()
+            set(STEAMWORKS_LIB ${STEAMWORKS_LIB_DIR}/steam_api.lib)
+            
+            add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy
+                           ${STEAMWORKS_LIB_DIR}/steam_api.dll
+                           $<TARGET_FILE_DIR:${TARGET_NAME}>)
+        endif()
+
+    else()
+        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+            set(STEAMWORKS_LIB ${STEAMWORKS_LIB_DIR}/linux64/libsteam_api.so)
+        else()
+            set(STEAMWORKS_LIB ${STEAMWORKS_LIB_DIR}/linux32/libsteam_api.so)
+        endif()
+    endif()
+
+    target_include_directories(${TARGET_NAME} PRIVATE ${STEAMWORKS_INCLUDE_DIR})
+    target_link_libraries(${TARGET_NAME} PRIVATE ${STEAMWORKS_LIB})
+
+    target_compile_definitions(${TARGET_NAME} PRIVATE USE_STEAMWORKS)
+
+    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E echo 480 > "$<TARGET_FILE_DIR:${TARGET_NAME}>/steam_appid.txt" 
+        COMMENT "Creating steam_appid.txt"
+    )
 endif()
 
 # add SDL2

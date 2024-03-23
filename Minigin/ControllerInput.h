@@ -13,9 +13,9 @@ namespace mk
 		~ControllerInput();
 
 		ControllerInput(const ControllerInput& other)					= delete;
-		ControllerInput(ControllerInput&& other) noexcept				= default;
+		ControllerInput(ControllerInput&& other) noexcept;
 		ControllerInput& operator=(const ControllerInput& other)		= delete;
-		ControllerInput& operator=(ControllerInput&& other) noexcept	= default;
+		ControllerInput& operator=(ControllerInput&& other) noexcept;
 
 		void UpdateInput();
 		// Deadzone is in a range between 0 and 1
@@ -30,6 +30,6 @@ namespace mk
 		bool ButtonUp(Input input) const noexcept;
 
 	private:
-		XControllerInput* m_XInputImpl;
+		XControllerInput* m_XInputImpl{};
 	};
 }

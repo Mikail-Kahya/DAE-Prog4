@@ -1,37 +1,53 @@
 #include "ControllerInput.h"
 #include "XControllerInput.h"
 
-mk::ControllerInput::ControllerInput(uint8_t idx)
-	: m_XInputImpl{new XControllerInput(idx) }
+using namespace mk;
+
+ControllerInput::ControllerInput(uint8_t idx)
+	: m_XInputImpl{ new XControllerInput(idx) }
 {
 }
 
-mk::ControllerInput::~ControllerInput()
+ControllerInput::~ControllerInput()
 {
 	delete m_XInputImpl;
 }
 
-void mk::ControllerInput::UpdateInput()
+ControllerInput::ControllerInput(ControllerInput&& other) noexcept
+	: m_XInputImpl{ other.m_XInputImpl }
+{
+	other.m_XInputImpl = nullptr;
+}
+
+ControllerInput& ControllerInput::operator=(ControllerInput&& other) noexcept
+{
+	m_XInputImpl = other.m_XInputImpl;
+	other.m_XInputImpl = nullptr;
+
+	return *this;
+}
+
+void ControllerInput::UpdateInput()
 {
 	m_XInputImpl->UpdateInput();
 }
 
-void mk::ControllerInput::SetDeadzone(float deadzone)
+void ControllerInput::SetDeadzone(float deadzone)
 {
 	m_XInputImpl->SetDeadzone(deadzone);
 }
 
-glm::vec2 mk::ControllerInput::GetLeftStickInput() const noexcept
+glm::vec2 ControllerInput::GetLeftStickInput() const noexcept
 {
 	return m_XInputImpl->GetLeftStickInput();
 }
 
-glm::vec2 mk::ControllerInput::GetRightStickInput() const noexcept
+glm::vec2 ControllerInput::GetRightStickInput() const noexcept
 {
 	return m_XInputImpl->GetRightStickInput();
 }
 
-glm::vec2 mk::ControllerInput::GetDPadInput() const noexcept
+glm::vec2 ControllerInput::GetDPadInput() const noexcept
 {
 	glm::vec2 input{};
 	if (ButtonHold(Input::dPadLeft))
@@ -49,17 +65,17 @@ glm::vec2 mk::ControllerInput::GetDPadInput() const noexcept
 	return input;
 }
 
-bool mk::ControllerInput::ButtonDown(Input input) const noexcept
+bool ControllerInput::ButtonDown(Input input) const noexcept
 {
 	return m_XInputImpl->ButtonDown(input);
 }
 
-bool mk::ControllerInput::ButtonHold(Input input) const noexcept
+bool ControllerInput::ButtonHold(Input input) const noexcept
 {
 	return m_XInputImpl->ButtonHold(input);
 }
 
-bool mk::ControllerInput::ButtonUp(Input input) const noexcept
+bool ControllerInput::ButtonUp(Input input) const noexcept
 {
 	return m_XInputImpl->ButtonUp(input);
 }

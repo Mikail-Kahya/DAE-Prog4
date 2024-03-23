@@ -106,7 +106,7 @@ namespace mk
 				samples.push_back(static_cast<int>(duration_cast<microseconds> (end - start).count()));
 			}
 
-			std::ranges::sort(samples);
+			std::sort(samples.begin(), samples.end());
 			measures.push_back(std::accumulate(std::next(samples.begin()), std::prev(samples.end()), 0.f) / (m_NrSamples - 2));
 		}
 	}

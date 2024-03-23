@@ -22,7 +22,7 @@ namespace mk
 		void HandleInput();
 
 		uint8_t GetIdx() const;
-		InputMapping& GetInputMapping();
+		const InputMapping& GetInputMapping() const;
 
 		void SetInputMapping(InputMapping&& map);
 
@@ -30,8 +30,9 @@ namespace mk
 		uint8_t m_Idx{};
 		inline static bool s_KeyboardUsed{};
 		inline static KeyboardInput s_Keyboard{};
+		inline static const KeyboardInput EMPTY_KEYBOARD{};
 		bool m_UseKeyboard{};
 		ControllerInput m_Controller;
-		InputMapping m_InputMapping{};
+		InputMapping m_InputMapping;
 	};
 }

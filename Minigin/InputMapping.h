@@ -13,7 +13,7 @@ namespace mk
 	class InputMapping final
 	{
 	public:
-		using Mapping = std::pair<Action, std::unique_ptr<Command>>;
+		using Mapping = std::pair<Action, Command*>;
 		using Mappings = std::vector<Mapping>;
 
 		InputMapping() = default;
@@ -24,13 +24,13 @@ namespace mk
 		InputMapping& operator=(const InputMapping& other)		= default;
 		InputMapping& operator=(InputMapping&& other) noexcept	= default;
 
-		template<std::derived_from<Command> CommandType, typename... Args>
-		void AddMapping(const Action& action, const Args&... args)
+		inline void AddMapping(const Action& action, Command* commandPtr)
 		{
-			m_Mappings.emplace_back(std::make_pair(action, std::make_unique<CommandType>(args...)));
+			Mapping map{ std::make_pair(action, commandPtr) };
+			m_Mappings.emplace_back(map);
 		}
 
-		const Mappings& GetMappings() const { return m_Mappings; }
+		inline const Mappings& GetMappings() const { return m_Mappings; }
 
 	private:
 		Mappings m_Mappings{};

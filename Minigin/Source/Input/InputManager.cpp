@@ -1,10 +1,7 @@
-#include <SDL.h>
 #include "InputManager.h"
 
 #include "Controller.h"
-#include "DebugUtils.h"
 #include "GUI.h"
-#include "KeyboardInput.h"
 
 
 using namespace mk;
@@ -15,7 +12,6 @@ bool InputManager::ProcessInput()
 
 	while (SDL_PollEvent(&e)) 
 	{
-		//GUI::GetInstance().ProcessSDLEvents(e);
 		if (GUI::GetInstance().ProcessSDLEvents(e))
 			return true;
 
@@ -48,4 +44,14 @@ void InputManager::RemoveController(Controller* controllerPtr)
 								});
 
 	m_Controllers.erase(foundController);
+}
+
+void InputManager::RemoveCommand(Command* commandPtr)
+{
+	auto commandIter = std::ranges::find_if(m_Commands, [commandPtr](const std::unique_ptr<Command>& command)
+		{
+			return command.get() == commandPtr;
+		});
+
+	m_Commands.erase(commandIter);
 }

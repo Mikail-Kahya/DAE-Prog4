@@ -11,7 +11,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-#include "Minigin.h"
+
+#include "MkUltra.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
@@ -62,7 +63,7 @@ void PrintSDLVersion()
 	LogSDLVersion("We linked against SDL_ttf version ", version);
 }
 
-mk::Minigin::Minigin(const std::filesystem::path &dataPath)
+mk::MkUltra::MkUltra(const std::filesystem::path &dataPath)
 {
 	PrintSDLVersion();
 	
@@ -73,13 +74,13 @@ mk::Minigin::Minigin(const std::filesystem::path &dataPath)
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
-mk::Minigin::~Minigin()
+mk::MkUltra::~MkUltra()
 {
 	Renderer::GetInstance().Destroy();
 	SDL_Quit();
 }
 
-void mk::Minigin::Run(const std::function<void()>& load)
+void mk::MkUltra::Run(const std::function<void()>& load)
 {
 	load();
 	using namespace std::chrono;
@@ -94,7 +95,7 @@ void mk::Minigin::Run(const std::function<void()>& load)
 #endif
 }
 
-void mk::Minigin::RunOneFrame()
+void mk::MkUltra::RunOneFrame()
 {
 	using namespace std::chrono;
 	SceneManager& sceneManager{ SceneManager::GetInstance() };

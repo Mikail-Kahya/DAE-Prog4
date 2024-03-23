@@ -12,19 +12,16 @@
 #endif
 #endif
 
-#include "Minigin.h"
+#include "MkUltra.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "Scene.h"
 
 #include "GameObject.h"
 #include "FPSComponent.h"
-#include "GUI.h"
 #include "InputManager.h"
-#include "MeasureWidget.h"
 #include "TextComponent.h"
 #include "RenderComponent.h"
-#include "OrbitComponent.h"
 #include "MovementComponent.h"
 #include "PlayerCommand.h"
 #include "Renderer.h"
@@ -92,13 +89,13 @@ void load()
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 	moveCompPtr = tank1->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
 
+	InputMapping map{};
 	controller = inputManager.AddController();
-	InputMapping mapping{};
-	mapping.AddMapping<MoveCommand>(up, tank1, glm::vec2{ 0, 1 });
-	mapping.AddMapping<MoveCommand>(down, tank1, glm::vec2{ 0, -1 });
-	mapping.AddMapping<MoveCommand>(left, tank1, glm::vec2{ -1, 0 });
-	mapping.AddMapping<MoveCommand>(right, tank1, glm::vec2{ 1, 0 });
-	controller->SetInputMapping(std::move(mapping));
+	map.AddMapping(up, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ 0, 1 }));
+	map.AddMapping(down, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ 0, -1 }));
+	map.AddMapping(left, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ -1, 0 }));
+	map.AddMapping(right, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ 1, 0 }));
+	controller->SetInputMapping(std::move(map));
 
 	// Player 2
 	GameObject* tank2 = scene.SpawnObject("Player2");
@@ -107,11 +104,11 @@ void load()
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 
 	controller = inputManager.AddController();
-	mapping.AddMapping<MoveCommand>(up, tank2, glm::vec2{ 0, 1 });
-	mapping.AddMapping<MoveCommand>(down, tank2, glm::vec2{ 0, -1 });
-	mapping.AddMapping<MoveCommand>(left, tank2, glm::vec2{ -1, 0 });
-	mapping.AddMapping<MoveCommand>(right, tank2, glm::vec2{ 1, 0 });
-	controller->SetInputMapping(std::move(mapping));
+	map.AddMapping(up, inputManager.AddCommand<MoveCommand>(tank2, glm::vec2{ 0, 1 }));
+	map.AddMapping(down, inputManager.AddCommand<MoveCommand>(tank2, glm::vec2{ 0, -1 }));
+	map.AddMapping(left, inputManager.AddCommand<MoveCommand>(tank2, glm::vec2{ -1, 0 }));
+	map.AddMapping(right, inputManager.AddCommand<MoveCommand>(tank2, glm::vec2{ 1, 0 }));
+	controller->SetInputMapping(std::move(map));
 }
 
 int main(int, char*[]) {
@@ -123,7 +120,7 @@ int main(int, char*[]) {
 	if(!fs::exists(data_location))
 		data_location = "../Data/";
 #endif
-	Minigin engine(data_location);
+	MkUltra engine(data_location);
 	engine.Run(load);
 
 	return 0;
