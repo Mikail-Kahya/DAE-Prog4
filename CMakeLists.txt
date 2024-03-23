@@ -77,7 +77,7 @@ if(NOT glm_POPULATED)
   FetchContent_Populate(glm)
 endif()
 
-# Add steamworks
+# Add steamworks (provided by Matias Devred on discord)
 if(USE_STEAMWORKS)
     if(NOT EXISTS "${CMAKE_SOURCE_DIR}/includes/steamworks")
         message(FATAL_ERROR "Steamworks directory not found. Please place the contents of the Steamworks zip file at external/steamworks")
