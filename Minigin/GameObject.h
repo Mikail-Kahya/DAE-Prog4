@@ -44,6 +44,8 @@ namespace mk
 		void SetRotation(float rotation);
 		void AddRotation(float deltaRotation);
 
+		glm::vec3 GetForward();
+
 		// TODO: Keep world rotation?
 		void SetParent(GameObject* parentPtr, bool keepWorldPosition = false);
 		int GetChildCount() const;
@@ -52,7 +54,7 @@ namespace mk
 		template <std::derived_from<Component> ComponentType>
 		[[nodiscard]] ComponentType* GetComponent() const;
 		template <std::derived_from<Component> ComponentType, typename... Args>
-		[[nodiscard]] ComponentType* AddComponent(const Args&... args);
+		ComponentType* AddComponent(const Args&... args);
 		void RemoveComponent(const std::unique_ptr<Component>& component);
 
 

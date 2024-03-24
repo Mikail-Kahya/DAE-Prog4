@@ -5,12 +5,12 @@
 #include <windows.h>
 #endif
 
-#if _DEBUG
-// ReSharper disable once CppUnusedIncludeDirective
-#if __has_include(<vld.h>)
-#include <vld.h>
-#endif
-#endif
+//#if _DEBUG
+//// ReSharper disable once CppUnusedIncludeDirective
+//#if __has_include(<vld.h>)
+//#include <vld.h>
+//#endif
+//#endif
 
 #include "MkUltra.h"
 #include "SceneManager.h"
@@ -25,10 +25,12 @@
 #include "RenderComponent.h"
 #include "MovementComponent.h"
 #include "BoxColliderComponent.h"
+#include "ScoreComponent.h"
+#include "FireComponent.h"	
 
 #include "PlayerCommand.h"
 #include "Renderer.h"
-#include "ScoreComponent.h"
+
 
 namespace fs = std::filesystem;
 using namespace mk;
@@ -54,9 +56,7 @@ void load()
 void LoadPlayer(Scene& scene, const std::string& name)
 {
 	InputManager& inputManager{ InputManager::GetInstance() };
-	MovementComponent* moveCompPtr{};
-	BoxColliderComponent* boxCompPtr{};
-	ScoreComponent* scoreCompPtr{};
+	//ScoreComponent* scoreCompPtr{};
 
 	// controls
 	Action up{};
@@ -84,25 +84,47 @@ void LoadPlayer(Scene& scene, const std::string& name)
 	fire.SetKeyboardInput(SDL_SCANCODE_SPACE);
 	fire.SetType(ActionType::down);
 
-	// Player 1
-	GameObject* tank1 = scene.SpawnObject(name);
-	tank1->SetLocalPosition(200, 200);
-	auto spriteCompPtr = tank1->AddComponent<RenderComponent>("BlueTank.png");
+	Action rotateLeft{};
+	rotateLeft.SetControllerInput(Input::x);
+	rotateLeft.SetKeyboardInput(SDL_SCANCODE_Q);
+	rotateLeft.SetType(ActionType::hold);
+
+	Action rotateRight{};
+	rotateRight.SetControllerInput(Input::b);
+	rotateRight.SetKeyboardInput(SDL_SCANCODE_E);
+	rotateRight.SetType(ActionType::hold);
+
+	// Tank
+	GameObject* tank = scene.SpawnObject(name);
+	tank->SetLocalPosition(200, 200);
+
+	RenderComponent* spriteCompPtr = tank->AddComponent<RenderComponent>("BlueTank.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
-	moveCompPtr = tank1->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
-	boxCompPtr = tank1->AddComponent<BoxColliderComponent>();
-	scoreCompPtr = tank1->AddComponent<ScoreComponent>();
+	tank->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
+	tank->AddComponent<BoxColliderComponent>();
+	//scoreCompPtr = tank1->AddComponent<ScoreComponent>();
 
-	//FireCommand* commandPtr{ inputManager.AddCommand<FireCommand>() };
+	// Gun
+	GameObject* gun = scene.SpawnObject(name + "Gun");
+	gun->SetParent(tank);
 
+	spriteCompPtr = gun->AddComponent<RenderComponent>("BlueTankGun.png");
+	spriteCompPtr->SetAnchor({ 0.5f,0.f });
+	gun->AddComponent<FireComponent>(glm::vec3{ 20.f, 20.f, 1.f });
+
+	// input
 	InputMapping map{};
 	auto controller = inputManager.AddController();
-	map.AddMapping(up, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ 0, 1 }));
-	map.AddMapping(down, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ 0, -1 }));
-	map.AddMapping(left, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ -1, 0 }));
-	map.AddMapping(right, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ 1, 0 }));
+	map.AddMapping(up, inputManager.AddCommand<MoveCommand>(tank, glm::vec2{ 0, 1 }));
+	map.AddMapping(down, inputManager.AddCommand<MoveCommand>(tank, glm::vec2{ 0, -1 }));
+	map.AddMapping(right, inputManager.AddCommand<MoveCommand>(tank, glm::vec2{ 1, 0 }));
+	map.AddMapping(left, inputManager.AddCommand<MoveCommand>(tank, glm::vec2{ -1, 0 }));
 
-	map.AddMapping(fire, inputManager.AddCommand<FireCommand>(tank1));
+
+	constexpr float rotateSpeed{ 50.f };
+	map.AddMapping(fire, inputManager.AddCommand<FireCommand>(gun));
+	map.AddMapping(rotateLeft, inputManager.AddCommand<RotateCommand>(gun, rotateSpeed, 1));
+	map.AddMapping(rotateRight, inputManager.AddCommand<RotateCommand>(gun, rotateSpeed, -1));
 	controller->SetInputMapping(std::move(map));
 }
 

@@ -1,6 +1,5 @@
 #include "MovementComponent.h"
 
-#include "DebugUtils.h"
 #include "GameObject.h"
 #include "SceneManager.h"
 

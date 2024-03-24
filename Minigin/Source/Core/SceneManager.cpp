@@ -22,7 +22,7 @@ TimeManager& SceneManager::GetTimeManager()
 	return m_TimeManager;
 }
 
-const TimeManager& Time()
+const TimeManager& mk::Time()
 {
 	return SceneManager::GetInstance().GetTimeManager();
 }

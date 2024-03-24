@@ -1,7 +1,11 @@
 #pragma once
 #include "Command.h"
-#include "Observer.h"
 #include "glm/vec2.hpp"
+
+namespace mk
+{
+	class FireComponent;
+}
 
 namespace mk
 {
@@ -22,7 +26,7 @@ namespace mk
 
 	private:
 		const glm::vec2 m_Direction{};
-		MovementComponent* m_MoveComp{};
+		MovementComponent* m_MoveCompPtr{};
 	};
 
 
@@ -38,5 +42,26 @@ namespace mk
 		FireCommand& operator=(FireCommand&& other) noexcept = delete;
 
 		void Execute() override;
+
+	private:
+		FireComponent* m_FireCompPtr{};
+	};
+
+	class RotateCommand : public GameObjectCommand
+	{
+	public:
+		RotateCommand(GameObject* gameObject, float rotateSpeed, int direction);
+		~RotateCommand() override = default;
+
+		RotateCommand(const RotateCommand& other) = delete;
+		RotateCommand(RotateCommand&& other) noexcept = delete;
+		RotateCommand& operator=(const RotateCommand& other) = delete;
+		RotateCommand& operator=(RotateCommand&& other) noexcept = delete;
+
+		void Execute() override;
+
+	private:
+		const float m_RotateSpeed{};
+		const int m_Direction{};
 	};
 }

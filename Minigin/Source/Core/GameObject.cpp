@@ -174,7 +174,14 @@ void GameObject::SetRotation(float rotation)
 void GameObject::AddRotation(float deltaRotation)
 {
 	m_LocalTransform.AddRotation(0, 0, deltaRotation);
+	m_LocalTransform.SetRotation({ 0.f, 0.f, std::fmod(m_LocalTransform.GetRotation().z, 360.f) });
 	FlagRotationDirty();
+}
+
+glm::vec3 GameObject::GetForward()
+{
+	const float angleRad{ GetRotation() * 3.14f / 180.f };
+	return { cosf(angleRad), sinf(angleRad), 0.f };
 }
 
 void GameObject::UpdateWorldPosition()
