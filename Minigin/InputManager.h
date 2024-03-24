@@ -20,10 +20,12 @@ namespace mk
 		void RemoveController(Controller* controllerPtr);
 
 		template<std::derived_from<Command> CommandType, typename... Args>
-		Command* AddCommand(const Args&... args)
+		CommandType* AddCommand(const Args&... args)
 		{
-			m_Commands.emplace_back(std::make_unique<CommandType>(args...));
-			return m_Commands.back().get();
+			std::unique_ptr<CommandType> command{ std::make_unique<CommandType>(args...) };
+			CommandType* commandPtr{ command.get() };
+			m_Commands.emplace_back(std::move(command));
+			return commandPtr;
 		}
 
 		void RemoveCommand(Command* commandPtr);

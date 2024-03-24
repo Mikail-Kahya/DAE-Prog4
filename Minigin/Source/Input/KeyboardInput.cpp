@@ -12,8 +12,7 @@ KeyboardInput::KeyboardInput()
 
 void KeyboardInput::Flush()
 {
-	m_PrevKeys = std::move(m_CurrentKeys);
-	m_CurrentKeys.resize(SDL_NUM_SCANCODES);
+	std::copy(m_CurrentKeys.begin(), m_CurrentKeys.end(), m_PrevKeys.begin());
 }
 
 void KeyboardInput::Update(const SDL_Event& sdlEvent)
@@ -21,7 +20,8 @@ void KeyboardInput::Update(const SDL_Event& sdlEvent)
 	switch (sdlEvent.type)
 	{
 	case SDL_KEYDOWN:
-		m_CurrentKeys[sdlEvent.key.keysym.scancode] = true;
+		if (!sdlEvent.key.repeat)
+			m_CurrentKeys[sdlEvent.key.keysym.scancode] = true;
 		break;
 	case SDL_KEYUP:
 		m_CurrentKeys[sdlEvent.key.keysym.scancode] = false;
@@ -41,6 +41,5 @@ bool KeyboardInput::ButtonHold(SDL_Scancode key) const
 
 bool KeyboardInput::ButtonUp(SDL_Scancode key) const
 {
-	//return m_UpKeys[SDL_SCANCODE_TO_KEYCODE(key)];
 	return m_PrevKeys[key] && !m_CurrentKeys[key];
 }
