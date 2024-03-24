@@ -25,7 +25,7 @@ namespace mk
 	};
 
 	template<typename T>
-	struct EventArg
+	struct EventArg : public IEventArg
 	{
 		explicit EventArg(T data) : m_Data{ data } {}
 
@@ -39,15 +39,23 @@ namespace mk
 	{
 		Event(EventType eventType) : type{ eventType }{}
 
+		Event(const Event& other)					= delete;
+		Event(Event&& other) noexcept;
+		Event& operator=(const Event& other)		= delete;
+		Event& operator=(Event&& other) noexcept;
+
+
 		EventType type{};
 
 		template<typename T> bool SetData(const std::string& key, T data)
 		{
 			if (!m_Args.contains(key))
-				m_Args.emplace(key, std::make_unique<EventArg<T>>(data));
+			{
+				m_Args[key] = std::make_unique<EventArg<T>>(data);
+				return true;
+			}
 
-
-			EventArg<T>* dataPtr = dynamic_cast<EventArg<T>*>(m_Args[key]);
+			EventArg<T>* dataPtr = dynamic_cast<EventArg<T>*>(m_Args.at(key).get());
 			if (dataPtr == nullptr)
 			{
 				Print("Warning: Data already found on " + key + " but a different type\n");
@@ -58,9 +66,9 @@ namespace mk
 			return true;
 		}
 
-		template<typename T> bool GetData(const std::string& key, T& data)
+		template<typename T> bool GetData(const std::string& key, T& data) const
 		{
-			EventArg<T>* dataPtr = dynamic_cast<EventArg<T>*>(m_Args[key]);
+			EventArg<T>* dataPtr = dynamic_cast<EventArg<T>*>(m_Args.at(key).get());
 			if (dataPtr != nullptr)
 			{
 				data = dataPtr->GetData();
