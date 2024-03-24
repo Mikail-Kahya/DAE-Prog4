@@ -10,7 +10,7 @@ void ScoreComponent::Start()
 {
 	Component::Start();
 
-	m_TextComponentPtr = GetOwner().AddComponent<TextComponent>("Score: 0");
+	m_TextComponentPtr = GetOwner().AddComponent<TextComponent>("Score: 0", "Lingua.otf", 30);
 }
 
 void ScoreComponent::OnNotify(Subject* subjectPtr, const Event& event)

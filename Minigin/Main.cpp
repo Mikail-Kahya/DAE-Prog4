@@ -27,6 +27,7 @@
 #include "BoxColliderComponent.h"
 #include "ScoreComponent.h"
 #include "FireComponent.h"	
+#include "HealthBarComponent.h"
 #include "HealthComponent.h"
 
 #include "PlayerCommand.h"
@@ -118,7 +119,7 @@ GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& s
 
 	spriteCompPtr = gun->AddComponent<RenderComponent>("BlueTankGun.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.f });
-	gun->AddComponent<FireComponent>(50.f);
+	gun->AddComponent<FireComponent>(60.f);
 
 	// input
 	InputMapping map{};
@@ -140,19 +141,31 @@ GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& s
 
 void LoadHud(Scene& scene, const std::vector<GameObject*>& players)
 {
-	GameObject* HUDWrapper{ scene.SpawnObject("Hud wrapper") };
-	HUDWrapper->SetLocalPosition(20, 200);
-
-	GameObject* score{ scene.SpawnObject("score") };
-	score->SetParent(HUDWrapper);
-	ScoreComponent* scoreCompPtr = score->AddComponent<ScoreComponent>();
-
-	for (GameObject* playerPtr : players)
+	for (size_t idx{}; idx < players.size(); ++idx)
 	{
+		GameObject* playerPtr{ players[idx] };
+
 		HealthComponent* healthCompPtr{ playerPtr->GetComponent<HealthComponent>() };
-		healthCompPtr->AddObserver(scoreCompPtr);
+
+		GameObject* HUDWrapper{ scene.SpawnObject("Hud wrapper") };
+		HUDWrapper->SetLocalPosition(playerPtr->GetWorldPosition().x , 200);
+
+		GameObject* score{ scene.SpawnObject("score") };
+		score->SetParent(HUDWrapper);
+		TextComponent* textCompPtr{ score->AddComponent<TextComponent>("Score: 0", "Lingua.otf", 30) };
+		textCompPtr->SetAnchor({ 0.5f, 0.5f });
+		ScoreComponent* scoreCompPtr{ score->AddComponent<ScoreComponent>() };
+
+		GameObject* health{ scene.SpawnObject("health") };
+		health->SetParent(HUDWrapper);
+		health->SetLocalPosition(0, 30);
+		textCompPtr = health->AddComponent<TextComponent>("Health: " + std::to_string(healthCompPtr->GetHealth()), "Lingua.otf", 20);
+		textCompPtr->SetAnchor({ 0.5f, 0.5f });
+		HealthBarComponent* healthBarCompPtr{ health->AddComponent<HealthBarComponent>() };
+
+		players[(idx + 1) % players.size()]->GetComponent<HealthComponent>()->AddObserver(scoreCompPtr);
+		healthCompPtr->AddObserver(healthBarCompPtr);
 	}
-	
 }
 
 

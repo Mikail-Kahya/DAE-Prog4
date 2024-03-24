@@ -18,6 +18,7 @@ namespace mk
 		void Start() override;
 		void OnNotify(Subject* subjectPtr, const Event& event) override;
 
+		int GetHealth() const;
 		bool IsDead() const;
 
 	private:

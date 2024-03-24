@@ -30,9 +30,15 @@ void HealthComponent::OnNotify(Subject* subjectPtr, const Event& event)
 		Hit();
 }
 
+int HealthComponent::GetHealth() const
+{
+	return m_Health;
+}
+
 void HealthComponent::Hit()
 {
 	m_Health = std::max(0, m_Health - 1);
+
 	if (IsDead())
 	{
 		Event event{ EventType::OBJECT_DIED };
@@ -40,7 +46,10 @@ void HealthComponent::Hit()
 		Notify(event);
 		Reset();
 	}
- 		
+
+	Event event{ EventType::TAKE_DAMAGE };
+	event.SetData("health", m_Health);
+	Notify(event);
 }
 
 void HealthComponent::Reset()

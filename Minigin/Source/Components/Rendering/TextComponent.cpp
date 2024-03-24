@@ -14,8 +14,10 @@
 using namespace mk;
 
 TextComponent::TextComponent(const std::string& text, const std::string& fontName, int size)
-	: m_Text{ text }
+	: m_NeedsUpdate{ !text.empty() }
+	, m_Text{ text }
 {
+	m_NeedsUpdate = text.size() > 0;
 	m_FontPtr = ResourceManager::GetInstance().LoadFont(fontName, size);
 }
 

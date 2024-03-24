@@ -71,6 +71,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Components/FireComponent.cpp"
   "Minigin/Source/Components/RespawnComponent.cpp"
   "Minigin/Source/Components/ExplosionComponent.cpp"
+  "Minigin/Source/Components/HealthBarComponent.cpp"
 )
 
 # enable c++20 features
