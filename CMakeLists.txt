@@ -23,7 +23,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Core/Transform.cpp"
 
   "Minigin/Source/Input/InputManager.cpp"
-  Minigin/Main.cpp
+  "Minigin/Main.cpp"
   "Minigin/Source/Core/MkUltra.cpp"
 
   "Minigin/Source/Core/Renderer.cpp"
@@ -43,6 +43,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Components/Rendering/FPSComponent.cpp"
   "Minigin/Source/Components/MovementComponent.cpp"
   "Minigin/Source/Components/OrbitComponent.cpp"
+  "Minigin/Source/Components/BoxColliderComponent.cpp"
 
   "Minigin/Source/Core/DebugUtils.cpp"
 
@@ -56,7 +57,14 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Input/XControllerInput.cpp"
   "Minigin/Source/Input/PlayerCommand.cpp"
   "Minigin/Source/Input/Action.cpp"
- "Minigin/Source/Core/FileInterface.cpp")
+  "Minigin/Source/Core/FileInterface.cpp"
+
+  "Minigin/Source/Core/Geometry.cpp"
+
+  "Minigin/Source/Core/Observer.cpp"
+
+  "Minigin/Source/Components/HealthComponent.cpp"
+)
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
