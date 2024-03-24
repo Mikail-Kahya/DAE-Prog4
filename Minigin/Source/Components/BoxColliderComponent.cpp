@@ -2,8 +2,39 @@
 
 #include "GameObject.h"
 #include "Geometry.h"
+#include "PhysicsSystem.h"
 
 using namespace mk;
+
+BoxColliderComponent::BoxColliderComponent()
+{
+	PhysicsSystem::GetInstance().RegisterCollider(this);
+}
+
+BoxColliderComponent::~BoxColliderComponent()
+{
+	PhysicsSystem::GetInstance().UnRegisterCollider(this);
+}
+
+void BoxColliderComponent::CheckCollision(BoxColliderComponent* other)
+{
+	if (CanOverlap() && IsOverlapping(other))
+	{
+		Event event{ EventType::OBJECT_OVERLAP };
+		event.SetData("other", other);
+		Notify(event);
+	}
+}
+
+CollisionType BoxColliderComponent::GetCollision() const
+{
+	return m_CollisionType;
+}
+
+void BoxColliderComponent::SetCollision(CollisionType type)
+{
+	m_CollisionType = type;
+}
 
 bool BoxColliderComponent::IsOverlapping(BoxColliderComponent* other) const
 {
@@ -19,7 +50,12 @@ const glm::vec3& BoxColliderComponent::GetBoxExtent() const
 	return m_Extent;
 }
 
-void BoxColliderComponent::FixedUpdate()
+void BoxColliderComponent::SetExtent(const glm::vec3& extent)
 {
-	Notify(Event{ EventType::OBJECT_OVERLAP });
+	m_Extent = extent;
+}
+
+bool BoxColliderComponent::CanOverlap() const
+{
+	return m_CollisionType == CollisionType::overlapAll || m_CollisionType == CollisionType::overlapDynamic;
 }

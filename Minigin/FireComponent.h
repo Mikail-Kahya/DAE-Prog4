@@ -7,7 +7,7 @@ namespace mk
 	class FireComponent : public Component
 	{
 	public:
-		FireComponent(const glm::vec3& socketOffset);
+		FireComponent(float barrelLength);
 		~FireComponent() override = default;
 
 		FireComponent(const FireComponent& other)					= delete;
@@ -18,6 +18,6 @@ namespace mk
 		void Fire() const;
 
 	private:
-		const glm::vec3 m_SocketOffset{};
+		float m_BarrelLength{};
 	};
 }

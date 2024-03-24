@@ -27,6 +27,7 @@
 #include "BoxColliderComponent.h"
 #include "ScoreComponent.h"
 #include "FireComponent.h"	
+#include "HealthComponent.h"
 
 #include "PlayerCommand.h"
 #include "Renderer.h"
@@ -35,12 +36,13 @@
 namespace fs = std::filesystem;
 using namespace mk;
 
-void LoadPlayer(Scene& scene, const std::string& name);
+void LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos);
 
 void load()
 {
 	auto& scene = SceneManager::GetInstance().LoadScene("Demo");
 	const Renderer& renderer{ Renderer::GetInstance() };
+	const int screenWidth{ renderer.GetWidth() };
 	const int screenHeight{ renderer.GetHeight() };
 
 
@@ -49,11 +51,11 @@ void load()
 	auto fpsComponent = fps->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
 
-	LoadPlayer(scene, "Player1");
-	LoadPlayer(scene, "Player2");
+	LoadPlayer(scene, "Player1", { 100.f, 100.f });
+	LoadPlayer(scene, "Player2", { screenWidth - 100.f, 100.f });
 }
 
-void LoadPlayer(Scene& scene, const std::string& name)
+void LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos)
 {
 	InputManager& inputManager{ InputManager::GetInstance() };
 	//ScoreComponent* scoreCompPtr{};
@@ -96,12 +98,13 @@ void LoadPlayer(Scene& scene, const std::string& name)
 
 	// Tank
 	GameObject* tank = scene.SpawnObject(name);
-	tank->SetLocalPosition(200, 200);
+	tank->SetLocalPosition(startPos.x, startPos.y);
 
 	RenderComponent* spriteCompPtr = tank->AddComponent<RenderComponent>("BlueTank.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 	tank->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
 	tank->AddComponent<BoxColliderComponent>();
+	tank->AddComponent<HealthComponent>(3, 3);
 	//scoreCompPtr = tank1->AddComponent<ScoreComponent>();
 
 	// Gun
@@ -110,7 +113,7 @@ void LoadPlayer(Scene& scene, const std::string& name)
 
 	spriteCompPtr = gun->AddComponent<RenderComponent>("BlueTankGun.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.f });
-	gun->AddComponent<FireComponent>(glm::vec3{ 20.f, 20.f, 1.f });
+	gun->AddComponent<FireComponent>(50.f);
 
 	// input
 	InputMapping map{};

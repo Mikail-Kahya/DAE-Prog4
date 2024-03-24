@@ -20,6 +20,7 @@
 
 #include "MkUltra.h"
 #include "InputManager.h"
+#include "PhysicsSystem.h"
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
@@ -76,7 +77,7 @@ mk::MkUltra::MkUltra(const std::filesystem::path &dataPath)
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 
-	Renderer::GetInstance().Init(1280, 720);
+	Renderer::GetInstance().Init(720, 480);
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
@@ -132,6 +133,7 @@ void mk::MkUltra::RunOneFrame()
 	while (m_Lag >= FIXED_TIME_STEP)
 	{
 		SceneManager::GetInstance().FixedUpdate();
+		PhysicsSystem::GetInstance().Update();
 		m_Lag -= FIXED_TIME_STEP;
 	}
 
