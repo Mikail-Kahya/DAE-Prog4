@@ -28,44 +28,35 @@
 
 #include "PlayerCommand.h"
 #include "Renderer.h"
-#include "Test.h"
+#include "ScoreComponent.h"
 
 namespace fs = std::filesystem;
 using namespace mk;
+
+void LoadPlayer(Scene& scene, const std::string& name);
 
 void load()
 {
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 	const Renderer& renderer{ Renderer::GetInstance() };
-	InputManager& inputManager{ InputManager::GetInstance() };
-	const int screenWidth{ renderer.GetWidth() };
 	const int screenHeight{ renderer.GetHeight() };
-
-	Controller* controller{};
-	RenderComponent* spriteCompPtr{};
-	MovementComponent* moveCompPtr{};
-	BoxColliderComponent* boxCompPtr{};
-	Test* testPtr{};
-
-	GameObject* bg = scene.SpawnObject("bg");
-	spriteCompPtr = bg->AddComponent<RenderComponent>("background.tga");
-	
-	GameObject* logo = scene.SpawnObject("logo");
-	logo->SetLocalPosition(screenWidth * 0.5f, screenHeight * 0.5f);
-	spriteCompPtr = logo->AddComponent<RenderComponent>("logo.tga");
-	spriteCompPtr->SetAnchor({ 0.5f, 0.5f });
-	
-	GameObject* text = scene.SpawnObject("text");
-	auto testTextComponent = text->AddComponent<TextComponent>("Programming 4 assignment", std::string{"Lingua.otf"}, 36);
-	testTextComponent->SetText("Programming 4 assignment");
-	testTextComponent->SetAnchor({ 0.5f, 0.5f });
-	text->SetLocalPosition(screenWidth * 0.5f, screenHeight * 0.9f);
 
 
 	GameObject* fps = scene.SpawnObject("fps");
 	fps->SetLocalPosition(0, screenHeight * 0.95f);
 	auto fpsComponent = fps->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
+
+	LoadPlayer(scene, "Player1");
+	LoadPlayer(scene, "Player2");
+}
+
+void LoadPlayer(Scene& scene, const std::string& name)
+{
+	InputManager& inputManager{ InputManager::GetInstance() };
+	MovementComponent* moveCompPtr{};
+	BoxColliderComponent* boxCompPtr{};
+	ScoreComponent* scoreCompPtr{};
 
 	// controls
 	Action up{};
@@ -77,48 +68,44 @@ void load()
 	down.SetControllerInput(Input::dPadDown);
 	down.SetKeyboardInput(SDL_SCANCODE_S);
 	down.SetType(ActionType::hold);
-	
+
 	Action left{};
 	left.SetControllerInput(Input::dPadLeft);
 	left.SetKeyboardInput(SDL_SCANCODE_A);
 	left.SetType(ActionType::hold);
-	
+
 	Action right{};
 	right.SetControllerInput(Input::dPadRight);
 	right.SetKeyboardInput(SDL_SCANCODE_D);
 	right.SetType(ActionType::hold);
 
+	Action fire{};
+	fire.SetControllerInput(Input::bumperRight);
+	fire.SetKeyboardInput(SDL_SCANCODE_SPACE);
+	fire.SetType(ActionType::down);
+
 	// Player 1
-	GameObject* tank1 = scene.SpawnObject("Player1");
+	GameObject* tank1 = scene.SpawnObject(name);
 	tank1->SetLocalPosition(200, 200);
-	spriteCompPtr = tank1->AddComponent<RenderComponent>("BlueTank.png");
+	auto spriteCompPtr = tank1->AddComponent<RenderComponent>("BlueTank.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 	moveCompPtr = tank1->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
 	boxCompPtr = tank1->AddComponent<BoxColliderComponent>();
-	testPtr = tank1->AddComponent<Test>();
-	boxCompPtr->AddObserver(testPtr);
+	scoreCompPtr = tank1->AddComponent<ScoreComponent>();
+
+	//FireCommand* commandPtr{ inputManager.AddCommand<FireCommand>() };
 
 	InputMapping map{};
-	controller = inputManager.AddController();
+	auto controller = inputManager.AddController();
 	map.AddMapping(up, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ 0, 1 }));
 	map.AddMapping(down, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ 0, -1 }));
 	map.AddMapping(left, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ -1, 0 }));
 	map.AddMapping(right, inputManager.AddCommand<MoveCommand>(tank1, glm::vec2{ 1, 0 }));
-	controller->SetInputMapping(std::move(map));
 
-	// Player 2
-	GameObject* tank2 = scene.SpawnObject("Player2");
-	tank2->SetLocalPosition(200, 100);
-	spriteCompPtr = tank2->AddComponent<RenderComponent>("BlueTank.png");
-	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
-
-	controller = inputManager.AddController();
-	map.AddMapping(up, inputManager.AddCommand<MoveCommand>(tank2, glm::vec2{ 0, 1 }));
-	map.AddMapping(down, inputManager.AddCommand<MoveCommand>(tank2, glm::vec2{ 0, -1 }));
-	map.AddMapping(left, inputManager.AddCommand<MoveCommand>(tank2, glm::vec2{ -1, 0 }));
-	map.AddMapping(right, inputManager.AddCommand<MoveCommand>(tank2, glm::vec2{ 1, 0 }));
+	map.AddMapping(fire, inputManager.AddCommand<FireCommand>(tank1));
 	controller->SetInputMapping(std::move(map));
 }
+
 
 int main(int, char*[]) {
 
