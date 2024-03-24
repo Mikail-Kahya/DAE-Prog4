@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include <string>
 #include <memory>
 #include "Singleton.h"
@@ -22,7 +21,8 @@ namespace mk
 		SceneManager& operator=(const SceneManager& other)		= delete;
 		SceneManager& operator=(SceneManager&& other) noexcept	= delete;
 
-		Scene& CreateScene(const std::string& name);
+		Scene& LoadScene(const std::string& name);
+		Scene& GetScene() const;
 
 		void FixedUpdate();
 		void Update();
@@ -31,7 +31,7 @@ namespace mk
 		TimeManager& GetTimeManager();
 
 	private:
-		std::vector<std::unique_ptr<Scene>> m_Scenes{};
+		std::unique_ptr<Scene> m_Scene{};
 		TimeManager m_TimeManager{};
 	};
 

@@ -6,11 +6,12 @@
 
 using namespace mk;
 
-MovementComponent::MovementComponent(float maxLinearSpeed, float maxAngularSpeed, float acceleration, float deceleration)
+MovementComponent::MovementComponent(float maxLinearSpeed, float maxAngularSpeed, float acceleration, float deceleration, bool consumeMovement)
 	: m_MaxLinearSpeed{ maxLinearSpeed }
 	, m_MaxAngularSpeed{ maxAngularSpeed }
 	, m_Acceleration{ acceleration }
 	, m_Deceleration{ deceleration }
+	, m_ConsumeMovement{ consumeMovement }
 {
 }
 
@@ -28,7 +29,8 @@ void MovementComponent::FixedUpdate()
 
 	const glm::vec2 travelled{ m_Velocity * deltaTime };
 	GetOwner().AddLocalOffset(travelled);
-	m_DesiredDirection = {};
+	if (m_ConsumeMovement)
+		m_DesiredDirection = {};
 }
 
 void MovementComponent::SetDirection(const glm::vec2& direction)

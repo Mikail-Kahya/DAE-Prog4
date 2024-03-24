@@ -36,10 +36,15 @@ namespace mk
 		const glm::vec3& GetWorldPosition();
 		const glm::vec3& GetLocalPosition() const;
 
+		float GetRotation();
+
 		void SetLocalPosition(float x, float y);
 		void SetLocalPosition(const glm::vec3& position);
 		void AddLocalOffset(const glm::vec2& offset);
+		void SetRotation(float rotation);
+		void AddRotation(float deltaRotation);
 
+		// TODO: Keep world rotation?
 		void SetParent(GameObject* parentPtr, bool keepWorldPosition = false);
 		int GetChildCount() const;
 		GameObject* GetChildAt(int index) const;
@@ -54,7 +59,9 @@ namespace mk
 	private:
 		void ComponentCleanup();
 		void UpdateWorldPosition();
+		void UpdateWorldRotation();
 		void FlagPositionDirty();
+		void FlagRotationDirty();
 		void AddChild(GameObject* childPtr);
 		void RemoveChild(GameObject* childPtr);
 
@@ -66,6 +73,7 @@ namespace mk
 		Transform m_LocalTransform;
 		Transform m_WorldTransform;
 		bool m_PositionIsDirty{ false };
+		bool m_RotationIsDirty{ false };
 
 		// Ownership
 		GameObject* m_Parent{};

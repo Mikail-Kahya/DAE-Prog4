@@ -141,6 +141,13 @@ const glm::vec3& GameObject::GetLocalPosition() const
 	return m_LocalTransform.GetPosition();
 }
 
+float GameObject::GetRotation()
+{
+	if (m_RotationIsDirty)
+		UpdateWorldRotation();
+	return m_WorldTransform.GetRotation().z;
+}
+
 void GameObject::SetLocalPosition(float x, float y)
 {
 	SetLocalPosition({ x, y, m_LocalTransform.GetPosition().z });
@@ -158,6 +165,18 @@ void GameObject::AddLocalOffset(const glm::vec2& offset)
 	FlagPositionDirty();
 }
 
+void GameObject::SetRotation(float rotation)
+{
+	m_LocalTransform.SetRotation({ 0, 0, rotation });
+	FlagRotationDirty();
+}
+
+void GameObject::AddRotation(float deltaRotation)
+{
+	m_LocalTransform.AddRotation(0, 0, deltaRotation);
+	FlagRotationDirty();
+}
+
 void GameObject::UpdateWorldPosition()
 {
 	if (!m_PositionIsDirty)
@@ -171,11 +190,33 @@ void GameObject::UpdateWorldPosition()
 	m_PositionIsDirty = false;
 }
 
+void GameObject::UpdateWorldRotation()
+{
+	if (!m_RotationIsDirty)
+		return;
+
+	if (m_Parent == nullptr)
+		m_WorldTransform.SetRotation(m_WorldTransform.GetRotation());
+	else
+		m_WorldTransform.SetRotation(
+			glm::vec3{ 0, 0, m_Parent->GetRotation() } +
+			m_LocalTransform.GetRotation());
+
+	m_RotationIsDirty = false;
+}
+
 void GameObject::FlagPositionDirty()
 {
 	m_PositionIsDirty = true;
 	for (GameObject* childPtr : m_Children)
 		childPtr->FlagPositionDirty();
+}
+
+void GameObject::FlagRotationDirty()
+{
+	m_RotationIsDirty = true;
+	for (GameObject* childPtr : m_Children)
+		childPtr->FlagRotationDirty();
 }
 
 void GameObject::SetParent(GameObject* parentPtr, bool keepWorldPosition)

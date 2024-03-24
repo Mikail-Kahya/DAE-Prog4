@@ -7,7 +7,7 @@ namespace mk
 	class MovementComponent final : public Component
 	{
 	public:
-		MovementComponent(float maxLinearSpeed = 50.f, float maxAngularSpeed = 5.f, float acceleration = 1.f, float deceleration = 1.f);
+		MovementComponent(float maxLinearSpeed = 50.f, float maxAngularSpeed = 5.f, float acceleration = 1.f, float deceleration = 1.f, bool consumeMovement = true);
 		~MovementComponent() override = default;
 
 		MovementComponent(const MovementComponent& other)				= delete;
@@ -38,5 +38,6 @@ namespace mk
 		float m_Deceleration{};
 		glm::vec2 m_Velocity{};
 		glm::vec2 m_DesiredDirection{};
+		bool m_ConsumeMovement{ false };
 	};
 }

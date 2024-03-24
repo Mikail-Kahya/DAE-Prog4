@@ -5,12 +5,12 @@
 #include <windows.h>
 #endif
 
-//#if _DEBUG
-//// ReSharper disable once CppUnusedIncludeDirective
-//#if __has_include(<vld.h>)
-//#include <vld.h>
-//#endif
-//#endif
+#if _DEBUG
+// ReSharper disable once CppUnusedIncludeDirective
+#if __has_include(<vld.h>)
+#include <vld.h>
+#endif
+#endif
 
 #include "MkUltra.h"
 #include "SceneManager.h"
@@ -37,7 +37,7 @@ void LoadPlayer(Scene& scene, const std::string& name);
 
 void load()
 {
-	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
+	auto& scene = SceneManager::GetInstance().LoadScene("Demo");
 	const Renderer& renderer{ Renderer::GetInstance() };
 	const int screenHeight{ renderer.GetHeight() };
 

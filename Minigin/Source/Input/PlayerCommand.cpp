@@ -16,3 +16,13 @@ void MoveCommand::Execute()
 {
 	m_MoveComp->SetDirection(m_MoveComp->GetDirection() + m_Direction);
 }
+
+FireCommand::FireCommand(GameObject* gameObject)
+	: GameObjectCommand(gameObject)
+{
+}
+
+void FireCommand::Execute()
+{
+	Print("Hey\n");
+}

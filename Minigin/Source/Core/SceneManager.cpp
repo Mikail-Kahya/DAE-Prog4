@@ -1,35 +1,39 @@
 #include "SceneManager.h"
 
-void mk::SceneManager::FixedUpdate()
+using namespace mk;
+
+void SceneManager::FixedUpdate()
 {
-	for (auto& scene : m_Scenes)
-		scene->FixedUpdate();
+	m_Scene->FixedUpdate();
 }
 
-void mk::SceneManager::Update()
+void SceneManager::Update()
 {
-	for(auto& scene : m_Scenes)
-		scene->Update();
+	m_Scene->Update();
 }
 
-void mk::SceneManager::LateUpdate()
+void SceneManager::LateUpdate()
 {
-	for (auto& scene : m_Scenes)
-		scene->LateUpdate();
+	m_Scene->LateUpdate();
 }
 
-mk::TimeManager& mk::SceneManager::GetTimeManager()
+TimeManager& SceneManager::GetTimeManager()
 {
 	return m_TimeManager;
 }
 
-const mk::TimeManager& mk::Time()
+const TimeManager& Time()
 {
 	return SceneManager::GetInstance().GetTimeManager();
 }
 
-mk::Scene& mk::SceneManager::CreateScene(const std::string& name)
+Scene& SceneManager::LoadScene(const std::string& name)
 {
-	m_Scenes.push_back(std::make_unique<Scene>(name));
-	return *m_Scenes.back();
+	m_Scene = std::make_unique<Scene>(name);
+	return *m_Scene;
+}
+
+Scene& SceneManager::GetScene() const
+{
+	return *m_Scene;
 }
