@@ -34,7 +34,18 @@ void HealthComponent::Hit()
 {
 	m_Health = std::max(0, m_Health - 1);
 	if (IsDead())
-		GetOwner().Destroy();
+	{
+		Event event{ EventType::OBJECT_DIED };
+		event.SetData("score", 100);
+		Notify(event);
+		Reset();
+	}
+ 		
+}
+
+void HealthComponent::Reset()
+{
+	m_Health = m_MaxHealth;
 }
 
 bool HealthComponent::IsDead() const

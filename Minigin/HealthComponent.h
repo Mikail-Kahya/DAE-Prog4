@@ -4,7 +4,7 @@
 
 namespace mk
 {
-	class HealthComponent : public Component, public Observer
+	class HealthComponent : public Component, public Observer, public Subject
 	{
 	public:
 		HealthComponent(int maxHealth, int startHealth);
@@ -22,6 +22,7 @@ namespace mk
 
 	private:
 		void Hit();
+		void Reset();
 
 		const int m_MaxHealth{};
 		int m_Health{};

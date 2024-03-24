@@ -4,6 +4,7 @@
 
 #include "Component.h"
 #include "glm/vec2.hpp"
+#include "Texture2D.h"
 
 namespace mk
 {

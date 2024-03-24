@@ -31,12 +31,14 @@
 
 #include "PlayerCommand.h"
 #include "Renderer.h"
+#include "RespawnComponent.h"
 
 
 namespace fs = std::filesystem;
 using namespace mk;
 
-void LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos);
+GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos);
+void LoadHud(Scene& scene, const std::vector<GameObject*>& players);
 
 void load()
 {
@@ -51,14 +53,16 @@ void load()
 	auto fpsComponent = fps->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
 
-	LoadPlayer(scene, "Player1", { 100.f, 100.f });
-	LoadPlayer(scene, "Player2", { screenWidth - 100.f, 100.f });
+	const std::vector players{
+		LoadPlayer(scene, "Player1", { 100.f, 100.f }),
+		LoadPlayer(scene, "Player2", { screenWidth - 100.f, 100.f })
+	};
+	LoadHud(scene, players);
 }
 
-void LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos)
+GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos)
 {
 	InputManager& inputManager{ InputManager::GetInstance() };
-	//ScoreComponent* scoreCompPtr{};
 
 	// controls
 	Action up{};
@@ -104,8 +108,9 @@ void LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 	tank->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
 	tank->AddComponent<BoxColliderComponent>();
-	tank->AddComponent<HealthComponent>(3, 3);
-	//scoreCompPtr = tank1->AddComponent<ScoreComponent>();
+	HealthComponent* healthCompPtr = tank->AddComponent<HealthComponent>(3, 3);
+	RespawnComponent* respawnCompPtr = tank->AddComponent<RespawnComponent>(glm::vec3{ startPos, 0.f });
+	healthCompPtr->AddObserver(respawnCompPtr);
 
 	// Gun
 	GameObject* gun = scene.SpawnObject(name + "Gun");
@@ -129,6 +134,25 @@ void LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos
 	map.AddMapping(rotateLeft, inputManager.AddCommand<RotateCommand>(gun, rotateSpeed, 1));
 	map.AddMapping(rotateRight, inputManager.AddCommand<RotateCommand>(gun, rotateSpeed, -1));
 	controller->SetInputMapping(std::move(map));
+
+	return tank;
+}
+
+void LoadHud(Scene& scene, const std::vector<GameObject*>& players)
+{
+	GameObject* HUDWrapper{ scene.SpawnObject("Hud wrapper") };
+	HUDWrapper->SetLocalPosition(20, 200);
+
+	GameObject* score{ scene.SpawnObject("score") };
+	score->SetParent(HUDWrapper);
+	ScoreComponent* scoreCompPtr = score->AddComponent<ScoreComponent>();
+
+	for (GameObject* playerPtr : players)
+	{
+		HealthComponent* healthCompPtr{ playerPtr->GetComponent<HealthComponent>() };
+		healthCompPtr->AddObserver(scoreCompPtr);
+	}
+	
 }
 
 

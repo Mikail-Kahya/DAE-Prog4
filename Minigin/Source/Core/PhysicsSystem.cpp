@@ -10,7 +10,10 @@ void PhysicsSystem::Update()
 	for (auto a : m_BoxColliders)
 	{
 		for (auto b : m_BoxColliders)
-			a->CheckCollision(b);
+		{
+			if (a != b)
+				a->CheckCollision(b);
+		}
 	}
 }
 

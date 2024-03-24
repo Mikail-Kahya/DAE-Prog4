@@ -1,6 +1,7 @@
 #include "FireComponent.h"
 
 #include "BoxColliderComponent.h"
+#include "ExplosionComponent.h"
 #include "GameObject.h"
 
 #include "SceneManager.h"
@@ -32,5 +33,7 @@ void FireComponent::Fire() const
 	spriteCompPtr->SetAnchor({ 0.5f, 0.5f });
 
 	BoxColliderComponent* colliderCompPtr{ bulletPtr->AddComponent<BoxColliderComponent>() };
-	colliderCompPtr->SetExtent({ spriteCompPtr->GetTexture()->GetSize() , 0.f });
+	colliderCompPtr->SetExtent({ spriteCompPtr->GetTexture()->GetSize() , 2.f });
+
+	colliderCompPtr->AddObserver(bulletPtr->AddComponent<ExplosionComponent>());
 }

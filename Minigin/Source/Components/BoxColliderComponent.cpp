@@ -23,6 +23,9 @@ void BoxColliderComponent::CheckCollision(BoxColliderComponent* other)
 		Event event{ EventType::OBJECT_OVERLAP };
 		event.SetData("other", other);
 		Notify(event);
+
+		event.SetData("other", this);
+		other->Notify(event);
 	}
 }
 

@@ -11,6 +11,7 @@ namespace mk
 		STOP_OBSERVING,
 		OBJECT_DESTROY,
 		OBJECT_OVERLAP,
+		OBJECT_DIED,
 		LEVEL_STARTED,
 		LEVEL_ENDED,
 		BOMB_EXPLODED,
@@ -68,6 +69,8 @@ namespace mk
 
 		template<typename T> bool GetData(const std::string& key, T& data) const
 		{
+			if (!m_Args.contains(key))
+				return false;
 			EventArg<T>* dataPtr = dynamic_cast<EventArg<T>*>(m_Args.at(key).get());
 			if (dataPtr != nullptr)
 			{
