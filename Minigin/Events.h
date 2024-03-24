@@ -7,6 +7,8 @@ namespace mk
 {
 	enum EventType
 	{
+		OBSERVE,
+		STOP_OBSERVING,
 		OBJECT_DESTROY,
 		OBJECT_OVERLAP,
 		LEVEL_STARTED,

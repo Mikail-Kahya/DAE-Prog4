@@ -11,27 +11,15 @@ Observer::~Observer()
 
 void Observer::OnNotify(Subject* subjectPtr, const Event& event)
 {
-	if (event.type == EventType::OBJECT_DESTROY)
-		StopObserving(subjectPtr);
-}
-
-void Observer::Observe(Subject* subjectPtr)
-{
-	const auto foundIter = std::find(m_Subjects.begin(), m_Subjects.end(), subjectPtr);
-	if (foundIter == m_Subjects.end())
+	switch (event.type)
 	{
-		m_Subjects.emplace_back(subjectPtr);
+	case OBSERVE:
 		subjectPtr->AddObserver(this);
-	}
-}
-
-void Observer::StopObserving(Subject* subjectPtr)
-{
-	const auto foundIter = std::find(m_Subjects.begin(), m_Subjects.end(), subjectPtr);
-	if (foundIter != m_Subjects.end())
-	{
+		break;
+	case STOP_OBSERVING:
+	case OBJECT_DESTROY:
 		subjectPtr->RemoveObserver(this);
-		m_Subjects.erase(foundIter);
+		break;
 	}
 }
 
@@ -47,7 +35,7 @@ void Subject::AddObserver(Observer* observerPtr)
 	if (foundIter == m_Observers.end())
 	{
 		m_Observers.emplace_back(observerPtr);
-		observerPtr->Observe(this);
+		observerPtr->OnNotify(this, { EventType::OBSERVE });
 	}
 }
 
@@ -56,8 +44,8 @@ void Subject::RemoveObserver(Observer* observerPtr)
 	const auto foundIter = std::find(m_Observers.begin(), m_Observers.end(), observerPtr);
 	if (foundIter == m_Observers.end())
 	{
-		observerPtr->StopObserving(this);
 		m_Observers.erase(foundIter);
+		observerPtr->OnNotify(this, { EventType::STOP_OBSERVING });
 	}
 }
 

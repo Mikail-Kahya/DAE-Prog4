@@ -96,7 +96,7 @@ void load()
 	moveCompPtr = tank1->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
 	boxCompPtr = tank1->AddComponent<BoxColliderComponent>();
 	testPtr = tank1->AddComponent<Test>();
-	testPtr->Observe(boxCompPtr);
+	boxCompPtr->AddObserver(testPtr);
 
 	InputMapping map{};
 	controller = inputManager.AddController();

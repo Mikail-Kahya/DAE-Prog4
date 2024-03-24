@@ -14,9 +14,6 @@ namespace mk
 		virtual ~Observer();
 		virtual void OnNotify(Subject* subjectPtr, const Event& event);
 
-		void Observe(Subject* subjectPtr);
-		void StopObserving(Subject* subjectPtr);
-
 	private:
 		std::vector<Subject*> m_Subjects{};
 	};
