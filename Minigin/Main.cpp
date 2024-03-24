@@ -5,12 +5,12 @@
 #include <windows.h>
 #endif
 
-#if _DEBUG
-// ReSharper disable once CppUnusedIncludeDirective
-#if __has_include(<vld.h>)
-#include <vld.h>
-#endif
-#endif
+//#if _DEBUG
+//// ReSharper disable once CppUnusedIncludeDirective
+//#if __has_include(<vld.h>)
+//#include <vld.h>
+//#endif
+//#endif
 
 #include "MkUltra.h"
 #include "SceneManager.h"
@@ -18,13 +18,17 @@
 #include "Scene.h"
 
 #include "GameObject.h"
-#include "FPSComponent.h"
 #include "InputManager.h"
+
+#include "FPSComponent.h"
 #include "TextComponent.h"
 #include "RenderComponent.h"
 #include "MovementComponent.h"
+#include "BoxColliderComponent.h"
+
 #include "PlayerCommand.h"
 #include "Renderer.h"
+#include "Test.h"
 
 namespace fs = std::filesystem;
 using namespace mk;
@@ -40,6 +44,8 @@ void load()
 	Controller* controller{};
 	RenderComponent* spriteCompPtr{};
 	MovementComponent* moveCompPtr{};
+	BoxColliderComponent* boxCompPtr{};
+	Test* testPtr{};
 
 	GameObject* bg = scene.SpawnObject("bg");
 	spriteCompPtr = bg->AddComponent<RenderComponent>("background.tga");
@@ -88,6 +94,9 @@ void load()
 	spriteCompPtr = tank1->AddComponent<RenderComponent>("BlueTank.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 	moveCompPtr = tank1->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
+	boxCompPtr = tank1->AddComponent<BoxColliderComponent>();
+	testPtr = tank1->AddComponent<Test>();
+	testPtr->Observe(boxCompPtr);
 
 	InputMapping map{};
 	controller = inputManager.AddController();

@@ -18,3 +18,8 @@ const glm::vec3& BoxColliderComponent::GetBoxExtent() const
 {
 	return m_Extent;
 }
+
+void BoxColliderComponent::FixedUpdate()
+{
+	Notify(Event{ EventType::OBJECT_OVERLAP });
+}

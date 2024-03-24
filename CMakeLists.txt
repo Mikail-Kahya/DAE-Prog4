@@ -64,6 +64,9 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Core/Observer.cpp"
 
   "Minigin/Source/Components/HealthComponent.cpp"
+  "Minigin/Source/Core/PhysicsSystem.cpp"
+
+  
 )
 
 # enable c++20 features

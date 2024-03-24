@@ -1,10 +1,11 @@
 #pragma once
 #include "Component.h"
+#include "Observer.h"
 #include "glm/vec3.hpp"
 
 namespace mk
 {
-	class BoxColliderComponent : public Component
+	class BoxColliderComponent : public Component, public Subject
 	{
 	public:
 		BoxColliderComponent() = default;
@@ -17,6 +18,8 @@ namespace mk
 
 		bool IsOverlapping(BoxColliderComponent* other) const;
 		const glm::vec3& GetBoxExtent() const;
+
+		void FixedUpdate() override;
 
 	private:
 		glm::vec3 m_Extent{};

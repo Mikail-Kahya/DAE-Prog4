@@ -12,6 +12,12 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
+#pragma warning (push)
+#pragma warning (disable: 4996)
+#include <steam_api.h>
+#pragma warning (pop)
+
+
 #include "MkUltra.h"
 #include "InputManager.h"
 #include "SceneManager.h"
@@ -70,7 +76,7 @@ mk::MkUltra::MkUltra(const std::filesystem::path &dataPath)
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 
-	Renderer::GetInstance().Init(640, 480);
+	Renderer::GetInstance().Init(1280, 720);
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
@@ -78,11 +84,22 @@ mk::MkUltra::~MkUltra()
 {
 	Renderer::GetInstance().Destroy();
 	SDL_Quit();
+	SteamAPI_Shutdown();
 }
 
 void mk::MkUltra::Run(const std::function<void()>& load)
 {
+	// Check steamAPI
+	if (!SteamAPI_Init())
+	{
+		std::cerr << "Fatal error - Steam must be running to play this game (SteamAPI_Init() failed).\n";
+		return;
+	}
+
+
 	load();
+
+	// Setup of timing
 	using namespace std::chrono;
 	m_LastTime = high_resolution_clock::now();
 	SceneManager::GetInstance().GetTimeManager().fixedDeltaTime = FIXED_TIME_STEP;
