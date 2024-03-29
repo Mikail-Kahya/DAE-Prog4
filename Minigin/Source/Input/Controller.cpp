@@ -14,7 +14,6 @@ Controller::Controller(uint8_t idx, bool useKeyboard)
 		s_KeyboardUsed = useKeyboard;
 		m_UseKeyboard = useKeyboard;
 	}
-		
 }
 
 void Controller::PollKeyboard(const SDL_Event& e)

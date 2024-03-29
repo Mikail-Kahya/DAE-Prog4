@@ -23,9 +23,13 @@ void ScoreComponent::OnNotify(Subject* subjectPtr, const Event& event)
 
 void ScoreComponent::AddScore(const Event& event)
 {
-	int score{};
-	event.GetData("score", score);
+	int scoreIncrease{};
+	event.GetData("score", scoreIncrease);
 
-	m_Score += score;
+	m_Score += scoreIncrease;
 	m_TextComponentPtr->SetText("Score: " + std::to_string(m_Score));
+
+	Event newEvent{ EventType::SCORE_CHANGED };
+	newEvent.SetData("score", m_Score);
+	Notify(newEvent);
 }

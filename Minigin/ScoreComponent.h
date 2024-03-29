@@ -6,7 +6,7 @@ namespace mk
 {
 	class TextComponent;
 
-	class ScoreComponent : public Component, public Observer
+	class ScoreComponent : public Component, public Observer, public Subject
 	{
 	public:
 		ScoreComponent() = default;

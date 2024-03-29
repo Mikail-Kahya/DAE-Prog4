@@ -17,7 +17,8 @@ namespace mk
 		LEVEL_ENDED,
 		BOMB_EXPLODED,
 		ENEMY_DIED,
-		PLAYER_DIED
+		PLAYER_DIED,
+		SCORE_CHANGED
 	};
 
 	struct IEventArg

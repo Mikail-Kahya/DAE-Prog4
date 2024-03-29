@@ -36,8 +36,7 @@ bool KeyboardInput::ButtonDown(SDL_Scancode key) const
 
 bool KeyboardInput::ButtonHold(SDL_Scancode key) const
 {
-	return m_CurrentKeys[key];
-}
+	return m_CurrentKeys[key];}
 
 bool KeyboardInput::ButtonUp(SDL_Scancode key) const
 {
