@@ -5,12 +5,12 @@
 #include <windows.h>
 #endif
 
-//#if _DEBUG
-//// ReSharper disable once CppUnusedIncludeDirective
-//#if __has_include(<vld.h>)
-//#include <vld.h>
-//#endif
-//#endif
+#if _DEBUG
+// ReSharper disable once CppUnusedIncludeDirective
+#if __has_include(<vld.h>)
+#include <vld.h>
+#endif
+#endif
 
 #include "MkUltra.h"
 #include "SceneManager.h"
@@ -33,6 +33,7 @@
 #include "PlayerCommand.h"
 #include "Renderer.h"
 #include "RespawnComponent.h"
+#include "Temp/AchievementComponent.h"
 
 
 namespace fs = std::filesystem;
@@ -40,6 +41,7 @@ using namespace mk;
 
 GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos);
 void LoadHud(Scene& scene, const std::vector<GameObject*>& players);
+void LoadInfo(Scene& scene);
 
 void load()
 {
@@ -59,6 +61,7 @@ void load()
 		LoadPlayer(scene, "Player2", { screenWidth - 100.f, 100.f })
 	};
 	LoadHud(scene, players);
+	LoadInfo(scene);
 }
 
 GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos)
@@ -165,7 +168,26 @@ void LoadHud(Scene& scene, const std::vector<GameObject*>& players)
 
 		players[(idx + 1) % players.size()]->GetComponent<HealthComponent>()->AddObserver(scoreCompPtr);
 		healthCompPtr->AddObserver(healthBarCompPtr);
+
+		GameObject* achievement{ scene.SpawnObject("achievement") };
+		AchievementComponent* achievementCompPtr{ achievement->AddComponent<AchievementComponent>() };
+
+		scoreCompPtr->AddObserver(achievementCompPtr);
 	}
+}
+
+void LoadInfo(Scene& scene)
+{
+	const int screenWidth{ Renderer::GetInstance().GetWidth() };
+
+	GameObject* controlsKeyboardText{ scene.SpawnObject("FireText") };
+	controlsKeyboardText->SetLocalPosition(static_cast<float>(screenWidth / 2.f), 370.f);
+	controlsKeyboardText->AddComponent<TextComponent>("Use WASD to move, SPACE to fire, Q and E to turn cannon", "Lingua.otf", 20)->SetAnchor({ 0.5f,0.5f });
+
+	GameObject* padKeyboardText{ scene.SpawnObject("FireText") };
+	padKeyboardText->SetLocalPosition(static_cast<float>(screenWidth / 2.f), 400.f);
+	padKeyboardText->AddComponent<TextComponent>("Use D-PAD to move, RIGHT BUMPER to fire, X and B to turn cannon", "Lingua.otf", 20)->SetAnchor({ 0.5f,0.5f });
+
 }
 
 
