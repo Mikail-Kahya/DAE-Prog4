@@ -35,19 +35,20 @@ namespace mk
 		const std::string& GetName() const;
 		const glm::vec3& GetWorldPosition();
 		const glm::vec3& GetLocalPosition() const;
-
 		float GetRotation();
+		glm::vec3 GetForward();
+		bool IsStatic() const;
 
 		void SetLocalPosition(float x, float y);
 		void SetLocalPosition(const glm::vec3& position);
 		void AddLocalOffset(const glm::vec2& offset);
 		void SetRotation(float rotation);
 		void AddRotation(float deltaRotation);
-
-		glm::vec3 GetForward();
+		void SetStatic(bool isStatic);
 
 		// TODO: Keep world rotation?
 		void SetParent(GameObject* parentPtr, bool keepWorldPosition = false);
+		GameObject* GetParent() const;
 		int GetChildCount() const;
 		GameObject* GetChildAt(int index) const;
 
@@ -69,14 +70,6 @@ namespace mk
 
 		bool IsChild(GameObject* childPtr) const;
 
-		// Common state
-		std::string m_Name{};
-		bool m_Destroy{};
-		Transform m_LocalTransform;
-		Transform m_WorldTransform;
-		bool m_PositionIsDirty{ false };
-		bool m_RotationIsDirty{ false };
-
 		// Ownership
 		GameObject* m_Parent{};
 		std::vector<GameObject*> m_Children{};
@@ -84,6 +77,15 @@ namespace mk
 		// Components
 		std::vector<std::unique_ptr<Component>> m_Components;
 		std::vector<std::unique_ptr<Component>> m_ComponentBuffer;
+
+		// Common state
+		std::string m_Name{};
+		Transform m_LocalTransform;
+		Transform m_WorldTransform;
+		bool m_PositionIsDirty{ false };
+		bool m_RotationIsDirty{ false };
+		bool m_IsStatic{ false };
+		bool m_Destroy{ false };
 	};
 
 	template <std::derived_from<Component> ComponentType>
