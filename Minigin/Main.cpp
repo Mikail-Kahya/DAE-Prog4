@@ -120,7 +120,7 @@ GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& s
 
 	spriteCompPtr = gun->AddComponent<RenderComponent>("BlueTankGun.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.f });
-	gun->AddComponent<FireComponent>(60.f);
+	gun->AddComponent<FireComponent>(20.f);
 
 	// input
 	InputMapping map{};

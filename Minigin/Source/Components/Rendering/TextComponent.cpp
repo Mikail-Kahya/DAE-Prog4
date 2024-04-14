@@ -23,7 +23,7 @@ TextComponent::TextComponent(const std::string& text, const std::string& fontNam
 
 void TextComponent::Start()
 {
-	m_RendererPtr = GetOwner().AddComponent<RenderComponent>(m_Texture.get());
+	m_RendererPtr = GetOwner()->AddComponent<RenderComponent>(m_Texture.get());
 }
 
 void TextComponent::Update()

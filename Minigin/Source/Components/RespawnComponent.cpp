@@ -24,5 +24,5 @@ void RespawnComponent::SetRespawn(const glm::vec3& respawn)
 
 void RespawnComponent::Respawn() const
 {
-	GetOwner().SetLocalPosition(m_Respawn);
+	GetOwner()->SetLocalPosition(m_Respawn);
 }

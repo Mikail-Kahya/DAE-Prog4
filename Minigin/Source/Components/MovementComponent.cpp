@@ -27,7 +27,7 @@ void MovementComponent::FixedUpdate()
 		return; // Avoid updating position if not moving
 
 	const glm::vec2 travelled{ m_Velocity * deltaTime };
-	GetOwner().AddLocalOffset(travelled);
+	GetOwner()->AddLocalOffset(travelled);
 	if (m_ConsumeMovement)
 		m_DesiredDirection = {};
 }

@@ -25,13 +25,13 @@ RenderComponent::~RenderComponent()
 
 void RenderComponent::Start()
 {
-	m_Depth = GetOwner().GetWorldPosition().z;
+	m_Depth = GetOwner()->GetWorldPosition().z;
 	Renderer::GetInstance().RegisterRenderComponent(this);
 }
 
 void RenderComponent::LateUpdate()
 {
-	const float newDepth{ GetOwner().GetWorldPosition().z };
+	const float newDepth{ GetOwner()->GetWorldPosition().z };
 	
 	if (abs(m_Depth - newDepth) > FLT_EPSILON)
 	{
@@ -47,7 +47,7 @@ Texture2D* RenderComponent::GetTexture() const
 
 glm::vec2 RenderComponent::GetRenderPosition() const
 {
-	glm::vec3 position{ GetOwner().GetWorldPosition() };
+	glm::vec3 position{ GetOwner()->GetWorldPosition() };
 	position.x -= m_Anchor.x * GetTextureWidth();
 	position.y -= m_Anchor.y * GetTextureHeight();
 	return { position.x, position.y };

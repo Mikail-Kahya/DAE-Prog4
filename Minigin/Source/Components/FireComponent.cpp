@@ -19,8 +19,8 @@ FireComponent::FireComponent(float barrelLength)
 
 void FireComponent::Fire() const
 {
-	const glm::vec3 pos{ GetOwner().GetWorldPosition() };
-	const glm::vec3 forward{ GetOwner().GetForward() };
+	const glm::vec3 pos{ GetOwner()->GetWorldPosition() };
+	const glm::vec3 forward{ GetOwner()->GetForward() };
 	constexpr float speed{ 100.f };
 
 	GameObject* bulletPtr{ SceneManager::GetInstance().GetScene().SpawnObject("Bullet") };
@@ -34,6 +34,8 @@ void FireComponent::Fire() const
 
 	BoxColliderComponent* colliderCompPtr{ bulletPtr->AddComponent<BoxColliderComponent>() };
 	colliderCompPtr->SetExtent({ spriteCompPtr->GetTexture()->GetSize() , 2.f });
+	colliderCompPtr->Ignore(GetOwner());
+	colliderCompPtr->Ignore(GetOwner()->GetParent());
 
 	colliderCompPtr->AddObserver(bulletPtr->AddComponent<ExplosionComponent>());
 }

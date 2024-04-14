@@ -15,7 +15,7 @@ HealthComponent::HealthComponent(int maxHealth, int startHealth)
 
 void HealthComponent::Start()
 {
-	BoxColliderComponent* boxPtr{ GetOwner().GetComponent<BoxColliderComponent>() };
+	BoxColliderComponent* boxPtr{ GetOwner()->GetComponent<BoxColliderComponent>() };
 	if (boxPtr != nullptr)
 		boxPtr->AddObserver(this);
 	else

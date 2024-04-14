@@ -9,7 +9,7 @@ void HealthBarComponent::Start()
 {
 	Component::Start();
 
-	m_TextCompPtr = GetOwner().AddComponent<TextComponent>("Health: 0", "Lingua.otf", 30);
+	m_TextCompPtr = GetOwner()->AddComponent<TextComponent>("Health: 0", "Lingua.otf", 30);
 }
 
 void HealthBarComponent::OnNotify(Subject* subjectPtr, const Event& event)

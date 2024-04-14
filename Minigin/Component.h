@@ -25,7 +25,7 @@ namespace mk
 		void ClearDestroy();
 
 		bool DestroyFlagged() const;
-		GameObject& GetOwner() const;
+		GameObject* GetOwner() const;
 
 	protected:
 		Component() = default;

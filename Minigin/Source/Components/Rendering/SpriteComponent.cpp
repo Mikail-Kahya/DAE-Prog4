@@ -13,7 +13,7 @@ SpriteComponent::SpriteComponent(const std::string& file)
 
 void SpriteComponent::Start()
 {
-    m_RendererPtr = GetOwner().AddComponent<RenderComponent>(m_TexturePtr);
+    m_RendererPtr = GetOwner()->AddComponent<RenderComponent>(m_TexturePtr);
 }
 
 void SpriteComponent::SetTexture(const std::string& file)

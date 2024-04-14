@@ -148,6 +148,17 @@ float GameObject::GetRotation()
 	return m_WorldTransform.GetRotation().z;
 }
 
+glm::vec3 GameObject::GetForward()
+{
+	const float angleRad{ GetRotation() * 3.14f / 180.f };
+	return { cosf(angleRad), sinf(angleRad), 0.f };
+}
+
+bool GameObject::IsStatic() const
+{
+	return m_IsStatic;
+}
+
 void GameObject::SetLocalPosition(float x, float y)
 {
 	SetLocalPosition({ x, y, m_LocalTransform.GetPosition().z });
@@ -178,10 +189,9 @@ void GameObject::AddRotation(float deltaRotation)
 	FlagRotationDirty();
 }
 
-glm::vec3 GameObject::GetForward()
+void GameObject::SetStatic(bool isStatic)
 {
-	const float angleRad{ GetRotation() * 3.14f / 180.f };
-	return { cosf(angleRad), sinf(angleRad), 0.f };
+	m_IsStatic = isStatic;
 }
 
 void GameObject::UpdateWorldPosition()
@@ -245,6 +255,11 @@ void GameObject::SetParent(GameObject* parentPtr, bool keepWorldPosition)
 	m_Parent = parentPtr;
 	if (m_Parent != nullptr)
 		m_Parent->AddChild(this);
+}
+
+GameObject* GameObject::GetParent() const
+{
+	return m_Parent;
 }
 
 int GameObject::GetChildCount() const

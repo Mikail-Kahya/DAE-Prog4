@@ -23,7 +23,7 @@ void OrbitComponent::FixedUpdate()
 		m_Angle -= fullRot;
 
 	const glm::vec3 offset{ glm::cos(m_Angle) * m_OrbitRadius, glm::sin(m_Angle) * m_OrbitRadius, 0.f };
-	GetOwner().SetLocalPosition(offset);
+	GetOwner()->SetLocalPosition(offset);
 }
 
 void OrbitComponent::SetAngle(float angleDegree)

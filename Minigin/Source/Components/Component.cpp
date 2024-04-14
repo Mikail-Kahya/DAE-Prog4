@@ -22,7 +22,7 @@ bool Component::DestroyFlagged() const
 	return m_Destroy;
 }
 
-GameObject& Component::GetOwner() const
+GameObject* Component::GetOwner() const
 {
-	return *m_OwnerPtr;
+	return m_OwnerPtr;
 }
