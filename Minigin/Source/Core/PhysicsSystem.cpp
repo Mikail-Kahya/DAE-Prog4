@@ -7,13 +7,10 @@ using namespace mk;
 void PhysicsSystem::Update()
 {
 	// Very poor performance, fix later
-	for (auto a : m_BoxColliders)
+	for (size_t idxFirst{}; idxFirst < m_BoxColliders.size() - 1; ++idxFirst)
 	{
-		for (auto b : m_BoxColliders)
-		{
-			if (a != b)
-				a->CheckCollision(b);
-		}
+		for (size_t idxLast{idxFirst + 1}; idxLast < m_BoxColliders.size(); ++idxLast)
+			m_BoxColliders[idxFirst]->CheckCollision(m_BoxColliders[idxLast]);
 	}
 }
 
