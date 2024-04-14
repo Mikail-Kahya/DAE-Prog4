@@ -18,9 +18,16 @@ BoxColliderComponent::~BoxColliderComponent()
 
 void BoxColliderComponent::CheckCollision(BoxColliderComponent* otherPtr)
 {
-	if (m_IgnoreObjects.contains(otherPtr->GetOwner()))
+	if (m_IgnoreObjects.contains(otherPtr->GetOwner()) || 
+		otherPtr->m_IgnoreObjects.contains(GetOwner()))
 		return;
+
+	if(!IsOverlapping(otherPtr))
+		return;
+
 	CollisionType type = otherPtr->GetOwner()->IsStatic() ? m_CollisionSettings.collisionStatic : m_CollisionSettings.collisionDynamic;
+
+	
 	switch (type)
 	{
 	case CollisionType::block:
@@ -85,9 +92,6 @@ void BoxColliderComponent::SetExtent(const glm::vec3& extent) noexcept
 
 void BoxColliderComponent::HandleOverlap(BoxColliderComponent* otherPtr)
 {
-	if (!IsOverlapping(otherPtr))
-		return;
-
 	Event event{ EventType::OBJECT_OVERLAP };
 	event.SetData("other", otherPtr);
 	Notify(event);
