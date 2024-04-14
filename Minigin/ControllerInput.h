@@ -30,6 +30,6 @@ namespace mk
 	private:
 		class XControllerInput;
 
-		XControllerInput*m_XInputImpl{};
+		XControllerInput* m_XInputImpl{};
 	};
 }
