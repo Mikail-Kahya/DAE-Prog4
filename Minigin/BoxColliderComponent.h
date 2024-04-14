@@ -9,11 +9,15 @@ namespace mk
 {
 	enum class CollisionType
 	{
-		overlapAll,
-		overlapDynamic,
-		blockAll,
-		blockDynamic,
-		none
+		block,
+		overlap,
+		ignore
+	};
+
+	struct CollisionSettings
+	{
+		CollisionType collisionStatic{ CollisionType::block };
+		CollisionType collisionDynamic{ CollisionType::overlap };
 	};
 
 	class BoxColliderComponent : public Component, public Subject
@@ -28,21 +32,22 @@ namespace mk
 		BoxColliderComponent& operator=(BoxColliderComponent&& other) noexcept	= delete;
 
 		void CheckCollision(BoxColliderComponent* otherPtr);
-		void Ignore(BoxColliderComponent* colliderPtr) noexcept;
-		void StopIgnoring(BoxColliderComponent* colliderPtr) noexcept;
+		void Ignore(GameObject* colliderPtr) noexcept;
+		void StopIgnoring(GameObject* colliderPtr) noexcept;
 
-		CollisionType GetCollision() const noexcept;
+		CollisionSettings GetCollision() const noexcept;
 		const glm::vec3& GetBoxExtent() const noexcept;
 
-		void SetCollision(CollisionType type) noexcept;
+		void SetCollision(CollisionSettings settings) noexcept;
 		void SetExtent(const glm::vec3& extent) noexcept;
 
 	private:
-		bool CanOverlap() const;
+		void HandleOverlap(BoxColliderComponent* otherPtr);
+		void HandleBlock(BoxColliderComponent* otherPtr);
 		bool IsOverlapping(BoxColliderComponent* other) const;
 
-		std::set<BoxColliderComponent*> m_IgnoreColliders{};
-		CollisionType m_CollisionType{ CollisionType::overlapAll };
+		std::set<GameObject*> m_IgnoreObjects{};
+		CollisionSettings m_CollisionSettings{};
 		glm::vec3 m_Extent{30.f, 30.f, 30.f};
 	};
 }

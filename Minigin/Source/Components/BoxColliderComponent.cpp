@@ -18,31 +18,34 @@ BoxColliderComponent::~BoxColliderComponent()
 
 void BoxColliderComponent::CheckCollision(BoxColliderComponent* otherPtr)
 {
-	if (CanOverlap() && !m_IgnoreColliders.contains(otherPtr) && IsOverlapping(otherPtr))
+	if (m_IgnoreObjects.contains(otherPtr->GetOwner()))
+		return;
+	CollisionType type = otherPtr->GetOwner()->IsStatic() ? m_CollisionSettings.collisionStatic : m_CollisionSettings.collisionDynamic;
+	switch (type)
 	{
-		Event event{ EventType::OBJECT_OVERLAP };
-		event.SetData("other", otherPtr);
-		Notify(event);
-
-		event.SetData("other", this);
-		otherPtr->Notify(event);
+	case CollisionType::block:
+		HandleBlock(otherPtr);
+		break;
+	case CollisionType::overlap:
+		HandleOverlap(otherPtr);
+		break;
 	}
 }
 
-void BoxColliderComponent::Ignore(BoxColliderComponent* colliderPtr) noexcept
+void BoxColliderComponent::Ignore(GameObject* colliderPtr) noexcept
 {
-	m_IgnoreColliders.insert(colliderPtr);
+	m_IgnoreObjects.insert(colliderPtr);
 }
 
-void BoxColliderComponent::StopIgnoring(BoxColliderComponent* colliderPtr) noexcept
+void BoxColliderComponent::StopIgnoring(GameObject* colliderPtr) noexcept
 {
-	if (m_IgnoreColliders.contains(colliderPtr))
-		m_IgnoreColliders.erase(colliderPtr);
+	if (m_IgnoreObjects.contains(colliderPtr))
+		m_IgnoreObjects.erase(colliderPtr);
 }
 
-CollisionType BoxColliderComponent::GetCollision() const noexcept
+CollisionSettings BoxColliderComponent::GetCollision() const noexcept
 {
-	return m_CollisionType;
+	return m_CollisionSettings;
 }
 
 const glm::vec3& BoxColliderComponent::GetBoxExtent() const noexcept
@@ -52,19 +55,27 @@ const glm::vec3& BoxColliderComponent::GetBoxExtent() const noexcept
 
 bool BoxColliderComponent::IsOverlapping(BoxColliderComponent* other) const
 {
-	const auto minMax{Geometry::GetBoxMinMax(other->GetOwner().GetWorldPosition(), other->GetBoxExtent()) };
-	if (Geometry::PointInBox(minMax.first, GetOwner().GetWorldPosition(), GetBoxExtent()))
+	const auto minMax{Geometry::GetBoxMinMax(other->GetOwner()->GetWorldPosition(), other->GetBoxExtent()) };
+	if (Geometry::PointInBox(minMax.first, GetOwner()->GetWorldPosition(), GetBoxExtent()))
 		return true;
 	
-	return Geometry::PointInBox(minMax.second, GetOwner().GetWorldPosition(), GetBoxExtent());
+	return Geometry::PointInBox(minMax.second, GetOwner()->GetWorldPosition(), GetBoxExtent());
 }
 
-void BoxColliderComponent::SetCollision(CollisionType type) noexcept
+void BoxColliderComponent::SetCollision(CollisionSettings settings) noexcept
 {
-	constexpr int lastIdx{ static_cast<int>(CollisionType::none) };
-	const int idx{ static_cast<int>(type) };
+	auto clampCollision = [](CollisionType type) -> CollisionType
+		{
+			constexpr int lastIdx{ static_cast<int>(CollisionType::ignore) };
+			int idx{ static_cast<int>(type) };
+			if (idx < 0 || idx > lastIdx)
+				idx = lastIdx;
+			return static_cast<CollisionType>(idx);
+		};
 
-	m_CollisionType = (idx < 0 || idx > lastIdx) ? CollisionType::none : type;
+	settings.collisionDynamic = clampCollision(settings.collisionDynamic);
+	settings.collisionStatic = clampCollision(settings.collisionStatic);
+	m_CollisionSettings = settings;
 }
 
 void BoxColliderComponent::SetExtent(const glm::vec3& extent) noexcept
@@ -72,7 +83,20 @@ void BoxColliderComponent::SetExtent(const glm::vec3& extent) noexcept
 	m_Extent = extent;
 }
 
-bool BoxColliderComponent::CanOverlap() const
+void BoxColliderComponent::HandleOverlap(BoxColliderComponent* otherPtr)
 {
-	return m_CollisionType == CollisionType::overlapAll || m_CollisionType == CollisionType::overlapDynamic;
+	if (!IsOverlapping(otherPtr))
+		return;
+
+	Event event{ EventType::OBJECT_OVERLAP };
+	event.SetData("other", otherPtr);
+	Notify(event);
+	event.SetData("other", this);
+	otherPtr->Notify(event);
+}
+
+void BoxColliderComponent::HandleBlock(BoxColliderComponent* otherPtr)
+{
+	if (!IsOverlapping(otherPtr))
+		return;
 }
