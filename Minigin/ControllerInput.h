@@ -4,8 +4,6 @@
 
 namespace mk
 {
-	class XControllerInput;
-
 	class ControllerInput final
 	{
 	public:
@@ -30,6 +28,8 @@ namespace mk
 		bool ButtonUp(Input input) const noexcept;
 
 	private:
-		XControllerInput* m_XInputImpl{};
+		class XControllerInput;
+
+		XControllerInput*m_XInputImpl{};
 	};
 }
