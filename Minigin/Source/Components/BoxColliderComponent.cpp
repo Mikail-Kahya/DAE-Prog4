@@ -16,27 +16,38 @@ BoxColliderComponent::~BoxColliderComponent()
 	PhysicsSystem::GetInstance().UnRegisterCollider(this);
 }
 
-void BoxColliderComponent::CheckCollision(BoxColliderComponent* other)
+void BoxColliderComponent::CheckCollision(BoxColliderComponent* otherPtr)
 {
-	if (CanOverlap() && IsOverlapping(other))
+	if (CanOverlap() && !m_IgnoreColliders.contains(otherPtr) && IsOverlapping(otherPtr))
 	{
 		Event event{ EventType::OBJECT_OVERLAP };
-		event.SetData("other", other);
+		event.SetData("other", otherPtr);
 		Notify(event);
 
 		event.SetData("other", this);
-		other->Notify(event);
+		otherPtr->Notify(event);
 	}
 }
 
-CollisionType BoxColliderComponent::GetCollision() const
+void BoxColliderComponent::Ignore(BoxColliderComponent* colliderPtr) noexcept
+{
+	m_IgnoreColliders.insert(colliderPtr);
+}
+
+void BoxColliderComponent::StopIgnoring(BoxColliderComponent* colliderPtr) noexcept
+{
+	if (m_IgnoreColliders.contains(colliderPtr))
+		m_IgnoreColliders.erase(colliderPtr);
+}
+
+CollisionType BoxColliderComponent::GetCollision() const noexcept
 {
 	return m_CollisionType;
 }
 
-void BoxColliderComponent::SetCollision(CollisionType type)
+const glm::vec3& BoxColliderComponent::GetBoxExtent() const noexcept
 {
-	m_CollisionType = type;
+	return m_Extent;
 }
 
 bool BoxColliderComponent::IsOverlapping(BoxColliderComponent* other) const
@@ -48,12 +59,15 @@ bool BoxColliderComponent::IsOverlapping(BoxColliderComponent* other) const
 	return Geometry::PointInBox(minMax.second, GetOwner().GetWorldPosition(), GetBoxExtent());
 }
 
-const glm::vec3& BoxColliderComponent::GetBoxExtent() const
+void BoxColliderComponent::SetCollision(CollisionType type) noexcept
 {
-	return m_Extent;
+	constexpr int lastIdx{ static_cast<int>(CollisionType::none) };
+	const int idx{ static_cast<int>(type) };
+
+	m_CollisionType = (idx < 0 || idx > lastIdx) ? CollisionType::none : type;
 }
 
-void BoxColliderComponent::SetExtent(const glm::vec3& extent)
+void BoxColliderComponent::SetExtent(const glm::vec3& extent) noexcept
 {
 	m_Extent = extent;
 }
