@@ -33,8 +33,6 @@
 #include "PlayerCommand.h"
 #include "Renderer.h"
 #include "RespawnComponent.h"
-#include "Temp/AchievementComponent.h"
-
 
 namespace fs = std::filesystem;
 using namespace mk;
@@ -90,17 +88,17 @@ GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& s
 	right.SetType(ActionType::hold);
 
 	Action fire{};
-	fire.SetControllerInput(Input::bumperRight);
+	fire.SetControllerInput(Input::x);
 	fire.SetKeyboardInput(SDL_SCANCODE_SPACE);
 	fire.SetType(ActionType::down);
 
 	Action rotateLeft{};
-	rotateLeft.SetControllerInput(Input::x);
+	rotateLeft.SetControllerInput(Input::bumperRight);
 	rotateLeft.SetKeyboardInput(SDL_SCANCODE_Q);
 	rotateLeft.SetType(ActionType::hold);
 
 	Action rotateRight{};
-	rotateRight.SetControllerInput(Input::b);
+	rotateRight.SetControllerInput(Input::bumperLeft);
 	rotateRight.SetKeyboardInput(SDL_SCANCODE_E);
 	rotateRight.SetType(ActionType::hold);
 
@@ -168,11 +166,6 @@ void LoadHud(Scene& scene, const std::vector<GameObject*>& players)
 
 		players[(idx + 1) % players.size()]->GetComponent<HealthComponent>()->AddObserver(scoreCompPtr);
 		healthCompPtr->AddObserver(healthBarCompPtr);
-
-		GameObject* achievement{ scene.SpawnObject("achievement") };
-		AchievementComponent* achievementCompPtr{ achievement->AddComponent<AchievementComponent>() };
-
-		scoreCompPtr->AddObserver(achievementCompPtr);
 	}
 }
 

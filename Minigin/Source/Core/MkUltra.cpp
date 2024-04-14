@@ -12,11 +12,6 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-#pragma warning (push)
-#pragma warning (disable: 4996)
-#include <steam_api.h>
-#pragma warning (pop)
-
 
 #include "MkUltra.h"
 #include "InputManager.h"
@@ -85,19 +80,10 @@ mk::MkUltra::~MkUltra()
 {
 	Renderer::GetInstance().Destroy();
 	SDL_Quit();
-	SteamAPI_Shutdown();
 }
 
 void mk::MkUltra::Run(const std::function<void()>& load)
 {
-	// Check steamAPI
-	if (!SteamAPI_Init())
-	{
-		std::cerr << "Fatal error - Steam must be running to play this game (SteamAPI_Init() failed).\n";
-		return;
-	}
-
-
 	load();
 
 	// Setup of timing

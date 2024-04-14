@@ -34,7 +34,6 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Core/Scene.cpp"
   "Minigin/Source/Core/SceneManager.cpp"
   "Minigin/Source/Core/TimeManager.cpp"
- 
   
   "Minigin/Source/Components/Component.cpp"
   "Minigin/Source/Components/Rendering/TextComponent.cpp"
@@ -54,7 +53,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Source/Input/ControllerInput.cpp" 
   "Minigin/Source/Input/Controller.cpp"
   "Minigin/Source/Input/KeyboardInput.cpp"
-  "Minigin/Source/Input/XControllerInput.cpp"
+  
   "Minigin/Source/Input/PlayerCommand.cpp"
   "Minigin/Source/Input/Action.cpp"
   "Minigin/Source/Core/FileInterface.cpp"
@@ -91,58 +90,6 @@ FetchContent_Declare(
 FetchContent_GetProperties(glm)
 if(NOT glm_POPULATED)
   FetchContent_Populate(glm)
-endif()
-
-# Add steamworks (provided by Matias Devred on discord)
-if(USE_STEAMWORKS)
-    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/includes/steamworks")
-        message(FATAL_ERROR "Steamworks directory not found. Please place the contents of the Steamworks zip file at external/steamworks")
-    else()
-        file(GLOB STEAMWORKS_FILES "${CMAKE_SOURCE_DIR}/includes/steamworks/*")
-        if(NOT STEAMWORKS_FILES)
-            message(FATAL_ERROR "Steamworks directory is empty. Please make sure it contains the necessary files.")
-        endif()
-    endif()
-
-
-    set(STEAMWORKS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/includes/steamworks/public/steam)
-    set(STEAMWORKS_LIB_DIR ${CMAKE_SOURCE_DIR}/includes/steamworks/redistributable_bin)
-
-    if(WIN32)
-        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-            set(STEAMWORKS_LIB ${STEAMWORKS_LIB_DIR}/win64/steam_api64.lib)
-
-            add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy
-                           ${STEAMWORKS_LIB_DIR}/win64/steam_api64.dll
-                           $<TARGET_FILE_DIR:${TARGET_NAME}>)
-
-        else()
-            set(STEAMWORKS_LIB ${STEAMWORKS_LIB_DIR}/steam_api.lib)
-            
-            add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy
-                           ${STEAMWORKS_LIB_DIR}/steam_api.dll
-                           $<TARGET_FILE_DIR:${TARGET_NAME}>)
-        endif()
-
-    else()
-        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-            set(STEAMWORKS_LIB ${STEAMWORKS_LIB_DIR}/linux64/libsteam_api.so)
-        else()
-            set(STEAMWORKS_LIB ${STEAMWORKS_LIB_DIR}/linux32/libsteam_api.so)
-        endif()
-    endif()
-
-    target_include_directories(${TARGET_NAME} PRIVATE ${STEAMWORKS_INCLUDE_DIR})
-    target_link_libraries(${TARGET_NAME} PRIVATE ${STEAMWORKS_LIB})
-
-    target_compile_definitions(${TARGET_NAME} PRIVATE USE_STEAMWORKS)
-
-    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E echo 480 > "$<TARGET_FILE_DIR:${TARGET_NAME}>/steam_appid.txt" 
-        COMMENT "Creating steam_appid.txt"
-    )
 endif()
 
 # add SDL2
