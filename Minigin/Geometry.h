@@ -1,10 +1,10 @@
 #pragma once
 #include <utility>
 
-#include "glm/vec3.hpp"
+#include "glm/vec2.hpp"
 
 namespace Geometry
 {
-	bool PointInBox(const glm::vec3& point, const glm::vec3& location, const glm::vec3& boxExtent);
-	std::pair<glm::vec3, glm::vec3> GetBoxMinMax(const glm::vec3& location, const glm::vec3& boxExtent);
+	bool PointInBox(const glm::vec2& point, const glm::vec2& location, const glm::vec2& boxExtent);
+	std::pair<glm::vec2, glm::vec2> GetBoxMinMax(const glm::vec2& location, const glm::vec2& boxExtent);
 }

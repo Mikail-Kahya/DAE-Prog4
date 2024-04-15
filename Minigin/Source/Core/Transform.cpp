@@ -2,61 +2,71 @@
 
 #include "Renderer.h"
 
-mk::Transform::Transform()
+using namespace mk;
+
+Transform::Transform()
 {
 	m_Position.z = Renderer::GetInstance().GetNextDepth();
 }
 
-void mk::Transform::AddOffset(const glm::vec3& offset)
+glm::vec2 Transform::GetPosition() const
 {
-	m_Position += offset;
+	return { m_Position.x, m_Position.y };
 }
 
-void mk::Transform::AddOffset(float x, float y, float z)
+float Transform::GetRotation() const
 {
-	AddOffset({ x, y, z });
+	return m_Rotation;
 }
 
-void mk::Transform::AddRotation(float x, float y, float z)
+const glm::vec2& Transform::GetScale() const
 {
-	m_Rotation.x += x;
-	m_Rotation.y += y;
-	m_Rotation.z += z;
+	return m_Scale;
 }
 
-void mk::Transform::AddScale(float x, float y, float z)
+float Transform::GetDepth() const
 {
-	m_Scale.x += x;
-	m_Scale.y += y;
-	m_Scale.z += z;
+	return m_Position.z;
 }
 
-void mk::Transform::SetPosition(const glm::vec3& position)
+void Transform::AddOffset(const glm::vec2& offset)
 {
-	m_Position = position;
+	m_Position.x += offset.x;
+	m_Position.y += offset.y;
 }
 
-void mk::Transform::SetPosition(float x, float y, float z)
+void Transform::AddRotation(float deltaAngle)
 {
-	SetPosition(glm::vec3{ x, y, z });
+	m_Rotation += deltaAngle;
 }
 
-void mk::Transform::SetRotation(const glm::vec3& rotation)
+void Transform::AddScale(const glm::vec2& deltaScale)
 {
-	m_Rotation = rotation;
+	m_Scale += deltaScale;
 }
 
-void mk::Transform::SetRotation(float x, float y, float z)
+void Transform::AddDepth(float deltaDepth)
 {
-	SetRotation(glm::vec3{ x, y, z });
+	m_Position.z += deltaDepth;
 }
 
-void mk::Transform::SetScale(const glm::vec3& scale)
+void Transform::SetPosition(const glm::vec2& position)
+{
+	m_Position.x = position.x;
+	m_Position.y = position.y;
+}
+
+void Transform::SetRotation(float angle)
+{
+	m_Rotation = angle;
+}
+
+void Transform::SetScale(const glm::vec2& scale)
 {
 	m_Scale = scale;
 }
 
-void mk::Transform::SetScale(float x, float y, float z)
+void Transform::SetDepth(float depth)
 {
-	SetScale(glm::vec3{ x, y, z });
+	m_Position.z = depth;
 }

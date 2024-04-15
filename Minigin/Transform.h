@@ -1,4 +1,6 @@
 #pragma once
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <glm/glm.hpp>
 
 namespace mk
@@ -8,25 +10,24 @@ namespace mk
 	public:
 		Transform();
 
-		const glm::vec3& GetPosition() const { return m_Position; }
-		const glm::vec3& GetRotation() const { return m_Rotation; }
-		const glm::vec3& GetScale() const { return m_Scale; }
+		glm::vec2 GetPosition() const;
+		float GetRotation() const;
+		const glm::vec2& GetScale() const;
+		float GetDepth() const;
 
-		void AddOffset(const glm::vec3& offset);
-		void AddOffset(float x = 0.f, float y = 0.f, float z = 0.f);
-		void AddRotation(float x = 0.f, float y = 0.f, float z = 0.f);
-		void AddScale(float x = 0.f, float y = 0.f, float z = 0.f);
+		void AddOffset(const glm::vec2& offset);
+		void AddRotation(float deltaAngle);
+		void AddScale(const glm::vec2& deltaScale);
+		void AddDepth(float deltaDepth);
 
-		void SetPosition(const glm::vec3& position);
-		void SetPosition(float x, float y, float z);
-		void SetRotation(const glm::vec3& rotation);
-		void SetRotation(float x, float y, float z);
-		void SetScale(const glm::vec3& scale);
-		void SetScale(float x, float y, float z);
+		void SetPosition(const glm::vec2& position);
+		void SetRotation(float angle);
+		void SetScale(const glm::vec2& scale);
+		void SetDepth(float depth);
 
 	private:
 		glm::vec3 m_Position{};
-		glm::vec3 m_Rotation{};
-		glm::vec3 m_Scale{};
+		float m_Rotation{};
+		glm::vec2 m_Scale{};
 	};
 }

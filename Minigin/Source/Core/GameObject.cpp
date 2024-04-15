@@ -129,29 +129,41 @@ const std::string& GameObject::GetName() const
 	return m_Name;
 }
 
-const glm::vec3& GameObject::GetWorldPosition()
+glm::vec2 GameObject::GetWorldPosition()
 {
 	if (m_PositionIsDirty)
 		UpdateWorldPosition();
 	return m_WorldTransform.GetPosition();
 }
 
-const glm::vec3& GameObject::GetLocalPosition() const
+glm::vec2 GameObject::GetLocalPosition() const
 {
 	return m_LocalTransform.GetPosition();
+}
+
+float GameObject::GetWorldDepth()
+{
+	if (m_PositionIsDirty)
+		UpdateWorldPosition();
+	return m_WorldTransform.GetDepth();
+}
+
+float GameObject::GetLocalDepth() const
+{
+	return m_LocalTransform.GetDepth();
 }
 
 float GameObject::GetRotation()
 {
 	if (m_RotationIsDirty)
 		UpdateWorldRotation();
-	return m_WorldTransform.GetRotation().z;
+	return m_WorldTransform.GetRotation();
 }
 
-glm::vec3 GameObject::GetForward()
+glm::vec2 GameObject::GetForward()
 {
 	const float angleRad{ GetRotation() * 3.14f / 180.f };
-	return { cosf(angleRad), sinf(angleRad), 0.f };
+	return { cosf(angleRad), sinf(angleRad) };
 }
 
 bool GameObject::IsStatic() const
@@ -159,12 +171,7 @@ bool GameObject::IsStatic() const
 	return m_IsStatic;
 }
 
-void GameObject::SetLocalPosition(float x, float y)
-{
-	SetLocalPosition({ x, y, m_LocalTransform.GetPosition().z });
-}
-
-void GameObject::SetLocalPosition(const glm::vec3& position)
+void GameObject::SetLocalPosition(const glm::vec2& position)
 {
 	m_LocalTransform.SetPosition(position);
 	FlagPositionDirty();
@@ -172,20 +179,31 @@ void GameObject::SetLocalPosition(const glm::vec3& position)
 
 void GameObject::AddLocalOffset(const glm::vec2& offset)
 {
-	m_LocalTransform.AddOffset({ offset.x, offset.y, 0 });
+	m_LocalTransform.AddOffset(offset);
+	FlagPositionDirty();
+}
+
+void GameObject::SetLocalDepth(float depth)
+{
+	m_LocalTransform.SetDepth(depth);
+	FlagPositionDirty();
+}
+
+void GameObject::AddLocalDepth(float deltaDepth)
+{
+	m_LocalTransform.AddDepth(deltaDepth);
 	FlagPositionDirty();
 }
 
 void GameObject::SetRotation(float rotation)
 {
-	m_LocalTransform.SetRotation({ 0, 0, rotation });
+	m_LocalTransform.SetRotation(rotation);
 	FlagRotationDirty();
 }
 
 void GameObject::AddRotation(float deltaRotation)
 {
-	m_LocalTransform.AddRotation(0, 0, deltaRotation);
-	m_LocalTransform.SetRotation({ 0.f, 0.f, std::fmod(m_LocalTransform.GetRotation().z, 360.f) });
+	m_LocalTransform.AddRotation(deltaRotation);
 	FlagRotationDirty();
 }
 
@@ -200,9 +218,15 @@ void GameObject::UpdateWorldPosition()
 		return;
 
 	if (m_Parent == nullptr)
+	{
 		m_WorldTransform.SetPosition(m_LocalTransform.GetPosition());
+		m_WorldTransform.SetDepth(m_LocalTransform.GetDepth());
+	}
 	else
+	{
 		m_WorldTransform.SetPosition(m_Parent->GetWorldPosition() + m_LocalTransform.GetPosition());
+		m_WorldTransform.AddDepth(m_Parent->GetWorldDepth() + m_LocalTransform.GetDepth());
+	}
 
 	m_PositionIsDirty = false;
 }
@@ -215,9 +239,7 @@ void GameObject::UpdateWorldRotation()
 	if (m_Parent == nullptr)
 		m_WorldTransform.SetRotation(m_WorldTransform.GetRotation());
 	else
-		m_WorldTransform.SetRotation(
-			glm::vec3{ 0, 0, m_Parent->GetRotation() } +
-			m_LocalTransform.GetRotation());
+		m_WorldTransform.SetRotation(m_Parent->GetRotation() + m_LocalTransform.GetRotation());
 
 	m_RotationIsDirty = false;
 }
@@ -242,11 +264,17 @@ void GameObject::SetParent(GameObject* parentPtr, bool keepWorldPosition)
 		return;
 
 	if (parentPtr == nullptr)
+	{
 		SetLocalPosition(GetWorldPosition());
+		SetLocalDepth(GetWorldDepth());
+	}
 	else
 	{
 		if (keepWorldPosition)
+		{
 			SetLocalPosition(m_WorldTransform.GetPosition() - parentPtr->GetWorldPosition());
+			SetLocalDepth(m_WorldTransform.GetDepth() - parentPtr->GetWorldDepth());
+		}
 		FlagPositionDirty();
 	}
 

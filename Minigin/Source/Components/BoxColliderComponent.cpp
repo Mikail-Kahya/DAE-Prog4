@@ -16,17 +16,9 @@ BoxColliderComponent::~BoxColliderComponent()
 	PhysicsSystem::GetInstance().UnRegisterCollider(this);
 }
 
-void BoxColliderComponent::CheckCollision(BoxColliderComponent* otherPtr)
+void BoxColliderComponent::Collide(BoxColliderComponent* otherPtr)
 {
-	if (m_IgnoreObjects.contains(otherPtr->GetOwner()) || 
-		otherPtr->m_IgnoreObjects.contains(GetOwner()))
-		return;
-
-	if(!IsOverlapping(otherPtr))
-		return;
-
 	CollisionType type = otherPtr->GetOwner()->IsStatic() ? m_CollisionSettings.collisionStatic : m_CollisionSettings.collisionDynamic;
-
 	
 	switch (type)
 	{
@@ -37,6 +29,11 @@ void BoxColliderComponent::CheckCollision(BoxColliderComponent* otherPtr)
 		HandleOverlap(otherPtr);
 		break;
 	}
+}
+
+bool BoxColliderComponent::IsIgnoring(GameObject* objectPtr) const noexcept
+{
+	return m_IgnoreObjects.contains(objectPtr);
 }
 
 void BoxColliderComponent::Ignore(GameObject* colliderPtr) noexcept
@@ -55,18 +52,9 @@ CollisionSettings BoxColliderComponent::GetCollision() const noexcept
 	return m_CollisionSettings;
 }
 
-const glm::vec3& BoxColliderComponent::GetBoxExtent() const noexcept
+const glm::vec2& BoxColliderComponent::GetBoxExtent() const noexcept
 {
 	return m_Extent;
-}
-
-bool BoxColliderComponent::IsOverlapping(BoxColliderComponent* other) const
-{
-	const auto minMax{Geometry::GetBoxMinMax(other->GetOwner()->GetWorldPosition(), other->GetBoxExtent()) };
-	if (Geometry::PointInBox(minMax.first, GetOwner()->GetWorldPosition(), GetBoxExtent()))
-		return true;
-	
-	return Geometry::PointInBox(minMax.second, GetOwner()->GetWorldPosition(), GetBoxExtent());
 }
 
 void BoxColliderComponent::SetCollision(CollisionSettings settings) noexcept
@@ -85,7 +73,7 @@ void BoxColliderComponent::SetCollision(CollisionSettings settings) noexcept
 	m_CollisionSettings = settings;
 }
 
-void BoxColliderComponent::SetExtent(const glm::vec3& extent) noexcept
+void BoxColliderComponent::SetExtent(const glm::vec2& extent) noexcept
 {
 	m_Extent = extent;
 }
@@ -95,12 +83,11 @@ void BoxColliderComponent::HandleOverlap(BoxColliderComponent* otherPtr)
 	Event event{ EventType::OBJECT_OVERLAP };
 	event.SetData("other", otherPtr);
 	Notify(event);
-	event.SetData("other", this);
-	otherPtr->Notify(event);
 }
 
 void BoxColliderComponent::HandleBlock(BoxColliderComponent* otherPtr)
 {
-	if (!IsOverlapping(otherPtr))
-		return;
+	Event event{ EventType::OBJECT_OVERLAP };
+	event.SetData("other", otherPtr);
+	Notify(event);
 }

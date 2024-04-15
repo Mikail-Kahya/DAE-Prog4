@@ -4,7 +4,7 @@
 
 using namespace mk;
 
-RespawnComponent::RespawnComponent(const glm::vec3& respawn)
+RespawnComponent::RespawnComponent(const glm::vec2& respawn)
 	: m_Respawn{ respawn }
 {
 }
@@ -17,7 +17,7 @@ void RespawnComponent::OnNotify(Subject* subjectPtr, const Event& event)
 		Respawn();
 }
 
-void RespawnComponent::SetRespawn(const glm::vec3& respawn)
+void RespawnComponent::SetRespawn(const glm::vec2& respawn)
 {
 	m_Respawn = respawn;
 }

@@ -50,13 +50,13 @@ void load()
 
 
 	GameObject* fps = scene.SpawnObject("fps");
-	fps->SetLocalPosition(0, screenHeight * 0.95f);
+	fps->SetLocalPosition({ 0, 0.95f * screenHeight});
 	auto fpsComponent = fps->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
 
 	const std::vector players{
 		LoadPlayer(scene, "Player1", { 100.f, 100.f }),
-		LoadPlayer(scene, "Player2", { screenWidth - 100.f, 100.f })
+		LoadPlayer(scene, "Player2", {  -100.f + screenWidth, 100.f })
 	};
 	LoadHud(scene, players);
 	LoadInfo(scene);
@@ -104,14 +104,14 @@ GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& s
 
 	// Tank
 	GameObject* tank = scene.SpawnObject(name);
-	tank->SetLocalPosition(startPos.x, startPos.y);
+	tank->SetLocalPosition(startPos);
 
 	RenderComponent* spriteCompPtr = tank->AddComponent<RenderComponent>("BlueTank.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 	tank->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
 	tank->AddComponent<BoxColliderComponent>();
 	HealthComponent* healthCompPtr = tank->AddComponent<HealthComponent>(3, 3);
-	RespawnComponent* respawnCompPtr = tank->AddComponent<RespawnComponent>(glm::vec3{ startPos, 0.f });
+	RespawnComponent* respawnCompPtr = tank->AddComponent<RespawnComponent>(startPos);
 	healthCompPtr->AddObserver(respawnCompPtr);
 
 	// Gun
@@ -149,7 +149,7 @@ void LoadHud(Scene& scene, const std::vector<GameObject*>& players)
 		HealthComponent* healthCompPtr{ playerPtr->GetComponent<HealthComponent>() };
 
 		GameObject* HUDWrapper{ scene.SpawnObject("Hud wrapper") };
-		HUDWrapper->SetLocalPosition(playerPtr->GetWorldPosition().x , 200);
+		HUDWrapper->SetLocalPosition({ playerPtr->GetWorldPosition().x , 200 });
 
 		GameObject* score{ scene.SpawnObject("score") };
 		score->SetParent(HUDWrapper);
@@ -159,7 +159,7 @@ void LoadHud(Scene& scene, const std::vector<GameObject*>& players)
 
 		GameObject* health{ scene.SpawnObject("health") };
 		health->SetParent(HUDWrapper);
-		health->SetLocalPosition(0, 30);
+		health->SetLocalPosition({ 0, 30 });
 		textCompPtr = health->AddComponent<TextComponent>("Health: " + std::to_string(healthCompPtr->GetHealth()), "Lingua.otf", 20);
 		textCompPtr->SetAnchor({ 0.5f, 0.5f });
 		HealthBarComponent* healthBarCompPtr{ health->AddComponent<HealthBarComponent>() };
@@ -171,16 +171,15 @@ void LoadHud(Scene& scene, const std::vector<GameObject*>& players)
 
 void LoadInfo(Scene& scene)
 {
-	const int screenWidth{ Renderer::GetInstance().GetWidth() };
+	const float screenCenter{0.5f * Renderer::GetInstance().GetWidth()};
 
 	GameObject* controlsKeyboardText{ scene.SpawnObject("FireText") };
-	controlsKeyboardText->SetLocalPosition(static_cast<float>(screenWidth / 2.f), 370.f);
+	controlsKeyboardText->SetLocalPosition({ screenCenter , 370.f });
 	controlsKeyboardText->AddComponent<TextComponent>("Use WASD to move, SPACE to fire, Q and E to turn cannon", "Lingua.otf", 20)->SetAnchor({ 0.5f,0.5f });
 
 	GameObject* padKeyboardText{ scene.SpawnObject("FireText") };
-	padKeyboardText->SetLocalPosition(static_cast<float>(screenWidth / 2.f), 400.f);
+	padKeyboardText->SetLocalPosition({ screenCenter, 400.f });
 	padKeyboardText->AddComponent<TextComponent>("Use D-PAD to move, RIGHT BUMPER to fire, X and B to turn cannon", "Lingua.otf", 20)->SetAnchor({ 0.5f,0.5f });
-
 }
 
 

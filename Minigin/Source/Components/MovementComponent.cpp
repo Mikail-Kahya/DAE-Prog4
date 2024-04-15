@@ -1,5 +1,7 @@
 #include "MovementComponent.h"
 
+#include <glm/glm.hpp>
+
 #include "GameObject.h"
 #include "SceneManager.h"
 

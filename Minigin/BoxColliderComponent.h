@@ -3,7 +3,7 @@
 
 #include "Component.h"
 #include "Observer.h"
-#include "glm/vec3.hpp"
+#include "glm/vec2.hpp"
 
 namespace mk
 {
@@ -31,23 +31,23 @@ namespace mk
 		BoxColliderComponent& operator=(const BoxColliderComponent& other)		= delete;
 		BoxColliderComponent& operator=(BoxColliderComponent&& other) noexcept	= delete;
 
-		void CheckCollision(BoxColliderComponent* otherPtr);
+		void Collide(BoxColliderComponent* otherPtr);
+		bool IsIgnoring(GameObject* objectPtr) const noexcept;
 		void Ignore(GameObject* colliderPtr) noexcept;
 		void StopIgnoring(GameObject* colliderPtr) noexcept;
 
 		CollisionSettings GetCollision() const noexcept;
-		const glm::vec3& GetBoxExtent() const noexcept;
+		const glm::vec2& GetBoxExtent() const noexcept;
 
 		void SetCollision(CollisionSettings settings) noexcept;
-		void SetExtent(const glm::vec3& extent) noexcept;
+		void SetExtent(const glm::vec2& extent) noexcept;
 
 	private:
 		void HandleOverlap(BoxColliderComponent* otherPtr);
 		void HandleBlock(BoxColliderComponent* otherPtr);
-		bool IsOverlapping(BoxColliderComponent* other) const;
 
 		std::set<GameObject*> m_IgnoreObjects{};
 		CollisionSettings m_CollisionSettings{};
-		glm::vec3 m_Extent{30.f, 30.f, 30.f};
+		glm::vec2 m_Extent{30.f, 30.f};
 	};
 }

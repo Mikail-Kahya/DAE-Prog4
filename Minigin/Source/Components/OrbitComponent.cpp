@@ -22,7 +22,7 @@ void OrbitComponent::FixedUpdate()
 	if (m_Angle > fullRot)
 		m_Angle -= fullRot;
 
-	const glm::vec3 offset{ glm::cos(m_Angle) * m_OrbitRadius, glm::sin(m_Angle) * m_OrbitRadius, 0.f };
+	const glm::vec2 offset{ glm::cos(m_Angle) * m_OrbitRadius, glm::sin(m_Angle) * m_OrbitRadius };
 	GetOwner()->SetLocalPosition(offset);
 }
 

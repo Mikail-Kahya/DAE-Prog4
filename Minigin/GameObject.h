@@ -1,5 +1,4 @@
 #pragma once
-#include <list>
 #include <string>
 #include <memory>
 #include <vector>
@@ -33,15 +32,18 @@ namespace mk
 		bool DestroyFlagged() const;
 
 		const std::string& GetName() const;
-		const glm::vec3& GetWorldPosition();
-		const glm::vec3& GetLocalPosition() const;
+		glm::vec2 GetWorldPosition();
+		glm::vec2 GetLocalPosition() const;
+		float GetWorldDepth();
+		float GetLocalDepth() const;
 		float GetRotation();
-		glm::vec3 GetForward();
+		glm::vec2 GetForward();
 		bool IsStatic() const;
 
-		void SetLocalPosition(float x, float y);
-		void SetLocalPosition(const glm::vec3& position);
+		void SetLocalPosition(const glm::vec2& position);
 		void AddLocalOffset(const glm::vec2& offset);
+		void SetLocalDepth(float depth);
+		void AddLocalDepth(float deltaDepth);
 		void SetRotation(float rotation);
 		void AddRotation(float deltaRotation);
 		void SetStatic(bool isStatic);

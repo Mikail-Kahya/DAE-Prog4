@@ -24,6 +24,8 @@ namespace mk
 		void UnRegisterCollider(BoxColliderComponent* colliderPtr);
 
 	private:
+		bool IsOverlapping(BoxColliderComponent* a, BoxColliderComponent* b) const;
+
 		std::vector<BoxColliderComponent*> m_BoxColliders{};
 	};
 }

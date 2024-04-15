@@ -2,21 +2,18 @@
 
 using namespace Geometry;
 
-bool Geometry::PointInBox(const glm::vec3& point, const glm::vec3& location, const glm::vec3& boxExtent)
+bool Geometry::PointInBox(const glm::vec2& point, const glm::vec2& location, const glm::vec2& boxExtent)
 {
-	const glm::vec3 min{ location - boxExtent };
-	const glm::vec3 max{ location + boxExtent };
+	const glm::vec2 min{ location - boxExtent };
+	const glm::vec2 max{ location + boxExtent };
 
 	if (min.x > point.x || point.x > max.x)
 		return false;
 
-	if (min.y > point.y || point.y > max.y)
-		return false;
-
-	return min.z < point.z && point.z < max.z;
+	return min.y < point.y && point.y < max.y;
 }
 
-std::pair<glm::vec3, glm::vec3> Geometry::GetBoxMinMax(const glm::vec3& location, const glm::vec3& boxExtent)
+std::pair<glm::vec2, glm::vec2> Geometry::GetBoxMinMax(const glm::vec2& location, const glm::vec2& boxExtent)
 {
 	return { location - boxExtent, location + boxExtent };
 }
