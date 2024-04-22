@@ -12,9 +12,8 @@ namespace mk
 
 	class InputManager final : public Singleton<InputManager>
 	{
+		friend class Singleton<InputManager>;
 	public:
-		InputManager() = default;
-
 		bool ProcessInput();
 		Controller* AddController();
 		void RemoveController(Controller* controllerPtr);
@@ -31,6 +30,8 @@ namespace mk
 		void RemoveCommand(Command* commandPtr);
 
 	private:
+		InputManager() = default;
+
 		uint8_t m_Idx{};
 		std::vector<Controller> m_Controllers;
 		std::vector<std::unique_ptr<Command>> m_Commands;

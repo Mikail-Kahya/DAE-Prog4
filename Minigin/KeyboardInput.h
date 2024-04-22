@@ -2,7 +2,6 @@
 #include <vector>
 
 #include "SDL_events.h"
-#include "Singleton.h"
 
 namespace mk
 {

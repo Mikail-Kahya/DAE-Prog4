@@ -1,16 +1,16 @@
 #pragma once
 #include <vector>
 
+#include "BoxColliderComponent.h"
 #include "Singleton.h"
+#include "glm/vec2.hpp"
 
 namespace mk
 {
-	class BoxColliderComponent;
-
 	class PhysicsSystem final : public Singleton<PhysicsSystem>
 	{
+		friend class Singleton<PhysicsSystem>;
 	public:
-		PhysicsSystem() = default;
 		~PhysicsSystem() override = default;
 
 		PhysicsSystem(const PhysicsSystem& other)					= delete;
@@ -24,7 +24,11 @@ namespace mk
 		void UnRegisterCollider(BoxColliderComponent* colliderPtr);
 
 	private:
+		PhysicsSystem() = default;
+
 		bool IsOverlapping(BoxColliderComponent* a, BoxColliderComponent* b) const;
+		CollisionInfo GetCollisionInfo(BoxColliderComponent* a, BoxColliderComponent* b) const;
+		void GetVertices(const glm::vec2& position, const glm::vec2& boxExtent, std::vector<glm::vec2>& vertices) const;
 
 		std::vector<BoxColliderComponent*> m_BoxColliders{};
 	};

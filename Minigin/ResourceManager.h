@@ -13,6 +13,7 @@ namespace mk
 
 	class ResourceManager final : public Singleton<ResourceManager>
 	{
+		friend class Singleton<ResourceManager>;
 	public:
 		~ResourceManager() override = default;
 
@@ -27,7 +28,6 @@ namespace mk
 		Font* LoadFont(const std::string& file, unsigned int size);
 
 	private:
-		friend class Singleton<ResourceManager>;
 		ResourceManager() = default;
 		std::filesystem::path m_DataPath;
 

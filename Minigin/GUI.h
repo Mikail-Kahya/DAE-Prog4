@@ -18,8 +18,8 @@ namespace mk
 {
 	class GUI final : public Singleton<GUI>
 	{
+		friend class Singleton<GUI>;
 	public:
-		GUI() = default;
 		~GUI() override = default;
 
 		GUI(const GUI& other)					= delete;
@@ -38,6 +38,8 @@ namespace mk
 		[[nodiscard]] WidgetType* Add(const std::string& widgetName, const Args&... args);
 
 	private:
+		GUI() = default;
+
 		void FlushBuffer();
 		void DestroyWidgets();
 		void BeginFrame() const;

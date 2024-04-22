@@ -14,6 +14,7 @@ namespace mk
 	 */
 	class Renderer final : public Singleton<Renderer>
 	{
+		friend class Singleton<Renderer>;
 	public:
 		void Init(int width, int height);
 		void Update();
@@ -33,6 +34,8 @@ namespace mk
 		void FlagDepthDirty();
 
 	private:
+		Renderer() = default;
+
 		void RenderTexture(const Texture2D& texture, float x, float y) const;
 
 		// Sorts by float. Whenever the float changes

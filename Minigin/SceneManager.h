@@ -12,9 +12,10 @@ namespace mk
 
 	class SceneManager final : public Singleton<SceneManager>
 	{
+		friend class Singleton<SceneManager>;
 	public:
-		SceneManager()				= default;
-		~SceneManager() override	= default;
+		
+		~SceneManager() override = default;
 
 		SceneManager(const SceneManager& other)					= delete;
 		SceneManager(SceneManager&& other) noexcept				= delete;
@@ -31,6 +32,8 @@ namespace mk
 		TimeManager& GetTimeManager();
 
 	private:
+		SceneManager() = default;
+
 		std::unique_ptr<Scene> m_Scene{};
 		TimeManager m_TimeManager{};
 	};
