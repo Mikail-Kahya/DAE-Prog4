@@ -58,6 +58,7 @@ void load()
 		LoadPlayer(scene, "Player1", { 100.f, 100.f }),
 		LoadPlayer(scene, "Player2", {  -100.f + screenWidth, 100.f })
 	};
+	players[1]->SetStatic(true);
 	LoadHud(scene, players);
 	LoadInfo(scene);
 }

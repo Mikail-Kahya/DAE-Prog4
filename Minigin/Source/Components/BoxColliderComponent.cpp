@@ -16,17 +16,30 @@ BoxColliderComponent::~BoxColliderComponent()
 	PhysicsSystem::GetInstance().UnRegisterCollider(this);
 }
 
-void BoxColliderComponent::Collide(BoxColliderComponent* otherPtr)
+void BoxColliderComponent::Start()
 {
-	CollisionType type = otherPtr->GetOwner()->IsStatic() ? m_CollisionSettings.collisionStatic : m_CollisionSettings.collisionDynamic;
+	Component::Start();
+	UpdatePrevPos();
+}
+
+void BoxColliderComponent::FixedUpdate()
+{
+	Component::FixedUpdate();
+	UpdatePrevPos();
+}
+
+void BoxColliderComponent::Collide(const CollisionInfo& info)
+{
+	CollisionType type = info.hitCompPtr->GetOwner()->IsStatic() ? m_CollisionSettings.collisionStatic : m_CollisionSettings.collisionDynamic;
 	
 	switch (type)
 	{
 	case CollisionType::block:
-		HandleBlock(otherPtr);
+		HandleBlock(info);
 		break;
 	case CollisionType::overlap:
-		HandleOverlap(otherPtr);
+		if (!GetOwner()->IsStatic())
+			HandleOverlap(info);
 		break;
 	}
 }
@@ -57,6 +70,11 @@ const glm::vec2& BoxColliderComponent::GetBoxExtent() const noexcept
 	return m_Extent;
 }
 
+glm::vec2 BoxColliderComponent::GetMoveDirection() const
+{
+	return glm::normalize(GetOwner()->GetWorldPosition() - m_PrevPos);
+}
+
 void BoxColliderComponent::SetCollision(CollisionSettings settings) noexcept
 {
 	auto clampCollision = [](CollisionType type) -> CollisionType
@@ -78,16 +96,44 @@ void BoxColliderComponent::SetExtent(const glm::vec2& extent) noexcept
 	m_Extent = extent;
 }
 
-void BoxColliderComponent::HandleOverlap(BoxColliderComponent* otherPtr)
+void BoxColliderComponent::UpdatePrevPos()
+{
+	m_PrevPos = GetOwner()->GetWorldPosition();
+}
+
+void BoxColliderComponent::HandleOverlap(const CollisionInfo& info)
 {
 	Event event{ EventType::OBJECT_OVERLAP };
-	event.SetData("other", otherPtr);
+	event.SetData("info", info);
 	Notify(event);
 }
 
-void BoxColliderComponent::HandleBlock(BoxColliderComponent* otherPtr)
+void BoxColliderComponent::HandleBlock(const CollisionInfo& info)
 {
-	Event event{ EventType::OBJECT_OVERLAP };
-	event.SetData("other", otherPtr);
-	Notify(event);
+	//const float distX{ otherPtr->GetBoxExtent().x + GetBoxExtent().x };
+	//const float distY{ otherPtr->GetBoxExtent().y + GetBoxExtent().y };
+	//const glm::vec2 toOther{ otherPtr->GetOwner()->GetWorldPosition() - GetOwner()->GetWorldPosition() };
+
+	const glm::vec3 projDir = glm::cross(glm::vec3{ info.impactNormal, 0 }, glm::vec3{ 0, 0, 1 });
+	const glm::vec2 slideAlongDir{ glm::normalize(glm::vec2 {projDir.x, projDir.y}) };
+	const glm::vec2 moveDir{ m_PrevPos - GetOwner()->GetWorldPosition() };
+	const float projectedDist{ glm::dot(slideAlongDir, moveDir) };
+	GetOwner()->AddLocalOffset(slideAlongDir * projectedDist);
+
+	//glm::vec2 correction{};
+
+
+	//if (abs(toOther.x) < distX)
+	//{
+	//	const float difference{ distX - abs(toOther.x) };
+	//	correction.x = toOther.x < 0 ? difference : -difference;
+	//}
+		
+	//if (abs(toOther.y) < distY)
+	//{
+	//	const float difference{ distY - abs(toOther.y) };
+	//	correction.y = toOther.y < 0 ? difference : -difference;
+	//}
+
+	
 }

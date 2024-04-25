@@ -16,7 +16,7 @@ MovementComponent::MovementComponent(float maxLinearSpeed, float maxAngularSpeed
 {
 }
 
-void MovementComponent::FixedUpdate()
+void MovementComponent::Update()
 {
 	const float deltaTime{ Time().fixedDeltaTime };
 

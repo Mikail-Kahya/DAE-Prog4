@@ -15,7 +15,7 @@ namespace mk
 		MovementComponent& operator=(const MovementComponent& other)	= delete;
 		MovementComponent& operator=(MovementComponent&& other)			= delete;
 
-		void FixedUpdate() override;
+		void Update() override;
 
 		// Normalizes in this function
 		void SetDirection(const glm::vec2& direction);
