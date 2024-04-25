@@ -33,9 +33,9 @@ add_library(${ENGINE_NAME} STATIC
   "Source/Core/PhysicsSystem.cpp"
 
   "Source/Components/Component.cpp"
-  "Source/Components/Rendering/TextComponent.cpp"
-  "Source/Components/Rendering/RenderComponent.cpp"
-  "Source/Components/Rendering/SpriteComponent.cpp"
+  "Source/Components/TextComponent.cpp"
+  "Source/Components/RenderComponent.cpp"
+  "Source/Components/SpriteComponent.cpp"
   "Source/Components/BoxColliderComponent.cpp"
 
   "Source/Widgets/GUI.cpp"
