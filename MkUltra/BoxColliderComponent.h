@@ -10,7 +10,7 @@ namespace mk
 {
 	class BoxColliderComponent;
 
-	enum class CollisionType
+	enum class CollisionType : uint8_t
 	{
 		block,
 		overlap,
