@@ -2,7 +2,9 @@
 
 #include "GameObject.h"
 
-void mk::ExplosionComponent::OnNotify(Subject* subjectPtr, const Event& event)
+using namespace mk;
+
+void ExplosionComponent::OnNotify(Subject* subjectPtr, const Event& event)
 {
 	Observer::OnNotify(subjectPtr, event);
 

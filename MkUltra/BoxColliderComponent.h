@@ -6,7 +6,6 @@
 #include "Component.h"
 #include "Observer.h"
 
-
 namespace mk
 {
 	class BoxColliderComponent;
