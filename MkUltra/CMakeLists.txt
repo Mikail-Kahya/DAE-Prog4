@@ -21,7 +21,8 @@ add_library(${ENGINE_NAME} STATIC
 
   "Source/Input/InputManager.cpp"
   "Source/Core/MkUltra.cpp"
-
+  
+  "Source/Core/ServiceLocator.cpp"
   "Source/Core/Renderer.cpp"
   "Source/Core/ResourceManager.cpp"
   "Source/Core/Texture2D.cpp"
@@ -51,6 +52,9 @@ add_library(${ENGINE_NAME} STATIC
 
   "Source/Core/Geometry.cpp"
   "Source/Core/Observer.cpp"
+
+  
+  "Source/Sound/CachedSound.cpp"
 )
 
 # enable c++20 features
