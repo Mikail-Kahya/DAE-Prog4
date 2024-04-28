@@ -8,3 +8,9 @@ SoundSystem& ServiceLocator::GetSoundSystem()
 		s_SoundSystem = std::make_unique<NullSoundSystem>();
 	return *s_SoundSystem;
 }
+
+void ServiceLocator::SetDefaultDataPath(const std::string& dataPath)
+{
+	GetSoundSystem().SetDefaultDataPath(dataPath);
+	m_DataPath = dataPath;
+}

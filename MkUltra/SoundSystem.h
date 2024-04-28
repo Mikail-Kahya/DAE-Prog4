@@ -6,6 +6,7 @@ namespace mk
 {
 	struct SoundHandle
 	{
+		SoundHandle() = default;
 		SoundHandle(std::future<uint32_t> _handle) : handle(std::move(_handle)) {}
 		~SoundHandle() = default;
 		SoundHandle(const SoundHandle& other) = delete;
@@ -27,6 +28,8 @@ namespace mk
 	{
 	public:
 		virtual ~SoundSystem() = default;
+		virtual void SetDefaultDataPath(const std::string& dataPath) = 0;
+
 		virtual void Play(const sound_id& id, float volume) = 0;
 		virtual void Pause(SoundHandle& soundHandle) = 0;
 		virtual void Unpause(SoundHandle& soundHandle) = 0;

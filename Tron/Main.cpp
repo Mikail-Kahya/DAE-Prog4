@@ -46,8 +46,8 @@ void LoadInfo(Scene& scene);
 
 void load()
 {
-	ServiceLocator::RegisterSoundSystem<DefaultSoundSystem>();
-	ServiceLocator::GetSoundSystem().Play("Shoot.mp3", 1);
+	ServiceLocator::GetSoundSystem().Play("MainMenuMusic.mp3", 0.7f);
+
 	auto& scene = SceneManager::GetInstance().LoadScene("Demo");
 	const Renderer& renderer{ Renderer::GetInstance() };
 	const int screenWidth{ renderer.GetWidth() };
@@ -199,6 +199,8 @@ int main(int, char*[]) {
 		data_location = "../Data/";
 #endif
 	MkUltra engine(data_location);
+	ServiceLocator::SetDefaultDataPath(data_location.string());
+	ServiceLocator::RegisterSoundSystem<DefaultSoundSystem>();
 	engine.Run(load);
 
 	return 0;

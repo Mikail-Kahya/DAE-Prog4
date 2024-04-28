@@ -36,6 +36,7 @@ void FireComponent::Fire() const
 	colliderCompPtr->SetExtent({ spriteCompPtr->GetTexture()->GetSize()  });
 	colliderCompPtr->Ignore(GetOwner());
 	colliderCompPtr->Ignore(GetOwner()->GetParent());
+	colliderCompPtr->SetCollision(CollisionSettings{ CollisionType::block, CollisionType::overlap });
 
 	colliderCompPtr->AddObserver(bulletPtr->AddComponent<ExplosionComponent>());
 }

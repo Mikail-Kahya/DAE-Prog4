@@ -56,6 +56,7 @@ public:
 	SoloudImpl() { m_Souloud.init(); }
 	~SoloudImpl() { m_Souloud.deinit(); }
 
+	void SetDefaultDataPath(const std::string& dataPath) { m_DefaultDataPath = dataPath; }
 	void Update();
 	uint32_t Play(sound_id id, float volume);
 	void SetPause(uint32_t handle, bool pause){ m_Souloud.setPause(handle, pause); }
@@ -64,10 +65,11 @@ public:
 	void StopAll() { m_Souloud.stopAll(); }
 
 private:
-	void Load(sound_id id) { m_CachedSounds[id] = CachedSound{ id }; }
+	void Load(sound_id id) { m_CachedSounds[id] = CachedSound{ m_DefaultDataPath + id }; }
 
 	SoLoud::Soloud m_Souloud{};
 	std::unordered_map<sound_id, CachedSound> m_CachedSounds{};
+	std::string m_DefaultDataPath{};
 };
 
 void DefaultSoundSystem::SoloudImpl::Update()
@@ -121,6 +123,8 @@ void DefaultSoundSystem::SetupThread()
 				events.back()();
 				events.pop();
 			}
+
+			m_Impl->Update();
 		}
 	});
 }
@@ -136,6 +140,11 @@ void DefaultSoundSystem::Unlock()
 	m_QueueState.notify_all();
 }
 
+
+void DefaultSoundSystem::SetDefaultDataPath(const std::string& dataPath)
+{
+	m_Impl->SetDefaultDataPath(dataPath);
+}
 
 void DefaultSoundSystem::Play(const sound_id& id, float volume)
 {

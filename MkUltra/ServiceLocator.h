@@ -14,13 +14,20 @@ namespace mk
 		ServiceLocator& operator=(ServiceLocator&& other) noexcept	= delete;
 
 		template <std::derived_from<SoundSystem> SystemType, typename ...Args>
-		static void RegisterSoundSystem(const Args&... args) { s_SoundSystem = std::make_unique<SystemType>(args...); }
+		static void RegisterSoundSystem(const Args&... args)
+		{
+			s_SoundSystem = std::make_unique<SystemType>(args...);
+			s_SoundSystem->SetDefaultDataPath(m_DataPath);
+		}
 		static SoundSystem& GetSoundSystem();
+
+		static void SetDefaultDataPath(const std::string& dataPath);
 
 	private:
 		ServiceLocator() = default;
 
 		// services
 		inline static std::unique_ptr<SoundSystem> s_SoundSystem{};
+		inline static std::string m_DataPath{};
 	};
 }

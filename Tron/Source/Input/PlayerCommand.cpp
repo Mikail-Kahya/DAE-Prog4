@@ -1,10 +1,10 @@
 #include "PlayerCommand.h"
 
-#include "DebugUtils.h"
 #include "GameObject.h"
 #include "MovementComponent.h"
 #include "FireComponent.h"
 #include "SceneManager.h"
+#include "ServiceLocator.h"
 
 using namespace mk;
 
@@ -29,6 +29,8 @@ FireCommand::FireCommand(GameObject* gameObject)
 void FireCommand::Execute()
 {
 	m_FireCompPtr->Fire();
+	SoundSystem& sound{ ServiceLocator::GetSoundSystem() };
+	sound.Play("Shoot.mp3", 1);
 }
 
 RotateCommand::RotateCommand(GameObject* gameObject, float rotateSpeed, int direction)

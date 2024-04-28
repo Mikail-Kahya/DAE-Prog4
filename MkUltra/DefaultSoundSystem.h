@@ -16,8 +16,9 @@ namespace mk
 		DefaultSoundSystem(const DefaultSoundSystem& other)					= delete;
 		DefaultSoundSystem(DefaultSoundSystem&& other) noexcept				= delete;
 		DefaultSoundSystem& operator=(const DefaultSoundSystem& other)		= delete;
-		DefaultSoundSystem& operator=(DefaultSoundSystem&& other)	noexcept	= delete;
+		DefaultSoundSystem& operator=(DefaultSoundSystem&& other) noexcept	= delete;
 
+		void SetDefaultDataPath(const std::string& dataPath) override;
 		void Play(const sound_id& id, float volume) override;
 		void Pause(SoundHandle& soundHandle) override;
 		void Unpause(SoundHandle& soundHandle) override;
