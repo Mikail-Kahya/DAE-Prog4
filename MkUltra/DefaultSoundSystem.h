@@ -35,6 +35,7 @@ namespace mk
 		class SoloudImpl;
 
 		std::queue<Event> m_Events{};
+		std::queue<std::promise<uint32_t>> m_Promises{};
 		std::unique_ptr<SoloudImpl> m_Impl;
 		std::condition_variable m_QueueState{};
 		std::jthread m_Thread;

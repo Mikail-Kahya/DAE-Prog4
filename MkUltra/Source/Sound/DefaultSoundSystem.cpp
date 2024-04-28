@@ -6,8 +6,6 @@
 #include "soloud.h"
 #include "soloud_wav.h"
 
-#include "DebugUtils.h"
-
 using namespace mk;
 
 class CachedSound final
@@ -23,10 +21,10 @@ public:
 	}
 	~CachedSound() = default;
 
-	CachedSound(const CachedSound& other)					= delete;
-	CachedSound(CachedSound&& other) noexcept				= default;
-	CachedSound& operator=(const CachedSound& other)		= delete;
-	CachedSound& operator=(CachedSound&& other)	noexcept	= default;
+	CachedSound(const CachedSound& other) = delete;
+	CachedSound(CachedSound&& other) noexcept = default;
+	CachedSound& operator=(const CachedSound& other) = delete;
+	CachedSound& operator=(CachedSound&& other)	noexcept = default;
 
 	SoLoud::Wav& GetSound()
 	{
@@ -59,9 +57,9 @@ public:
 	void SetDefaultDataPath(const std::string& dataPath) { m_DefaultDataPath = dataPath; }
 	void Update();
 	uint32_t Play(sound_id id, float volume);
-	void SetPause(uint32_t handle, bool pause){ m_Souloud.setPause(handle, pause); }
+	void SetPause(uint32_t handle, bool pause) { m_Souloud.setPause(handle, pause); }
 
-	void Stop(uint32_t handle){ m_Souloud.stop(handle); }
+	void Stop(uint32_t handle) { m_Souloud.stop(handle); }
 	void StopAll() { m_Souloud.stopAll(); }
 
 private:
@@ -75,14 +73,13 @@ private:
 void DefaultSoundSystem::SoloudImpl::Update()
 {
 	std::erase_if(m_CachedSounds, [](const auto& cachedSound)
-	{
+		{
 			return cachedSound.second.ShouldDestroy();
-	});
+		});
 }
 
 uint32_t DefaultSoundSystem::SoloudImpl::Play(sound_id id, float volume)
 {
-	Print(id);
 	if (!m_CachedSounds.contains(id))
 		Load(id);
 	return m_Souloud.play(m_CachedSounds[id].GetSound(), volume);
@@ -153,41 +150,37 @@ void DefaultSoundSystem::Play(const sound_id& id, float volume)
 	Unlock();
 }
 
-void DefaultSoundSystem::Pause(SoundHandle& soundHandle)
+void DefaultSoundSystem::Pause(SoundHandle&)
 {
-	Lock();
-	m_Events.emplace([this, &soundHandle] {m_Impl->SetPause(soundHandle.GetHandle(), true); });
-	Unlock();
+	//Lock();
+	//m_Events.emplace([this, &soundHandle] {m_Impl->SetPause(soundHandle.GetHandle(), true); });
+	//Unlock();
 }
 
-void DefaultSoundSystem::Unpause(SoundHandle& soundHandle)
+void DefaultSoundSystem::Unpause(SoundHandle&)
 {
-	Lock();
-	m_Events.emplace([this, &soundHandle] {m_Impl->SetPause(soundHandle.GetHandle(), false); });
-	Unlock();
+	//Lock();
+	//m_Events.emplace([this, &soundHandle] {m_Impl->SetPause(soundHandle.GetHandle(), false); });
+	//Unlock();
 }
 
-void DefaultSoundSystem::Stop(SoundHandle& soundHandle)
+void DefaultSoundSystem::Stop(SoundHandle&)
 {
-	Lock();
-	m_Events.emplace([this, &soundHandle] {m_Impl->Stop(soundHandle.GetHandle()); });
-	Unlock();
+	//Lock();
+	//m_Events.emplace([this, &soundHandle] {m_Impl->Stop(soundHandle.GetHandle()); });
+	//Unlock();
 }
 
-void DefaultSoundSystem::PlayAudio(const sound_id& id, SoundHandle& handle)
+void DefaultSoundSystem::PlayAudio(const sound_id&, SoundHandle&)
 {
-	Lock();
+	//Lock();
 
-	std::promise<uint32_t> soloudHandlePromise{};
-	handle = { soloudHandlePromise.get_future() };
-	const auto insert = [this, id, &soloudHandlePromise]()
-		{
-			std::promise<uint32_t> promise{ std::move(soloudHandlePromise) };
-			promise.set_value(m_Impl->Play(std::move(id), 1));
-		};
-	
-	m_Events.emplace(insert);
-	Unlock();
+	//std::promise<uint32_t> promise{};
+	//handle = { promise.get_future() };
+	//m_Promises.push(std::move(promise));
+
+	//m_Events([this, &handle] { m_Promises.pop() m_Impl->(handle.GetHandle()); });
+	//Unlock();
 }
 
 void DefaultSoundSystem::StopAll()
