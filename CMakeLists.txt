@@ -4,5 +4,6 @@ project(MkUltraTron)
 set(PROJECT_FOLDER Tron)
 
 add_subdirectory(includes/imgui)
+add_subdirectory(includes/soloud)
 add_subdirectory(MkUltra)
 add_subdirectory(Tron)

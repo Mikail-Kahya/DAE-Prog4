@@ -54,8 +54,10 @@ add_library(${ENGINE_NAME} STATIC
   "Source/Core/Observer.cpp"
 
   
-  "Source/Sound/CachedSound.cpp"
-)
+  "SoundSystem.h"
+  "NullSoundSystem.h"
+  "Source/Sound/DefaultSoundSystem.cpp"
+ )
 
 # enable c++20 features
 target_compile_features(${ENGINE_NAME} PUBLIC cxx_std_20)
@@ -204,6 +206,7 @@ elseif(NOT EMSCRIPTEN)
   )
 endif()
 
+#imgui
 
 target_link_libraries(${ENGINE_NAME} PUBLIC imguiLib)
 target_include_directories(imguiLib PUBLIC
@@ -214,6 +217,17 @@ target_include_directories(${ENGINE_NAME} PUBLIC
   ${glm_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/includes/imgui
 )
+
+#soloud
+target_link_libraries(${ENGINE_NAME} PUBLIC soloud)
+
+if(EMSCRIPTEN)
+    target_compile_definitions(soloud PUBLIC WITH_SDL2_STATIC)
+else()
+    target_compile_definitions(soloud PUBLIC WITH_MINIAUDIO)
+    target_link_libraries(soloud PUBLIC  ${sdl2_SOURCE_DIR})
+endif()
+
 
 # compile at max warning level + treat warnings as errors
 target_compile_options(${ENGINE_NAME} PRIVATE
