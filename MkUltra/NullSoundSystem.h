@@ -15,11 +15,11 @@ namespace mk
 		NullSoundSystem& operator=(const NullSoundSystem& other)		= delete;
 		NullSoundSystem& operator=(NullSoundSystem&& other)	noexcept	= delete;
 
-		void Play(sound_id, float) override {}
+		void Play(const sound_id&, float) override {}
 		void Pause(SoundHandle&) override {}
 		void Unpause(SoundHandle&) override {}
 		void Stop(SoundHandle&) override {}
-		void PlayAudio(sound_id, SoundHandle&) override {}
+		void PlayAudio(const sound_id&, SoundHandle&) override {}
 		void StopAll() override {}
 	};
 }

@@ -25,14 +25,17 @@
 #include "RenderComponent.h"
 #include "MovementComponent.h"
 #include "BoxColliderComponent.h"
+#include "DefaultSoundSystem.h"
 #include "ScoreComponent.h"
 #include "FireComponent.h"	
 #include "HealthBarComponent.h"
 #include "HealthComponent.h"
+#include "NullSoundSystem.h"
 
 #include "PlayerCommand.h"
 #include "Renderer.h"
 #include "RespawnComponent.h"
+#include "ServiceLocator.h"
 
 namespace fs = std::filesystem;
 using namespace mk;
@@ -43,6 +46,8 @@ void LoadInfo(Scene& scene);
 
 void load()
 {
+	ServiceLocator::RegisterSoundSystem<DefaultSoundSystem>();
+	ServiceLocator::GetSoundSystem().Play("Shoot.mp3", 1);
 	auto& scene = SceneManager::GetInstance().LoadScene("Demo");
 	const Renderer& renderer{ Renderer::GetInstance() };
 	const int screenWidth{ renderer.GetWidth() };
@@ -58,7 +63,7 @@ void load()
 		LoadPlayer(scene, "Player1", { 100.f, 100.f }),
 		LoadPlayer(scene, "Player2", {  -100.f + screenWidth, 100.f })
 	};
-	players[1]->SetStatic(true);
+	//players[1]->SetStatic(true);
 	LoadHud(scene, players);
 	LoadInfo(scene);
 }
