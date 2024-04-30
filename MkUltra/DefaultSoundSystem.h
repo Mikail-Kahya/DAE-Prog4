@@ -19,11 +19,10 @@ namespace mk
 		DefaultSoundSystem& operator=(DefaultSoundSystem&& other) noexcept	= delete;
 
 		void SetDefaultDataPath(const std::string& dataPath) override;
-		void Play(const sound_id& id, float volume) override;
-		void Pause(SoundHandle& soundHandle) override;
-		void Unpause(SoundHandle& soundHandle) override;
-		void Stop(SoundHandle& soundHandle) override;
-		void PlayAudio(const sound_id& id, SoundHandle& handle) override;
+		handle_id Play(const sound_id& id, float volume) override;
+		void Pause(handle_id soundHandleId) override;
+		void Unpause(handle_id soundHandleId) override;
+		void Stop(handle_id soundHandleId) override;
 		void StopAll() override;
 
 	private:
@@ -31,12 +30,12 @@ namespace mk
 		void Lock();
 		void Unlock();
 
-		using Event = std::function<void()>;
 		class SoloudImpl;
+		using Impl = std::unique_ptr<SoloudImpl>;
+		using Event = std::function<void(const Impl&)>;
 
 		std::queue<Event> m_Events{};
-		std::queue<std::promise<uint32_t>> m_Promises{};
-		std::unique_ptr<SoloudImpl> m_Impl;
+		Impl m_Impl;
 		std::condition_variable m_QueueState{};
 		std::jthread m_Thread;
 		std::mutex m_QueueMutex{};

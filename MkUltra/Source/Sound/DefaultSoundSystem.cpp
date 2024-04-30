@@ -48,6 +48,13 @@ private:
 
 };
 
+struct Handle
+{
+	CachedSound* CachedSoundPtr{};
+	SoLoud::handle SoloudHandle{};
+	bool IsUsed{};
+};
+
 class DefaultSoundSystem::SoloudImpl final
 {
 public:
@@ -56,34 +63,75 @@ public:
 
 	void SetDefaultDataPath(const std::string& dataPath) { m_DefaultDataPath = dataPath; }
 	void Update();
-	uint32_t Play(sound_id id, float volume);
-	void SetPause(uint32_t handle, bool pause) { m_Souloud.setPause(handle, pause); }
 
-	void Stop(uint32_t handle) { m_Souloud.stop(handle); }
+	void Play(sound_id id, float volume, handle_id handleId);
+	void SetPause(handle_id soundHandleId, bool pause) { m_Souloud.setPause(m_Handles[soundHandleId].SoloudHandle, pause); }
+	void Stop(handle_id soundHandleId);
 	void StopAll() { m_Souloud.stopAll(); }
+
+	handle_id GetNextHandleId();
+	bool HandleOutOfRange(handle_id soundHandle) const;
 
 private:
 	void Load(sound_id id) { m_CachedSounds[id] = CachedSound{ m_DefaultDataPath + id }; }
+	void SetHandleNull(handle_id handleId);
 
 	SoLoud::Soloud m_Souloud{};
 	std::unordered_map<sound_id, CachedSound> m_CachedSounds{};
+	std::vector<Handle> m_Handles{};
 	std::string m_DefaultDataPath{};
 };
 
 void DefaultSoundSystem::SoloudImpl::Update()
 {
+	for (Handle& handle : m_Handles)
+		handle.IsUsed = m_Souloud.isValidVoiceHandle(handle.SoloudHandle);
+
 	std::erase_if(m_CachedSounds, [](const auto& cachedSound)
 		{
 			return cachedSound.second.ShouldDestroy();
 		});
 }
 
-uint32_t DefaultSoundSystem::SoloudImpl::Play(sound_id id, float volume)
+void DefaultSoundSystem::SoloudImpl::Play(sound_id id, float volume, handle_id handleId)
 {
 	if (!m_CachedSounds.contains(id))
 		Load(id);
-	return m_Souloud.play(m_CachedSounds[id].GetSound(), volume);
+
+	const Handle handle{ &m_CachedSounds[id], m_Souloud.play(m_CachedSounds[id].GetSound(), volume), true };
+	if (handleId == m_Handles.size())
+		m_Handles.emplace_back(handle);
+	else
+		m_Handles[handleId] = handle;
 }
+
+void DefaultSoundSystem::SoloudImpl::Stop(handle_id soundHandleId)
+{
+	m_Souloud.stop(m_Handles[soundHandleId].SoloudHandle);
+	SetHandleNull(soundHandleId);
+}
+
+handle_id DefaultSoundSystem::SoloudImpl::GetNextHandleId()
+{
+	const auto foundId = std::find_if(m_Handles.begin(), m_Handles.end(), [](const Handle& handle)
+	{
+			return handle.IsUsed;
+	});
+
+	return foundId == m_Handles.end() ? m_Handles.size() : std::distance(m_Handles.begin(), foundId);
+}
+
+bool DefaultSoundSystem::SoloudImpl::HandleOutOfRange(handle_id soundHandleId) const
+{
+	return m_Handles.size() - 1 < soundHandleId;
+}
+
+void DefaultSoundSystem::SoloudImpl::SetHandleNull(handle_id handleId)
+{
+	m_Handles[handleId].IsUsed = false;
+}
+
+// ----------- System -----------
 
 DefaultSoundSystem::DefaultSoundSystem()
 	: SoundSystem()
@@ -110,17 +158,20 @@ void DefaultSoundSystem::SetupThread()
 			m_QueueState.wait(transferLock, [this] { return !m_Events.empty() || m_CloseThread; });
 
 			// move everything to local queue
-			std::queue<Event> events = std::move(this->m_Events);
+			std::queue<Event> events{};
+			events.swap(m_Events);
 
 			transferLock.unlock();
 
 			// perform functions of local queue
 			while (!events.empty())
 			{
-				events.back()();
+				events.back()(m_Impl);
 				events.pop();
 			}
 
+			// Remove sounds if not used after events are handled
+			transferLock.lock();
 			m_Impl->Update();
 		}
 	});
@@ -143,49 +194,48 @@ void DefaultSoundSystem::SetDefaultDataPath(const std::string& dataPath)
 	m_Impl->SetDefaultDataPath(dataPath);
 }
 
-void DefaultSoundSystem::Play(const sound_id& id, float volume)
+handle_id DefaultSoundSystem::Play(const sound_id& id, float volume)
 {
-	Lock();
-	m_Events.emplace([this, id, volume]() { m_Impl->Play(std::move(id), volume); });
-	Unlock();
+	std::lock_guard lock{ m_QueueMutex };
+	const handle_id handleId{ m_Impl->GetNextHandleId() };
+	m_Events.emplace([id, volume, handleId](const Impl& impl) mutable { impl->Play(std::move(id), volume, handleId); });
+	m_QueueState.notify_all();
+	return handleId;
 }
 
-void DefaultSoundSystem::Pause(SoundHandle&)
+void DefaultSoundSystem::Pause(handle_id soundHandle)
 {
-	//Lock();
-	//m_Events.emplace([this, &soundHandle] {m_Impl->SetPause(soundHandle.GetHandle(), true); });
-	//Unlock();
+	std::lock_guard lock{ m_QueueMutex };
+	if (m_Impl->HandleOutOfRange(soundHandle))
+		return;
+
+	m_Events.emplace([soundHandle](const Impl& impl) { impl->SetPause(soundHandle, true); });
+	m_QueueState.notify_all();
 }
 
-void DefaultSoundSystem::Unpause(SoundHandle&)
+void DefaultSoundSystem::Unpause(handle_id soundHandleId)
 {
-	//Lock();
-	//m_Events.emplace([this, &soundHandle] {m_Impl->SetPause(soundHandle.GetHandle(), false); });
-	//Unlock();
+	std::lock_guard lock{ m_QueueMutex };
+	if (m_Impl->HandleOutOfRange(soundHandleId))
+		return;
+
+	m_Events.emplace([soundHandleId](const Impl& impl) { impl->SetPause(soundHandleId, false); });
+	m_QueueState.notify_all();
 }
 
-void DefaultSoundSystem::Stop(SoundHandle&)
+void DefaultSoundSystem::Stop(handle_id soundHandleId)
 {
-	//Lock();
-	//m_Events.emplace([this, &soundHandle] {m_Impl->Stop(soundHandle.GetHandle()); });
-	//Unlock();
-}
+	std::lock_guard lock{ m_QueueMutex };
+	if (m_Impl->HandleOutOfRange(soundHandleId))
+		return;
 
-void DefaultSoundSystem::PlayAudio(const sound_id&, SoundHandle&)
-{
-	//Lock();
-
-	//std::promise<uint32_t> promise{};
-	//handle = { promise.get_future() };
-	//m_Promises.push(std::move(promise));
-
-	//m_Events([this, &handle] { m_Promises.pop() m_Impl->(handle.GetHandle()); });
-	//Unlock();
+	m_Events.emplace([soundHandleId](const Impl& impl) { impl->Stop(soundHandleId); });
+	m_QueueState.notify_all();
 }
 
 void DefaultSoundSystem::StopAll()
 {
-	Lock();
-	m_Events.emplace([this]() {m_Impl->StopAll(); });
-	Unlock();
+	std::lock_guard lock{ m_QueueMutex };
+	m_Events.emplace([](const Impl& impl) { impl->StopAll(); });
+	m_QueueState.notify_all();
 }

@@ -15,12 +15,11 @@ namespace mk
 		NullSoundSystem& operator=(const NullSoundSystem& other)		= delete;
 		NullSoundSystem& operator=(NullSoundSystem&& other)	noexcept	= delete;
 
-		void SetDefaultDataPath(const std::string&) override {}
-		void Play(const sound_id&, float) override {}
-		void Pause(SoundHandle&) override {}
-		void Unpause(SoundHandle&) override {}
-		void Stop(SoundHandle&) override {}
-		void PlayAudio(const sound_id&, SoundHandle&) override {}
-		void StopAll() override {}
+		void SetDefaultDataPath(const std::string&) override{}
+		handle_id Play(const sound_id&, float) override { return 0; }
+		void Pause(handle_id) override{}
+		void Unpause(handle_id) override{}
+		void Stop(handle_id) override{}
+		void StopAll() override{}
 	};
 }
