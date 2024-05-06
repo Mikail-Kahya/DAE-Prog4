@@ -30,18 +30,17 @@ void TextComponent::Update()
 {
 	if (m_NeedsUpdate)
 	{
-		const SDL_Color color = { 255,255,255,255 }; // only white text is supported now
-		const auto surf = TTF_RenderText_Blended(m_FontPtr->GetFont(), m_Text.c_str(), color);
-		if (surf == nullptr) 
-		{
+		const auto surfacePtr = TTF_RenderText_Blended(	m_FontPtr->GetFont(), 
+														m_Text.c_str(),
+														{ m_Color.r, m_Color.g, m_Color.b, m_Color.a } );
+		if (surfacePtr == nullptr) 
 			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
-		}
-		auto texture = SDL_CreateTextureFromSurface(Renderer::GetInstance().GetSDLRenderer(), surf);
+
+		auto texture = SDL_CreateTextureFromSurface(Renderer::GetInstance().GetSDLRenderer(), surfacePtr);
 		if (texture == nullptr) 
-		{
 			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
-		}
-		SDL_FreeSurface(surf);
+
+		SDL_FreeSurface(surfacePtr);
 		m_Texture = std::make_unique<Texture2D>(texture);
 		m_RendererPtr->SetTexture(m_Texture.get());
 		m_NeedsUpdate = false;
@@ -61,7 +60,12 @@ void TextComponent::SetFont(const std::string& fontPath, unsigned int size)
 	m_FontPtr = fontPtr;
 }
 
-void TextComponent::SetAnchor(const glm::vec2& anchor)
+void TextComponent::SetColor(const Color& color)
+{
+	m_Color = color;
+}
+
+void TextComponent::SetAnchor(const glm::vec2& anchor) const
 {
 	m_RendererPtr->SetAnchor(anchor);
 }

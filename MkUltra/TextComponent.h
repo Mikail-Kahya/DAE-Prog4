@@ -29,13 +29,15 @@ namespace mk
 
 		void SetText(const std::string& text);
 		void SetFont(const std::string& fontPath, unsigned int size);
-		void SetAnchor(const glm::vec2& anchor);
+		void SetColor(const Color& color);
+		void SetAnchor(const glm::vec2& anchor) const;
 
 	private:
 		bool m_NeedsUpdate{ false };
 		std::string m_Text{};
-		Font* m_FontPtr{};
+		Color m_Color{};
 		std::unique_ptr<Texture2D> m_Texture{};
+		Font* m_FontPtr{};
 		RenderComponent* m_RendererPtr{};
 	};
 }

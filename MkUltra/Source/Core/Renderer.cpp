@@ -103,7 +103,7 @@ void Renderer::RenderTexture(const Texture2D& texture, const float x, const floa
 	dst.x = static_cast<int>(x);
 	dst.y = m_Height - static_cast<int>(y) - texture.GetSize().y;
 	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	SDL_RenderCopy(m_Renderer, texture.GetSDLTexture(), nullptr, &dst);
 }
 
 float Renderer::GetNextDepth()
