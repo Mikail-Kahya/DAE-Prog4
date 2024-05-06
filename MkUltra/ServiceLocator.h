@@ -27,7 +27,7 @@ namespace mk
 		ServiceLocator() = default;
 
 		// services
-		inline static std::unique_ptr<SoundSystem> s_SoundSystem{};
+		static std::unique_ptr<SoundSystem> s_SoundSystem;
 		inline static std::string m_DataPath{};
 	};
 }

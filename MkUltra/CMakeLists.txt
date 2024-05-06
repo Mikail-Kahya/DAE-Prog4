@@ -225,7 +225,7 @@ if(EMSCRIPTEN)
     target_compile_definitions(soloud PUBLIC WITH_SDL2_STATIC)
 else()
     target_compile_definitions(soloud PUBLIC WITH_MINIAUDIO)
-    target_link_libraries(soloud PUBLIC  ${sdl2_SOURCE_DIR})
+    target_link_libraries(soloud PUBLIC ${sdl2_SOURCE_DIR})
 endif()
 
 

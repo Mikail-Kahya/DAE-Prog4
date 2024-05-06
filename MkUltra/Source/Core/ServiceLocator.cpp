@@ -2,10 +2,10 @@
 #include "NullSoundSystem.h"
 using namespace mk;
 
+std::unique_ptr<SoundSystem> ServiceLocator::s_SoundSystem{ std::make_unique<NullSoundSystem>() };
+
 SoundSystem& ServiceLocator::GetSoundSystem()
 {
-	if (!s_SoundSystem)
-		s_SoundSystem = std::make_unique<NullSoundSystem>();
 	return *s_SoundSystem;
 }
 

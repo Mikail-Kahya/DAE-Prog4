@@ -46,7 +46,7 @@ void LoadInfo(Scene& scene);
 
 void load()
 {
-	handle_id id = ServiceLocator::GetSoundSystem().Play("MainMenuMusic.mp3", 0.7f);
+	ServiceLocator::GetSoundSystem().Play("MainMenuMusic.mp3", 0.7f);
 
 	auto& scene = SceneManager::GetInstance().LoadScene("Demo");
 	const Renderer& renderer{ Renderer::GetInstance() };

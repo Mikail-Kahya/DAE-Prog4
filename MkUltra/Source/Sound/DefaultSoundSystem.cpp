@@ -98,7 +98,7 @@ void DefaultSoundSystem::SoloudImpl::Play(sound_id id, float volume, handle_id h
 	if (!m_CachedSounds.contains(id))
 		Load(id);
 
-	const Handle handle{ &m_CachedSounds[id], m_Souloud.play(m_CachedSounds[id].GetSound(), volume), true };
+ 	const Handle handle{ &m_CachedSounds[id], m_Souloud.play(m_CachedSounds[id].GetSound(), volume), true };
 	if (handleId == m_Handles.size())
 		m_Handles.emplace_back(handle);
 	else
