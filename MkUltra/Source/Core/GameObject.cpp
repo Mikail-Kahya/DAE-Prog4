@@ -301,3 +301,27 @@ GameObject* GameObject::GetChildAt(int index) const
 		return nullptr;
 	return m_Children[index];
 }
+
+GameObject* GameObject::GetChildWithName(const std::string& name, bool recursively) const
+{
+	GameObject* foundChildPtr = *std::find_if(m_Children.begin(), m_Children.end(), [&name](GameObject* childPtr)
+		{
+			return childPtr->GetName() == name;
+		});
+
+	if (foundChildPtr != nullptr)
+		return foundChildPtr;
+
+	if (!recursively)
+		return nullptr;
+
+	for (const GameObject* childPtr : m_Children)
+	{
+		foundChildPtr = childPtr->GetChildWithName(name, recursively);
+		if (foundChildPtr != nullptr )
+			return foundChildPtr;
+	}
+		
+
+	return nullptr;
+}
