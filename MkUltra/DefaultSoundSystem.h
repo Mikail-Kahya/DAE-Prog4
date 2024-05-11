@@ -3,11 +3,11 @@
 #include <memory>
 #include <queue>
 
-#include "SoundSystem.h"
+#include "ISoundSystem.h"
 
 namespace mk
 {
-	class DefaultSoundSystem final : public SoundSystem
+	class DefaultSoundSystem final : public ISoundSystem
 	{
 	public:
 		DefaultSoundSystem();

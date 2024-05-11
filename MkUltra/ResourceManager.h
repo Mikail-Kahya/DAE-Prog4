@@ -6,14 +6,14 @@
 
 #include "Texture2D.h"
 #include "Font.h"
-#include "Singleton.h"
+#include "ISingleton.h"
 
 namespace mk
 {
 
-	class ResourceManager final : public Singleton<ResourceManager>
+	class ResourceManager final : public ISingleton<ResourceManager>
 	{
-		friend class Singleton<ResourceManager>;
+		friend class ISingleton<ResourceManager>;
 	public:
 		~ResourceManager() override = default;
 

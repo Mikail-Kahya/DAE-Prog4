@@ -1,9 +1,9 @@
 #pragma once
-#include "Component.h"
+#include "IComponent.h"
 
 namespace mk
 {
-	class FireComponent : public Component
+	class FireComponent : public IComponent
 	{
 	public:
 		FireComponent(float barrelLength);

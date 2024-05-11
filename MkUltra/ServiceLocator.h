@@ -1,5 +1,5 @@
 #pragma once
-#include "SoundSystem.h"
+#include "ISoundSystem.h"
 
 namespace mk
 {
@@ -13,13 +13,13 @@ namespace mk
 		ServiceLocator& operator=(const ServiceLocator& other)		= delete;
 		ServiceLocator& operator=(ServiceLocator&& other) noexcept	= delete;
 
-		template <std::derived_from<SoundSystem> SystemType, typename ...Args>
+		template <std::derived_from<ISoundSystem> SystemType, typename ...Args>
 		static void RegisterSoundSystem(const Args&... args)
 		{
 			s_SoundSystem = std::make_unique<SystemType>(args...);
 			s_SoundSystem->SetDefaultDataPath(m_DataPath);
 		}
-		static SoundSystem& GetSoundSystem();
+		static ISoundSystem& GetSoundSystem();
 
 		static void SetDefaultDataPath(const std::string& dataPath);
 
@@ -27,7 +27,7 @@ namespace mk
 		ServiceLocator() = default;
 
 		// services
-		static std::unique_ptr<SoundSystem> s_SoundSystem;
+		static std::unique_ptr<ISoundSystem> s_SoundSystem;
 		inline static std::string m_DataPath{};
 	};
 }

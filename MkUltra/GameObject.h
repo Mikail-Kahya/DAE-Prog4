@@ -8,7 +8,7 @@
 namespace mk
 {
 
-	class Component;
+	class IComponent;
 	class Texture2D;
 
 	class GameObject final
@@ -54,11 +54,11 @@ namespace mk
 		int GetChildCount() const;
 		GameObject* GetChildAt(int index) const;
 
-		template <std::derived_from<Component> ComponentType>
+		template <std::derived_from<IComponent> ComponentType>
 		[[nodiscard]] ComponentType* GetComponent() const;
-		template <std::derived_from<Component> ComponentType, typename... Args>
+		template <std::derived_from<IComponent> ComponentType, typename... Args>
 		ComponentType* AddComponent(const Args&... args);
-		void RemoveComponent(const std::unique_ptr<Component>& component);
+		void RemoveComponent(const std::unique_ptr<IComponent>& component);
 
 
 	private:
@@ -77,8 +77,8 @@ namespace mk
 		std::vector<GameObject*> m_Children{};
 
 		// Components
-		std::vector<std::unique_ptr<Component>> m_Components;
-		std::vector<std::unique_ptr<Component>> m_ComponentBuffer;
+		std::vector<std::unique_ptr<IComponent>> m_Components;
+		std::vector<std::unique_ptr<IComponent>> m_ComponentBuffer;
 
 		// Common state
 		std::string m_Name{};
@@ -90,10 +90,10 @@ namespace mk
 		bool m_Destroy{ false };
 	};
 
-	template <std::derived_from<Component> ComponentType>
+	template <std::derived_from<IComponent> ComponentType>
 	ComponentType* GameObject::GetComponent() const
 	{
-		auto componentIt = std::ranges::find_if(m_Components, [](const std::unique_ptr<Component>& component)
+		auto componentIt = std::ranges::find_if(m_Components, [](const std::unique_ptr<IComponent>& component)
 			{
 				return dynamic_cast<ComponentType*>(component.get());
 			});
@@ -101,7 +101,7 @@ namespace mk
 		if (componentIt != m_Components.end())
 			return dynamic_cast<ComponentType*>(componentIt->get());
 
-		componentIt = std::ranges::find_if(m_ComponentBuffer, [](const std::unique_ptr<Component>& component)
+		componentIt = std::ranges::find_if(m_ComponentBuffer, [](const std::unique_ptr<IComponent>& component)
 			{
 				return dynamic_cast<ComponentType*>(component.get());
 			});
@@ -112,7 +112,7 @@ namespace mk
 		return nullptr;
 	}
 
-	template <std::derived_from<Component> ComponentType, typename... Args>
+	template <std::derived_from<IComponent> ComponentType, typename... Args>
 	ComponentType* GameObject::AddComponent(const Args&... args)
 	{
 		ComponentType* componentPtr{ GetComponent<ComponentType>() };

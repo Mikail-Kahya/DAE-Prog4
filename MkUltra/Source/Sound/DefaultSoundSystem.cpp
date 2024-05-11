@@ -134,7 +134,7 @@ void DefaultSoundSystem::SoloudImpl::SetHandleNull(handle_id handleId)
 // ----------- System -----------
 
 DefaultSoundSystem::DefaultSoundSystem()
-	: SoundSystem()
+	: ISoundSystem()
 	, m_Impl{ std::make_unique<SoloudImpl>() }
 	, m_Thread()
 {

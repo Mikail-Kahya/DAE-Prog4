@@ -2,7 +2,7 @@
 #include <list>
 #include <SDL.h>
 
-#include "Singleton.h"
+#include "ISingleton.h"
 
 namespace mk
 {
@@ -12,9 +12,9 @@ namespace mk
 	/**
 	 * Simple RAII wrapper for the SDL renderer
 	 */
-	class Renderer final : public Singleton<Renderer>
+	class Renderer final : public ISingleton<Renderer>
 	{
-		friend class Singleton<Renderer>;
+		friend class ISingleton<Renderer>;
 	public:
 		void Init(int width, int height);
 		void Update();

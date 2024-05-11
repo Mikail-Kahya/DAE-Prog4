@@ -2,14 +2,14 @@
 
 #include <string_view>
 
-#include "Component.h"
+#include "IComponent.h"
 #include "Transform.h"
 
 namespace mk
 {
 	class Texture2D;
 
-	class RenderComponent final : public Component
+	class RenderComponent final : public IComponent
 	{
 	public:
 		RenderComponent(Texture2D* texturePtr);

@@ -2,7 +2,7 @@
 #include <algorithm>
 
 #include "GameObject.h"
-#include "Component.h"
+#include "IComponent.h"
 
 using namespace mk;
 
@@ -47,7 +47,7 @@ GameObject& GameObject::operator=(GameObject&& other) noexcept
 	return *this;
 }
 
-void GameObject::RemoveComponent(const std::unique_ptr<Component>& component)
+void GameObject::RemoveComponent(const std::unique_ptr<IComponent>& component)
 {
 	component->Destroy();
 }
@@ -75,7 +75,7 @@ void GameObject::LateUpdate()
 void GameObject::ComponentCleanup()
 {
 	// Remove destroy flagged components
-	auto eraseIt = std::stable_partition(m_Components.begin(), m_Components.end(), [](const std::unique_ptr<Component>& component)
+	auto eraseIt = std::stable_partition(m_Components.begin(), m_Components.end(), [](const std::unique_ptr<IComponent>& component)
 		{
 			return !component->DestroyFlagged();
 		});

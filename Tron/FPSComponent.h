@@ -2,13 +2,13 @@
 
 #include <vector>
 
-#include "Component.h"
+#include "IComponent.h"
 
 namespace mk
 {
 	class TextComponent;
 
-	class FPSComponent : public Component
+	class FPSComponent : public IComponent
 	{
 	public:
 		FPSComponent() = default;

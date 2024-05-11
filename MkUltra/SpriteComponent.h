@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-#include "Component.h"
+#include "IComponent.h"
 
 namespace mk
 {
@@ -9,7 +9,7 @@ namespace mk
 	class Texture2D;
 
 	// Will transform to animated
-	class SpriteComponent final : public Component
+	class SpriteComponent final : public IComponent
 	{
 	public:
 		~SpriteComponent() override = default;

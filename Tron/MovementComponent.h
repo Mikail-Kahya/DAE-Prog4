@@ -1,10 +1,10 @@
 #pragma once
-#include "Component.h"
+#include "IComponent.h"
 #include "glm/vec2.hpp"
 
 namespace mk
 {
-	class MovementComponent final : public Component
+	class MovementComponent final : public IComponent
 	{
 	public:
 		MovementComponent(float maxLinearSpeed = 50.f, float maxAngularSpeed = 5.f, float acceleration = 1.f, float deceleration = 1.f, bool consumeMovement = true);

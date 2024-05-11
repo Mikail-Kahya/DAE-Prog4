@@ -8,14 +8,14 @@ using namespace mk;
 
 void ScoreComponent::Start()
 {
-	Component::Start();
+	IComponent::Start();
 
 	m_TextComponentPtr = GetOwner()->AddComponent<TextComponent>("Score: 0", "Lingua.otf", 30);
 }
 
-void ScoreComponent::OnNotify(Subject* subjectPtr, const Event& event)
+void ScoreComponent::OnNotify(ISubject* subjectPtr, const Event& event)
 {
-	Observer::OnNotify(subjectPtr, event);
+	IObserver::OnNotify(subjectPtr, event);
 
 	if (event.type == EventType::OBJECT_DIED)
 		AddScore(event);

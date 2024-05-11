@@ -3,15 +3,15 @@ namespace mk
 {
 	class GameObject;
 
-	class Component
+	class IComponent
 	{
 	public:
-		virtual ~Component() = default;
+		virtual ~IComponent() = default;
 
-		Component(const Component& other) = delete;
-		Component(Component&& other) = delete;
-		Component& operator=(const Component& other) = delete;
-		Component& operator=(Component&& other) = delete;
+		IComponent(const IComponent& other) = delete;
+		IComponent(IComponent&& other) = delete;
+		IComponent& operator=(const IComponent& other) = delete;
+		IComponent& operator=(IComponent&& other) = delete;
 
 		virtual void Start() {}
 
@@ -26,7 +26,7 @@ namespace mk
 		GameObject* GetOwner() const;
 
 	protected:
-		Component() = default;
+		IComponent() = default;
 
 	private:
 		friend class GameObject;

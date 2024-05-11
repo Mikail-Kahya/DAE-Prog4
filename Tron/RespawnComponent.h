@@ -1,11 +1,11 @@
 #pragma once
-#include "Component.h"
-#include "Observer.h"
+#include "IComponent.h"
+#include "IObserver.h"
 #include "glm/vec2.hpp"
 
 namespace mk
 {
-	class RespawnComponent : public Component, public Observer
+	class RespawnComponent : public IComponent, public IObserver
 	{
 	public:
 		RespawnComponent(const glm::vec2& respawn);
@@ -16,7 +16,7 @@ namespace mk
 		RespawnComponent& operator=(const RespawnComponent& other)		= delete;
 		RespawnComponent& operator=(RespawnComponent&& other) noexcept	= delete;
 
-		void OnNotify(Subject* subjectPtr, const Event& event) override;
+		void OnNotify(ISubject* subjectPtr, const Event& event) override;
 		void SetRespawn(const glm::vec2& respawn);
 
 	private:

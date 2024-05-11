@@ -1,12 +1,12 @@
 #pragma once
-#include "Component.h"
-#include "Observer.h"
+#include "IComponent.h"
+#include "IObserver.h"
 
 namespace mk
 {
 	class TextComponent;
 
-	class HealthBarComponent : public Component, public Observer
+	class HealthBarComponent : public IComponent, public IObserver
 	{
 	public:
 		HealthBarComponent() = default;
@@ -19,7 +19,7 @@ namespace mk
 
 		void Start() override;
 
-		void OnNotify(Subject* subjectPtr, const Event& event) override;
+		void OnNotify(ISubject* subjectPtr, const Event& event) override;
 
 	private:
 		TextComponent* m_TextCompPtr{};

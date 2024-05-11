@@ -3,16 +3,16 @@
 #include <vector>
 
 #include "InputMapping.h"
-#include "Singleton.h"
+#include "ISingleton.h"
 #include "Controller.h"
 
 namespace mk
 {
 	class Command;
 
-	class InputManager final : public Singleton<InputManager>
+	class InputManager final : public ISingleton<InputManager>
 	{
-		friend class Singleton<InputManager>;
+		friend class ISingleton<InputManager>;
 	public:
 		bool ProcessInput();
 		Controller* AddController();

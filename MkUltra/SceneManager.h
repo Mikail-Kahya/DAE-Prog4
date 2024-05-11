@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
-#include "Singleton.h"
+#include "ISingleton.h"
 #include "TimeManager.h"
 #include "Scene.h"
 
@@ -10,9 +10,9 @@ namespace mk
 	// Design for future when loading from files
 		// Load scene with file, allow preloading, and hold one current scene 
 
-	class SceneManager final : public Singleton<SceneManager>
+	class SceneManager final : public ISingleton<SceneManager>
 	{
-		friend class Singleton<SceneManager>;
+		friend class ISingleton<SceneManager>;
 	public:
 		
 		~SceneManager() override = default;

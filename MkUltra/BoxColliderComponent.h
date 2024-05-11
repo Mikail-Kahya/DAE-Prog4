@@ -3,8 +3,8 @@
 
 #include "glm/vec2.hpp"
 
-#include "Component.h"
-#include "Observer.h"
+#include "IComponent.h"
+#include "IObserver.h"
 
 namespace mk
 {
@@ -31,7 +31,7 @@ namespace mk
 		float distance{};
 	};
 
-	class BoxColliderComponent : public Component, public Subject
+	class BoxColliderComponent : public IComponent, public ISubject
 	{
 	public:
 		BoxColliderComponent();

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "Singleton.h"
+#include "ISingleton.h"
 #include "GUIWidget.h"
 #include "SDL_events.h"
 
@@ -16,9 +16,9 @@ struct SDL_Renderer;
 
 namespace mk
 {
-	class GUI final : public Singleton<GUI>
+	class GUI final : public ISingleton<GUI>
 	{
-		friend class Singleton<GUI>;
+		friend class ISingleton<GUI>;
 	public:
 		~GUI() override = default;
 

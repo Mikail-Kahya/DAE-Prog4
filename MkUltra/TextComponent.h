@@ -2,7 +2,7 @@
 #include <string>
 #include <memory>
 
-#include "Component.h"
+#include "IComponent.h"
 #include "glm/vec2.hpp"
 #include "Texture2D.h"
 
@@ -12,7 +12,7 @@ namespace mk
 	class Texture2D;
 	class Font;
 	
-	class TextComponent final : public Component
+	class TextComponent final : public IComponent
 	{
 	public:
 		TextComponent(const std::string& text, const std::string& fontName = "Lingua.otf", int size = 11);

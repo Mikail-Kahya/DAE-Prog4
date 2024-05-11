@@ -1,10 +1,10 @@
 #pragma once
-#include "Component.h"
-#include "Observer.h"
+#include "IComponent.h"
+#include "IObserver.h"
 
 namespace mk
 {
-	class HealthComponent : public Component, public Observer, public Subject
+	class HealthComponent : public IComponent, public IObserver, public ISubject
 	{
 	public:
 		HealthComponent(int maxHealth, int startHealth);
@@ -16,7 +16,7 @@ namespace mk
 		HealthComponent& operator=(HealthComponent&& other)	noexcept	= delete;
 
 		void Start() override;
-		void OnNotify(Subject* subjectPtr, const Event& event) override;
+		void OnNotify(ISubject* subjectPtr, const Event& event) override;
 
 		int GetHealth() const;
 		bool IsDead() const;

@@ -1,15 +1,15 @@
-#include "Observer.h"
+#include "IObserver.h"
 #include <algorithm>
 
 using namespace mk;
 
-Observer::~Observer()
+IObserver::~IObserver()
 {
-	for (Subject* subjectPtr : m_Subjects)
+	for (ISubject* subjectPtr : m_Subjects)
 		subjectPtr->RemoveObserver(this);
 }
 
-void Observer::OnNotify(Subject* subjectPtr, const Event& event)
+void IObserver::OnNotify(ISubject* subjectPtr, const Event& event)
 {
 	switch (event.type)
 	{
@@ -23,13 +23,13 @@ void Observer::OnNotify(Subject* subjectPtr, const Event& event)
 	}
 }
 
-Subject::~Subject()
+ISubject::~ISubject()
 {
-	for (Observer* observerPtr : m_Observers)
+	for (IObserver* observerPtr : m_Observers)
 		observerPtr->OnNotify(this, { EventType::OBJECT_DESTROY });
 }
 
-void Subject::AddObserver(Observer* observerPtr)
+void ISubject::AddObserver(IObserver* observerPtr)
 {
 	const auto foundIter = std::find(m_Observers.begin(), m_Observers.end(), observerPtr);
 	if (foundIter == m_Observers.end())
@@ -39,7 +39,7 @@ void Subject::AddObserver(Observer* observerPtr)
 	}
 }
 
-void Subject::RemoveObserver(Observer* observerPtr)
+void ISubject::RemoveObserver(IObserver* observerPtr)
 {
 	const auto foundIter = std::find(m_Observers.begin(), m_Observers.end(), observerPtr);
 	if (foundIter == m_Observers.end())
@@ -49,8 +49,8 @@ void Subject::RemoveObserver(Observer* observerPtr)
 	}
 }
 
-void Subject::Notify(const Event& event)
+void ISubject::Notify(const Event& event)
 {
-	for (Observer* observerPtr : m_Observers)
+	for (IObserver* observerPtr : m_Observers)
 		observerPtr->OnNotify(this, event);
 }

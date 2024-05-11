@@ -1,10 +1,10 @@
 #pragma once
 
-#include "SoundSystem.h"
+#include "ISoundSystem.h"
 
 namespace mk
 {
-	class NullSoundSystem : public SoundSystem
+	class NullSoundSystem : public ISoundSystem
 	{
 	public:
 		NullSoundSystem()			= default;

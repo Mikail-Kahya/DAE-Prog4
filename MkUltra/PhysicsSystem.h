@@ -2,14 +2,14 @@
 #include <vector>
 
 #include "BoxColliderComponent.h"
-#include "Singleton.h"
+#include "ISingleton.h"
 #include "glm/vec2.hpp"
 
 namespace mk
 {
-	class PhysicsSystem final : public Singleton<PhysicsSystem>
+	class PhysicsSystem final : public ISingleton<PhysicsSystem>
 	{
-		friend class Singleton<PhysicsSystem>;
+		friend class ISingleton<PhysicsSystem>;
 	public:
 		~PhysicsSystem() override = default;
 

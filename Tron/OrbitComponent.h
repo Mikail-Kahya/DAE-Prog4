@@ -1,9 +1,9 @@
 #pragma once
-#include "Component.h"
+#include "IComponent.h"
 
 namespace mk
 {
-	class OrbitComponent : public Component
+	class OrbitComponent : public IComponent
 	{
 	public:
 		OrbitComponent(float orbitRadius = 50.f, float rotationSpeed = 5.f);

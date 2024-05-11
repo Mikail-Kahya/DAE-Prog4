@@ -1,10 +1,10 @@
 #pragma once
-#include "Component.h"
-#include "Observer.h"
+#include "IComponent.h"
+#include "IObserver.h"
 
 namespace mk
 {
-	class ExplosionComponent : public Component, public Observer
+	class ExplosionComponent : public IComponent, public IObserver
 	{
 	public:
 		ExplosionComponent() = default;
@@ -15,6 +15,6 @@ namespace mk
 		ExplosionComponent& operator=(const ExplosionComponent& other)		= delete;
 		ExplosionComponent& operator=(ExplosionComponent&& other) noexcept	= delete;
 
-		void OnNotify(Subject* subjectPtr, const Event& event) override;
+		void OnNotify(ISubject* subjectPtr, const Event& event) override;
 	};
 }

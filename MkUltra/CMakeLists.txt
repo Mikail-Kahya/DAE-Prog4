@@ -33,7 +33,7 @@ add_library(${ENGINE_NAME} STATIC
   "Source/Core/TimeManager.cpp"
   "Source/Core/PhysicsSystem.cpp"
 
-  "Source/Components/Component.cpp"
+  "Source/Components/IComponent.cpp"
   "Source/Components/TextComponent.cpp"
   "Source/Components/RenderComponent.cpp"
   "Source/Components/SpriteComponent.cpp"
@@ -46,15 +46,14 @@ add_library(${ENGINE_NAME} STATIC
   "Source/Input/ControllerInput.cpp" 
   "Source/Input/Controller.cpp"
   "Source/Input/KeyboardInput.cpp"
-
   "Source/Input/Action.cpp"
-  "Source/Core/FileInterface.cpp"
-
+  
+  "Source/Core/IObserver.cpp"
   "Source/Core/Geometry.cpp"
-  "Source/Core/Observer.cpp"
+  
 
   
-  "SoundSystem.h"
+  "ISoundSystem.h"
   "NullSoundSystem.h"
   "Source/Sound/DefaultSoundSystem.cpp"
   )

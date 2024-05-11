@@ -4,9 +4,9 @@
 
 using namespace mk;
 
-void ExplosionComponent::OnNotify(Subject* subjectPtr, const Event& event)
+void ExplosionComponent::OnNotify(ISubject* subjectPtr, const Event& event)
 {
-	Observer::OnNotify(subjectPtr, event);
+	IObserver::OnNotify(subjectPtr, event);
 
 	if (event.type == EventType::OBJECT_OVERLAP)
 		GetOwner()->Destroy();

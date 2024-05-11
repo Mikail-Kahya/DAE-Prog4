@@ -7,10 +7,10 @@ namespace mk
 	using sound_id = std::string;
 	using handle_id = size_t;
 
-	class SoundSystem
+	class ISoundSystem
 	{
 	public:
-		virtual ~SoundSystem() = default;
+		virtual ~ISoundSystem() = default;
 		virtual void SetDefaultDataPath(const std::string& dataPath) = 0;
 
 		virtual handle_id Play(const sound_id& id, float volume) = 0;
@@ -20,10 +20,10 @@ namespace mk
 		virtual void StopAll() = 0;
 
 	protected:
-		SoundSystem() = default;
-		SoundSystem(const SoundSystem& other)					= delete;
-		SoundSystem(SoundSystem&& other) noexcept				= delete;
-		SoundSystem& operator=(const SoundSystem& other)		= delete;
-		SoundSystem& operator=(SoundSystem&& other)	noexcept	= delete;
+		ISoundSystem() = default;
+		ISoundSystem(const ISoundSystem& other)					= delete;
+		ISoundSystem(ISoundSystem&& other) noexcept				= delete;
+		ISoundSystem& operator=(const ISoundSystem& other)		= delete;
+		ISoundSystem& operator=(ISoundSystem&& other)	noexcept	= delete;
 	};
 }

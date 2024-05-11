@@ -18,13 +18,13 @@ BoxColliderComponent::~BoxColliderComponent()
 
 void BoxColliderComponent::Start()
 {
-	Component::Start();
+	IComponent::Start();
 	UpdatePrevPos();
 }
 
 void BoxColliderComponent::FixedUpdate()
 {
-	Component::FixedUpdate();
+	IComponent::FixedUpdate();
 	UpdatePrevPos();
 }
 

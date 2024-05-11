@@ -22,9 +22,9 @@ void HealthComponent::Start()
 		assert(false && "No box component in healthComponent");
 }
 
-void HealthComponent::OnNotify(Subject* subjectPtr, const Event& event)
+void HealthComponent::OnNotify(ISubject* subjectPtr, const Event& event)
 {
-	Observer::OnNotify(subjectPtr, event);
+	IObserver::OnNotify(subjectPtr, event);
 
 	if (event.type == EventType::OBJECT_OVERLAP)
 		Hit();

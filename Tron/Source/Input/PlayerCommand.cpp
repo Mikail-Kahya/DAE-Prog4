@@ -29,7 +29,7 @@ FireCommand::FireCommand(GameObject* gameObject)
 void FireCommand::Execute()
 {
 	m_FireCompPtr->Fire();
-	SoundSystem& sound{ ServiceLocator::GetSoundSystem() };
+	ISoundSystem& sound{ ServiceLocator::GetSoundSystem() };
 	sound.Play("Shoot.mp3", 1);
 }
 
