@@ -22,6 +22,8 @@ add_executable(${PROJECT_NAME}
   "Source/Components/RespawnComponent.cpp"
   "Source/Components/ExplosionComponent.cpp"
   "Source/Components/HealthBarComponent.cpp"
+
+  "Source/Behavior/EnemyStates.cpp"
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE

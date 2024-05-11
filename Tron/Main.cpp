@@ -26,6 +26,7 @@
 #include "MovementComponent.h"
 #include "BoxColliderComponent.h"
 #include "DefaultSoundSystem.h"
+#include "EnemyStates.h"
 #include "ScoreComponent.h"
 #include "FireComponent.h"	
 #include "HealthBarComponent.h"
@@ -36,13 +37,17 @@
 #include "Renderer.h"
 #include "RespawnComponent.h"
 #include "ServiceLocator.h"
+#include "StateComponent.h"
 
 namespace fs = std::filesystem;
 using namespace mk;
 
 GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos);
+GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::string& name);
+GameObject* LoadEnemy(Scene& scene);
 void LoadHud(Scene& scene, const std::vector<GameObject*>& players);
 void LoadInfo(Scene& scene);
+
 
 void load()
 {
@@ -66,6 +71,7 @@ void load()
 	//players[1]->SetStatic(true);
 	LoadHud(scene, players);
 	LoadInfo(scene);
+	LoadEnemy(scene);
 }
 
 GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos)
@@ -108,42 +114,31 @@ GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& s
 	rotateRight.SetKeyboardInput(SDL_SCANCODE_E);
 	rotateRight.SetType(ActionType::hold);
 
-	// Tank
-	GameObject* tank = scene.SpawnObject(name);
-	tank->SetLocalPosition(startPos);
+	GameObject* tankPtr =  LoadTank(scene, "Red", name);
+	tankPtr->SetLocalPosition(startPos);
 
-	RenderComponent* spriteCompPtr = tank->AddComponent<RenderComponent>("BlueTank.png");
-	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
-	tank->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
-	tank->AddComponent<BoxColliderComponent>();
-	HealthComponent* healthCompPtr = tank->AddComponent<HealthComponent>(3, 3);
-	RespawnComponent* respawnCompPtr = tank->AddComponent<RespawnComponent>(startPos);
+	HealthComponent* healthCompPtr = tankPtr->AddComponent<HealthComponent>(3, 3);
+	RespawnComponent* respawnCompPtr = tankPtr->AddComponent<RespawnComponent>(startPos);
 	healthCompPtr->AddObserver(respawnCompPtr);
 
-	// Gun
-	GameObject* gun = scene.SpawnObject(name + "Gun");
-	gun->SetParent(tank);
-
-	spriteCompPtr = gun->AddComponent<RenderComponent>("BlueTankGun.png");
-	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
-	gun->AddComponent<FireComponent>(20.f);
+	GameObject* gunPtr{ tankPtr->GetChildWithName(name + "Gun") };
 
 	// input
 	InputMapping map{};
 	auto controller = inputManager.AddController();
-	map.AddMapping(up, inputManager.AddCommand<MoveCommand>(tank, glm::vec2{ 0, 1 }));
-	map.AddMapping(down, inputManager.AddCommand<MoveCommand>(tank, glm::vec2{ 0, -1 }));
-	map.AddMapping(right, inputManager.AddCommand<MoveCommand>(tank, glm::vec2{ 1, 0 }));
-	map.AddMapping(left, inputManager.AddCommand<MoveCommand>(tank, glm::vec2{ -1, 0 }));
+	map.AddMapping(up, inputManager.AddCommand<MoveCommand>(tankPtr, glm::vec2{ 0, 1 }));
+	map.AddMapping(down, inputManager.AddCommand<MoveCommand>(tankPtr, glm::vec2{ 0, -1 }));
+	map.AddMapping(right, inputManager.AddCommand<MoveCommand>(tankPtr, glm::vec2{ 1, 0 }));
+	map.AddMapping(left, inputManager.AddCommand<MoveCommand>(tankPtr, glm::vec2{ -1, 0 }));
 
 
 	constexpr float rotateSpeed{ 50.f };
-	map.AddMapping(fire, inputManager.AddCommand<FireCommand>(gun));
-	map.AddMapping(rotateLeft, inputManager.AddCommand<RotateCommand>(gun, rotateSpeed, 1));
-	map.AddMapping(rotateRight, inputManager.AddCommand<RotateCommand>(gun, rotateSpeed, -1));
+	map.AddMapping(fire, inputManager.AddCommand<FireCommand>(gunPtr));
+	map.AddMapping(rotateLeft, inputManager.AddCommand<RotateCommand>(gunPtr, rotateSpeed, 1));
+	map.AddMapping(rotateRight, inputManager.AddCommand<RotateCommand>(gunPtr, rotateSpeed, -1));
 	controller->SetInputMapping(std::move(map));
 
-	return tank;
+	return tankPtr;
 }
 
 void LoadHud(Scene& scene, const std::vector<GameObject*>& players)
@@ -186,6 +181,35 @@ void LoadInfo(Scene& scene)
 	GameObject* padKeyboardText{ scene.SpawnObject("FireText") };
 	padKeyboardText->SetLocalPosition({ screenCenter, 400.f });
 	padKeyboardText->AddComponent<TextComponent>("Use D-PAD to move, RIGHT BUMPER to fire, X and B to turn cannon", "Lingua.otf", 20)->SetAnchor({ 0.5f,0.5f });
+}
+
+GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::string& name)
+{
+	// Tank
+	GameObject* tank = scene.SpawnObject(name);
+
+	RenderComponent* spriteCompPtr = tank->AddComponent<RenderComponent>(tankColor + "Tank.png");
+	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
+	tank->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
+	tank->AddComponent<BoxColliderComponent>();
+
+	// Gun
+	GameObject* gun = scene.SpawnObject(name + "Gun");
+	gun->SetParent(tank);
+
+	spriteCompPtr = gun->AddComponent<RenderComponent>(tankColor + "TankGun.png");
+	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
+	gun->AddComponent<FireComponent>(20.f);
+
+	return tank;
+}
+
+GameObject* LoadEnemy(Scene& scene)
+{
+	GameObject* tankPtr{ LoadTank(scene, "Blue", "Enemy") };
+	tankPtr->SetLocalPosition({ 100, 300 });
+	tankPtr->AddComponent<StateComponent>(std::make_unique<Patrolling>());
+	return tankPtr;
 }
 
 

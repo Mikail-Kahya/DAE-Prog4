@@ -53,11 +53,12 @@ namespace mk
 		GameObject* GetParent() const;
 		int GetChildCount() const;
 		GameObject* GetChildAt(int index) const;
+		GameObject* GetChildWithName(const std::string& name, bool recursively = false) const;
 
 		template <std::derived_from<IComponent> ComponentType>
 		[[nodiscard]] ComponentType* GetComponent() const;
 		template <std::derived_from<IComponent> ComponentType, typename... Args>
-		ComponentType* AddComponent(const Args&... args);
+		ComponentType* AddComponent(Args... args);
 		void RemoveComponent(const std::unique_ptr<IComponent>& component);
 
 
@@ -113,13 +114,13 @@ namespace mk
 	}
 
 	template <std::derived_from<IComponent> ComponentType, typename... Args>
-	ComponentType* GameObject::AddComponent(const Args&... args)
+	ComponentType* GameObject::AddComponent(Args... args)
 	{
 		ComponentType* componentPtr{ GetComponent<ComponentType>() };
 		if (componentPtr != nullptr)
 			return componentPtr;
 
-		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>(args...) };
+		std::unique_ptr<ComponentType> component{ std::make_unique<ComponentType>(std::move(args)...)};
 		component->SetOwner(this);
 		component->Start();
 

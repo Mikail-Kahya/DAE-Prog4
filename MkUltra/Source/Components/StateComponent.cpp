@@ -16,7 +16,7 @@ void StateComponent::FixedUpdate()
 void StateComponent::Update()
 {
 	IComponent::Update();
-	m_CurrentState->FixedUpdate();
+	m_CurrentState->Update();
 }
 
 void StateComponent::LateUpdate()
