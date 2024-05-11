@@ -38,6 +38,7 @@ add_library(${ENGINE_NAME} STATIC
   "Source/Components/RenderComponent.cpp"
   "Source/Components/SpriteComponent.cpp"
   "Source/Components/BoxColliderComponent.cpp"
+  "Source/Components/StateComponent.cpp"
 
   "Source/Widgets/GUI.cpp"
   "Source/Core/DebugUtils.cpp"
@@ -51,7 +52,7 @@ add_library(${ENGINE_NAME} STATIC
   "Source/Core/IObserver.cpp"
   "Source/Core/Geometry.cpp"
   
-
+  "IState.h"
   
   "ISoundSystem.h"
   "NullSoundSystem.h"
