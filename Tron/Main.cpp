@@ -46,7 +46,7 @@ void LoadInfo(Scene& scene);
 
 void load()
 {
-	ServiceLocator::GetSoundSystem().Play("MainMenuMusic.mp3", 0.7f);
+	//ServiceLocator::GetSoundSystem().Play("MainMenuMusic.mp3", 0.7f);
 
 	auto& scene = SceneManager::GetInstance().LoadScene("Demo");
 	const Renderer& renderer{ Renderer::GetInstance() };
@@ -125,7 +125,7 @@ GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& s
 	gun->SetParent(tank);
 
 	spriteCompPtr = gun->AddComponent<RenderComponent>("BlueTankGun.png");
-	spriteCompPtr->SetAnchor({ 0.5f,0.f });
+	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 	gun->AddComponent<FireComponent>(20.f);
 
 	// input

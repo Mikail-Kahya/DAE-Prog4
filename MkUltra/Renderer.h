@@ -35,8 +35,8 @@ namespace mk
 
 	private:
 		Renderer() = default;
-
-		void RenderTexture(const Texture2D& texture, float x, float y) const;
+		void RenderTexture(const RenderComponent* renderComponentPtr) const;
+		SDL_Rect GetDstRect(const Texture2D& texture, float x, float y) const;
 
 		// Sorts by float. Whenever the float changes
 		std::list<RenderComponent*> m_Renderers{};

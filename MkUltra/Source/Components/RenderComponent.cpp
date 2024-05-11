@@ -58,6 +58,16 @@ float RenderComponent::GetRenderDepth() const
 	return m_Depth;
 }
 
+std::pair<bool, bool> RenderComponent::IsFlipped() const
+{
+	return m_FlipAxis;
+}
+
+const glm::vec2& RenderComponent::GetAnchor() const
+{
+	return m_Anchor;
+}
+
 void RenderComponent::SetTexture(Texture2D* texturePtr)
 {
 	m_TexturePtr = texturePtr;
@@ -66,6 +76,16 @@ void RenderComponent::SetTexture(Texture2D* texturePtr)
 void RenderComponent::SetAnchor(const glm::vec2& anchor)
 {
 	m_Anchor = anchor;
+}
+
+void RenderComponent::SetFlipHorizontal(bool isFlipped)
+{
+	m_FlipAxis.first = isFlipped;
+}
+
+void RenderComponent::SetFlipVertical(bool isFlipped)
+{
+	m_FlipAxis.second = isFlipped;
 }
 
 int RenderComponent::GetTextureWidth() const

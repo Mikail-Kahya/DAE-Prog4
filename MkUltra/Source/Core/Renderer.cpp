@@ -72,9 +72,7 @@ void Renderer::Render() const
 	{
 		if (renderComponentPtr->GetTexture() == nullptr)
 			continue;
-
-		const glm::vec2 position{ renderComponentPtr->GetRenderPosition() };
-		RenderTexture(*renderComponentPtr->GetTexture(), position.x, position.y);
+		RenderTexture(renderComponentPtr);
 	}
 
 	GUI::GetInstance().Render();
@@ -95,15 +93,6 @@ void Renderer::Destroy()
 		SDL_DestroyWindow(m_Window);
 		m_Window = nullptr;
 	}
-}
-
-void Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
-{
-	SDL_Rect dst{};
-	dst.x = static_cast<int>(x);
-	dst.y = m_Height - static_cast<int>(y) - texture.GetSize().y;
-	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
-	SDL_RenderCopy(m_Renderer, texture.GetSDLTexture(), nullptr, &dst);
 }
 
 float Renderer::GetNextDepth()
@@ -132,7 +121,7 @@ void Renderer::RegisterRenderComponent(RenderComponent* renderComponentPtr)
 	if (foundIt != m_Renderers.end())
 		return;
 
-	// Place in right order to avoid full resort
+	// place in right order to avoid full resort
 	const float newDepth{ renderComponentPtr->GetRenderDepth() };
 
 	const auto lowerBoundIt = std::ranges::find_if(m_Renderers,
@@ -159,4 +148,37 @@ void Renderer::UnregisterRenderComponent(RenderComponent* renderComponentPtr)
 void Renderer::FlagDepthDirty()
 {
 	m_DepthChanged = true;
+}
+
+void Renderer::RenderTexture(const RenderComponent* renderComponentPtr) const
+{
+	const Texture2D& texture{ *renderComponentPtr->GetTexture() };
+	const glm::vec2 renderPosition{ renderComponentPtr->GetRenderPosition() };
+	const glm::vec2& anchor{ renderComponentPtr->GetAnchor() };
+	const glm::vec2 position{ renderComponentPtr->GetRenderPosition() };
+	const auto dstRect{ GetDstRect(texture, position.x, position.y) };
+	const float angle{ -renderComponentPtr->GetOwner()->GetRotation() };
+	const auto flipAxis{ renderComponentPtr->IsFlipped() };
+
+	const SDL_Point pivot{
+		static_cast<int>(dstRect.w * anchor.x),
+		dstRect.h - static_cast<int>(dstRect.h * anchor.y) // flip Y to be at the bottom
+	};
+
+	SDL_RendererFlip flip{};
+	if (flipAxis.first)
+		flip = SDL_FLIP_HORIZONTAL;
+	if (flipAxis.second)
+		flip = static_cast<SDL_RendererFlip>(flip | SDL_FLIP_VERTICAL);
+
+	SDL_RenderCopyEx(m_Renderer, texture.GetSDLTexture(), nullptr, &dstRect, angle, &pivot, flip);
+}
+
+SDL_Rect Renderer::GetDstRect(const Texture2D& texture, float x, float y) const
+{
+	const auto size{ texture.GetSize() };
+	return{	static_cast<int>(x),
+				m_Height - static_cast<int>(y) - texture.GetSize().y, // flip Y to be at the bottom
+				size.x,
+				size.y };
 }
