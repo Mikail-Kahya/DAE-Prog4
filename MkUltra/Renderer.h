@@ -21,6 +21,8 @@ namespace mk
 		void Render() const;
 		void Destroy();
 
+		void RenderRect(int x, int y, int width, int height) const;
+
 		float GetNextDepth();
 		SDL_Renderer* GetSDLRenderer() const;
 		int GetHeight() const noexcept;

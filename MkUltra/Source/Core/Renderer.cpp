@@ -95,6 +95,12 @@ void Renderer::Destroy()
 	}
 }
 
+void Renderer::RenderRect(int x, int y, int width, int height) const
+{
+	const SDL_Rect rect{ x, y, width, height };
+	SDL_RenderDrawRect(m_Renderer , &rect);
+}
+
 float Renderer::GetNextDepth()
 {
 	constexpr float depthSlice{ 0.1f };
