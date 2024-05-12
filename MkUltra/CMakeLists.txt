@@ -36,7 +36,7 @@ add_library(${ENGINE_NAME} STATIC
   "Source/Components/IComponent.cpp"
   "Source/Components/TextComponent.cpp"
   "Source/Components/RenderComponent.cpp"
-  "Source/Components/SpriteComponent.cpp"
+  
   "Source/Components/BoxColliderComponent.cpp"
   "Source/Components/StateComponent.cpp"
 
@@ -53,6 +53,7 @@ add_library(${ENGINE_NAME} STATIC
   "Source/Core/Geometry.cpp"
   
   "IState.h"
+  "GameObjectState.h"
   
   "ISoundSystem.h"
   "NullSoundSystem.h"
