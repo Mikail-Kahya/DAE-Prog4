@@ -1,5 +1,5 @@
 #pragma once
-#include <memory>
+#include <string>
 
 namespace mk
 {
@@ -16,7 +16,7 @@ namespace mk
 		virtual void FixedUpdate() {}
 		virtual void Update() {}
 		virtual void LateUpdate() {}
-		virtual std::unique_ptr<IState> TransitionState() = 0; // Force an override of transitioning
+		virtual std::string TransitionState() = 0; // Force an override of transitioning
 		virtual void OnEnter() {}
 		virtual void OnExit() {}
 
