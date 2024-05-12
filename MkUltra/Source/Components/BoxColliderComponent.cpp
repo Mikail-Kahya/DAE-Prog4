@@ -1,5 +1,7 @@
 #include "BoxColliderComponent.h"
 
+#include <iostream>
+
 #include "GameObject.h"
 #include "Geometry.h"
 #include "PhysicsSystem.h"
@@ -89,32 +91,15 @@ void BoxColliderComponent::HandleOverlap(const CollisionInfo& info)
 
 void BoxColliderComponent::HandleBlock(const CollisionInfo& info)
 {
-	//const float distX{ otherPtr->GetBoxExtent().x + GetBoxExtent().x };
-	//const float distY{ otherPtr->GetBoxExtent().y + GetBoxExtent().y };
-	//const glm::vec2 toOther{ otherPtr->GetOwner()->GetWorldPosition() - GetOwner()->GetWorldPosition() };
-
-	//const glm::vec3 projDir = glm::cross(glm::vec3{ info.impactNormal, 0 }, glm::vec3{ 0, 0, 1 });
-	//const glm::vec2 slideAlongDir{ glm::normalize(glm::vec2 {projDir.x, projDir.y}) };
-	//const glm::vec2 moveDir{ m_PrevPos - GetOwner()->GetWorldPosition() };
-	//const float projectedDist{ glm::dot(slideAlongDir, moveDir) };
-	//GetOwner()->AddLocalOffset(slideAlongDir * projectedDist);
-
-	GetOwner()->SetLocalPosition(info.intersectionPoint + info.impactNormal * m_Extent.x);
-
-	//glm::vec2 correction{};
-
-
-	//if (abs(toOther.x) < distX)
-	//{
-	//	const float difference{ distX - abs(toOther.x) };
-	//	correction.x = toOther.x < 0 ? difference : -difference;
-	//}
-		
-	//if (abs(toOther.y) < distY)
-	//{
-	//	const float difference{ distY - abs(toOther.y) };
-	//	correction.y = toOther.y < 0 ? difference : -difference;
-	//}
-
+	const glm::vec2 hitCompPos{ info.hitCompPtr->GetOwner()->GetWorldPosition() };
+	const glm::vec2 pos{ GetOwner()->GetWorldPosition() };
+	glm::vec2 offset{ glm::normalize(pos - hitCompPos) };
+	offset.x *= m_Extent.x;
+	offset.y *= m_Extent.y;
 	
+	GetOwner()->SetLocalPosition(info.intersectionPoint + offset);
+
+	Event event{ EventType::OBJECT_BLOCK };
+	event.SetData("info", info);
+	Notify(event);
 }

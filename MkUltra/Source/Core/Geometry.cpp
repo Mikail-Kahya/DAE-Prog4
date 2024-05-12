@@ -13,7 +13,7 @@ bool Geometry::PointInBox(const glm::vec2& point, const glm::vec2& location, con
 	return min.y < point.y && point.y < max.y;
 }
 
-std::pair<glm::vec2, glm::vec2> Geometry::GetBoxMinMax(const glm::vec2& location, const glm::vec2& boxExtent)
+Box Geometry::GetBoxMinMax(const glm::vec2& location, const glm::vec2& boxExtent)
 {
 	return { location - boxExtent, location + boxExtent };
 }

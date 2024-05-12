@@ -13,7 +13,7 @@ void Patrolling::Update()
 
 std::unique_ptr<IState> Patrolling::TransitionState()
 {
-	std::cout << "Patrolling\n";
+	//std::cout << "Patrolling\n";
 	if(m_Timer > 2)
 	{
 		return std::make_unique<TargetPlayer>();
@@ -23,6 +23,6 @@ std::unique_ptr<IState> Patrolling::TransitionState()
 
 std::unique_ptr<IState> TargetPlayer::TransitionState()
 {
-	std::cout << "Agro\n";
+	//std::cout << "Agro\n";
 	return {};
 }

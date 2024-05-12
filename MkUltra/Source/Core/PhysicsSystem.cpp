@@ -10,7 +10,7 @@
 
 using namespace mk;
 
-#ifdef NDEBUG
+#ifndef NDEBUG
 void PhysicsSystem::DrawDebug() const
 {
 	for (const Collider& collider : m_PhysicsBuffer)
@@ -31,8 +31,8 @@ void PhysicsSystem::DrawDebug() const
 
 void PhysicsSystem::Update()
 {
-	HandleCollision();
 	UpdateInformation();
+	HandleCollision();
 }
 
 void PhysicsSystem::RegisterCollider(BoxColliderComponent* colliderPtr)
@@ -86,12 +86,12 @@ void PhysicsSystem::HandleCollision() const
 				firstCollider.first->Collide(info);
 			}
 
-			//if (!isSecondIgnoring)
-			//{
-				//info = GetCollisionInfo(secondCollider.second, firstCollider.second);
-				//info.hitCompPtr = firstCollider.first;
-				//secondCollider.first->Collide(info);
-			//}
+			if (!isSecondIgnoring)
+			{
+				CollisionInfo info{ GetCollisionInfo(secondCollider.second, firstCollider.second) };
+				info.hitCompPtr = firstCollider.first;
+				secondCollider.first->Collide(info);
+			}
 		}
 	}
 }
@@ -112,11 +112,15 @@ PhysicsInfo PhysicsSystem::GetPhysicsInfo(const BoxColliderComponent* colliderPt
 
 bool PhysicsSystem::IsOverlapping(const PhysicsInfo& a, const PhysicsInfo& b)
 {
-	const auto minMax{ Geometry::GetBoxMinMax(b.position, b.boxExtent) };
-	if (Geometry::PointInBox(minMax.first, a.position, a.boxExtent))
-		return true;
+	const auto box{ Geometry::GetBoxMinMax(a.position, a.boxExtent) };
+	const auto otherBox{ Geometry::GetBoxMinMax(b.position, b.boxExtent) };
 
-	return Geometry::PointInBox(minMax.second, a.position, a.boxExtent);
+	if (box.topRight.x < otherBox.bottomLeft.x ||	// left check
+		otherBox.topRight.x < box.bottomLeft.x ||	// right check
+		otherBox.topRight.y < box.bottomLeft.y ||	// top check
+		box.topRight.y < otherBox.bottomLeft.y)		// bottom check
+		return false;
+	return true;
 }
 
 CollisionInfo PhysicsSystem::GetCollisionInfo(const PhysicsInfo& a, const PhysicsInfo& b)
@@ -134,11 +138,11 @@ CollisionInfo PhysicsSystem::GetCollisionInfo(const PhysicsInfo& a, const Physic
 	constexpr int nrVertices{ 4 };
 	for (int idx{}; idx < nrVertices; ++idx)
 	{
-		// place lines in projection space
 		const glm::vec2& p1{ vertices[idx] };
 		const glm::vec2& p2{ vertices[(idx + 1) % nrVertices] };
 		const glm::vec2 edge{ p2 - p1 };
 
+		// place lines in projection space
 		const glm::vec3 line1{ glm::cross(glm::vec3{p1, 1}, glm::vec3{p2,1}) };
 		const glm::vec3 line2{ glm::cross(pos, end) };
 		const glm::vec3 solution{ glm::cross(line1, line2) };

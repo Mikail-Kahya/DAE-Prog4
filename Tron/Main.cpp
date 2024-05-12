@@ -191,7 +191,7 @@ GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::stri
 	RenderComponent* spriteCompPtr = tank->AddComponent<RenderComponent>(tankColor + "Tank.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 	tank->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
-	tank->AddComponent<BoxColliderComponent>();
+	tank->AddComponent<BoxColliderComponent>()->SetCollision({ CollisionType::block, CollisionType::block });
 
 	// Gun
 	GameObject* gun = scene.SpawnObject(name + "Gun");

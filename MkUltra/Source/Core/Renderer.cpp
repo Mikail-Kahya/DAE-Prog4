@@ -78,7 +78,7 @@ void Renderer::Render() const
 
 	GUI::GetInstance().Render();
 
-#ifdef NDEBUG
+#ifndef NDEBUG
 	PhysicsSystem::GetInstance().DrawDebug();
 #endif
 

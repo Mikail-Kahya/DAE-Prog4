@@ -25,7 +25,7 @@ namespace mk
 		PhysicsSystem& operator=(const PhysicsSystem& other)		= delete;
 		PhysicsSystem& operator=(PhysicsSystem&& other)	noexcept	= delete;
 
-#ifdef NDEBUG
+#ifndef NDEBUG
 		void DrawDebug() const;
 #endif
 
