@@ -3,11 +3,11 @@
 #include <SDL.h>
 
 #include "ISingleton.h"
+#include "Texture2D.h"
 
 namespace mk
 {
 	class RenderComponent;
-	class Texture2D;
 
 	/**
 	 * Simple RAII wrapper for the SDL renderer
@@ -21,7 +21,7 @@ namespace mk
 		void Render() const;
 		void Destroy();
 
-		void RenderRect(int x, int y, int width, int height) const;
+		void RenderRect(int x, int y, int width, int height, const Color& color) const;
 
 		float GetNextDepth();
 		SDL_Renderer* GetSDLRenderer() const;

@@ -8,6 +8,7 @@
 #include "SceneManager.h"
 #include "Texture2D.h"
 #include "GUI.h"
+#include "PhysicsSystem.h"
 
 using namespace mk;
 
@@ -77,6 +78,11 @@ void Renderer::Render() const
 
 	GUI::GetInstance().Render();
 
+#ifdef NDEBUG
+	PhysicsSystem::GetInstance().DrawDebug();
+#endif
+
+
 	SDL_RenderPresent(m_Renderer);
 }
 
@@ -95,10 +101,15 @@ void Renderer::Destroy()
 	}
 }
 
-void Renderer::RenderRect(int x, int y, int width, int height) const
+void Renderer::RenderRect(int x, int y, int width, int height, const Color& color) const
 {
-	const SDL_Rect rect{ x, y, width, height };
+	const SDL_Rect rect{ x, m_Height - y - height, width, height };
+	Color temp{};
+	SDL_GetRenderDrawColor(m_Renderer, &temp.r, &temp.g, &temp.b, &temp.a);
+
+	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderDrawRect(m_Renderer , &rect);
+	SDL_SetRenderDrawColor(m_Renderer, temp.r, temp.g, temp.b, temp.a);
 }
 
 float Renderer::GetNextDepth()
@@ -159,7 +170,6 @@ void Renderer::FlagDepthDirty()
 void Renderer::RenderTexture(const RenderComponent* renderComponentPtr) const
 {
 	const Texture2D& texture{ *renderComponentPtr->GetTexture() };
-	const glm::vec2 renderPosition{ renderComponentPtr->GetRenderPosition() };
 	const glm::vec2& anchor{ renderComponentPtr->GetAnchor() };
 	const glm::vec2 position{ renderComponentPtr->GetRenderPosition() };
 	const auto dstRect{ GetDstRect(texture, position.x, position.y) };
