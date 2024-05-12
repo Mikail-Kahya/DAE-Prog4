@@ -31,13 +31,15 @@ namespace mk
 		bool IsMoving() const;
 		bool ShouldMove() const;
 
+		static float GetLengthSqr(const glm::vec2& vec);
+
+		glm::vec2 m_Velocity{};
+		glm::vec2 m_DesiredDirection{};
 		float m_MaxLinearSpeed{};
 		float m_MaxAngularSpeed{};
 		float m_AngularVelocity{};
 		float m_Acceleration{};
 		float m_Deceleration{};
-		glm::vec2 m_Velocity{};
-		glm::vec2 m_DesiredDirection{};
 		bool m_ConsumeMovement{ false };
 	};
 }

@@ -23,10 +23,8 @@ void MovementComponent::Update()
 	const float deltaSpeed{ m_MaxLinearSpeed * deltaTime };
 	if (ShouldMove())
 		Accelerate(deltaSpeed * m_Acceleration);
-	else if (IsMoving())
-		Decelerate(deltaSpeed * m_Deceleration);
 	else
-		return; // Avoid updating position if not moving
+		Decelerate(deltaSpeed * m_Deceleration);
 
 	const glm::vec2 travelled{ m_Velocity * deltaTime };
 	GetOwner()->AddLocalOffset(travelled);
@@ -36,7 +34,7 @@ void MovementComponent::Update()
 
 void MovementComponent::SetDirection(const glm::vec2& direction)
 {
-	m_DesiredDirection = glm::normalize(direction);
+	m_DesiredDirection = GetLengthSqr(direction) > FLT_EPSILON ? glm::normalize(direction) : glm::vec2{};
 }
 
 const glm::vec2& MovementComponent::GetDirection() const
@@ -46,19 +44,19 @@ const glm::vec2& MovementComponent::GetDirection() const
 
 float MovementComponent::GetSpeed() const
 {
-	return static_cast<float>(m_Velocity.length());
+	return glm::length(m_Velocity);
 }
 
 float MovementComponent::GetSpeedSqr() const
 {
-	return m_Velocity.x * m_Velocity.x + m_Velocity.y * m_Velocity.y;
+	return GetLengthSqr(m_Velocity);
 }
 
 void MovementComponent::Accelerate(float acceleration)
 {
-	if (GetSpeedSqr() > m_MaxLinearSpeed * m_MaxLinearSpeed)
-		return;
 	m_Velocity += acceleration * m_DesiredDirection;
+	const float speed = std::min(GetSpeed(), m_MaxLinearSpeed);
+	m_Velocity = glm::normalize(m_Velocity) * speed;
 }
 
 void MovementComponent::Decelerate(float deceleration)
@@ -77,4 +75,9 @@ bool MovementComponent::ShouldMove() const
 	const float desiredLengthSqr{ m_DesiredDirection.x * m_DesiredDirection.x
 			+ m_DesiredDirection.y * m_DesiredDirection.y };
 	return desiredLengthSqr > FLT_EPSILON;
+}
+
+float MovementComponent::GetLengthSqr(const glm::vec2& vec)
+{
+	return vec.x * vec.x + vec.y * vec.y;
 }
