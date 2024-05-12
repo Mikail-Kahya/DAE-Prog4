@@ -121,33 +121,42 @@ bool PhysicsSystem::IsOverlapping(const PhysicsInfo& a, const PhysicsInfo& b)
 
 CollisionInfo PhysicsSystem::GetCollisionInfo(const PhysicsInfo& a, const PhysicsInfo& b)
 {
+	// Math help https://imois.in/posts/line-intersections-with-cross-products/
 	CollisionInfo result{};
 	result.distance = FLT_MAX;
-
-	const glm::vec2 ray{ b.position - a.position };
 
 	std::vector<glm::vec2> vertices{};
 	GetVertices(b.position, b.boxExtent, vertices);
 
-	const glm::vec2 pos{ a.position };
+	const glm::vec2 ray{ b.position - a.position };
+	const glm::vec3 pos{ a.position, 1 };
+	const glm::vec3 end{ b.position, 1 };
 	constexpr int nrVertices{ 4 };
 	for (int idx{}; idx < nrVertices; ++idx)
 	{
+		// place lines in projection space
 		const glm::vec2& p1{ vertices[idx] };
 		const glm::vec2& p2{ vertices[(idx + 1) % nrVertices] };
 		const glm::vec2 edge{ p2 - p1 };
-		const float cross{ edge.x * ray.y - ray.x * edge.y };
-		if (abs(cross) < FLT_EPSILON)
+
+		const glm::vec3 line1{ glm::cross(glm::vec3{p1, 1}, glm::vec3{p2,1}) };
+		const glm::vec3 line2{ glm::cross(pos, end) };
+		const glm::vec3 solution{ glm::cross(line1, line2) };
+		const glm::vec2 intersection{ solution.x / solution.z, solution.y / solution.z };
+		if (solution.z < FLT_EPSILON)
 			continue;
 
-		const glm::vec2 posToEdge{ p1 - pos };
-		const float distance{ (edge.x * posToEdge.y - posToEdge.x * edge.y) / cross };
-
-		if (distance > result.distance)
+		// check if point isn't to out of vertices on the line
+		const glm::vec2 intersectToP1{ p1 - intersection };
+		if (glm::cross(glm::vec3{ ray, 0 }, glm::vec3{ intersectToP1, 0 }).z < 0) // < 0 is to the left of P1
 			continue;
 
-		result.distance = distance;
-		result.intersectionPoint = pos + distance * glm::normalize(ray);
+		const glm::vec2 intersectToP2{ p2 - intersection };
+		if (glm::cross(glm::vec3{ ray, 0 }, glm::vec3{ intersectToP2, 0 }).z > 0) // > 0 is to the right of P2
+			continue;
+
+		result.intersectionPoint = intersection;
+		result.distance = glm::distance(a.position, result.intersectionPoint);
 		result.impactNormal = glm::normalize(glm::cross(glm::vec3{ edge, 0 }, glm::vec3{ 0, 0, 1 }));
 	}
 

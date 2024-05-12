@@ -99,7 +99,7 @@ void BoxColliderComponent::HandleBlock(const CollisionInfo& info)
 	//const float projectedDist{ glm::dot(slideAlongDir, moveDir) };
 	//GetOwner()->AddLocalOffset(slideAlongDir * projectedDist);
 
-	GetOwner()->SetLocalPosition(info.intersectionPoint + info.impactNormal * (info.distance + 0.5f));
+	GetOwner()->SetLocalPosition(info.intersectionPoint + info.impactNormal * m_Extent.x);
 
 	//glm::vec2 correction{};
 
