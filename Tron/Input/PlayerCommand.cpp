@@ -1,8 +1,8 @@
 #include "PlayerCommand.h"
 
 #include "GameObject.h"
-#include "MovementComponent.h"
-#include "FireComponent.h"
+#include "Components/MovementComponent.h"
+#include "Components/FireComponent.h"
 #include "SceneManager.h"
 #include "ServiceLocator.h"
 

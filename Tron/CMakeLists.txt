@@ -6,24 +6,25 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(${PROJECT_NAME}
   "Main.cpp"
 
-  "Source/Input/PlayerCommand.cpp"
+  "Input/PlayerCommand.cpp"
 
-  "Source/Widgets/PlotWidget.cpp"
-  "Source/Widgets/MeasureWidget.cpp"
+  "Widgets/PlotWidget.cpp"
+  "Widgets/MeasureWidget.cpp"
 
-  "Source/Components/HealthComponent.cpp"
+  "Components/HealthComponent.cpp"
 
-  "Source/Components/FPSComponent.cpp"
-  "Source/Components/MovementComponent.cpp"
-  "Source/Components/OrbitComponent.cpp"
+  "Components/FPSComponent.cpp"
+  "Components/MovementComponent.cpp"
+  "Components/OrbitComponent.cpp"
   
-  "Source/Components/ScoreComponent.cpp"
-  "Source/Components/FireComponent.cpp"
-  "Source/Components/RespawnComponent.cpp"
-  "Source/Components/ExplosionComponent.cpp"
-  "Source/Components/HealthBarComponent.cpp"
+  "Components/ScoreComponent.cpp"
+  "Components/FireComponent.cpp"
+  "Components/RespawnComponent.cpp"
+  "Components/ExplosionComponent.cpp"
+  "Components/HealthBarComponent.cpp"
+  "Components/SensorComponent.cpp"
 
-  "Source/Behavior/EnemyStates.cpp"
+  "Behavior/EnemyStates.cpp"
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE

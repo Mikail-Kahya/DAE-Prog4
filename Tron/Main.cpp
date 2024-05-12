@@ -12,6 +12,8 @@
 #endif
 #endif
 
+#include <numbers>
+
 #include "MkUltra.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
@@ -20,24 +22,27 @@
 #include "GameObject.h"
 #include "InputManager.h"
 
-#include "FPSComponent.h"
 #include "TextComponent.h"
 #include "RenderComponent.h"
-#include "MovementComponent.h"
+
 #include "BoxColliderComponent.h"
 #include "DefaultSoundSystem.h"
-#include "EnemyStates.h"
-#include "ScoreComponent.h"
-#include "FireComponent.h"	
-#include "HealthBarComponent.h"
-#include "HealthComponent.h"
+#include "Behavior/EnemyStates.h"
+#include "Components/FPSComponent.h"
+#include "Components/MovementComponent.h"
+#include "Components/ScoreComponent.h"
+#include "Components/FireComponent.h"	
+#include "Components/HealthBarComponent.h"
+#include "Components/HealthComponent.h"
+#include "Components/RespawnComponent.h"
 #include "NullSoundSystem.h"
 
-#include "PlayerCommand.h"
+#include "Input/PlayerCommand.h"
 #include "Renderer.h"
-#include "RespawnComponent.h"
+
 #include "ServiceLocator.h"
 #include "StateComponent.h"
+#include "Components/SensorComponent.h"
 
 namespace fs = std::filesystem;
 using namespace mk;
@@ -47,6 +52,7 @@ GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::stri
 GameObject* LoadEnemy(Scene& scene);
 void LoadHud(Scene& scene, const std::vector<GameObject*>& players);
 void LoadInfo(Scene& scene);
+void LoadLevel(Scene& scene, int screenWidth, int screenHeight);
 
 
 void load()
@@ -72,6 +78,7 @@ void load()
 	LoadHud(scene, players);
 	LoadInfo(scene);
 	LoadEnemy(scene);
+	LoadLevel(scene, screenWidth, screenHeight);
 }
 
 GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos)
@@ -183,6 +190,21 @@ void LoadInfo(Scene& scene)
 	padKeyboardText->AddComponent<TextComponent>("Use D-PAD to move, RIGHT BUMPER to fire, X and B to turn cannon", "Lingua.otf", 20)->SetAnchor({ 0.5f,0.5f });
 }
 
+void LoadLevel(Scene& scene, int screenWidth, int screenHeight)
+{
+	GameObject* obstacle = scene.SpawnObject("");
+	obstacle->SetStatic(true);
+
+	RenderComponent* spritePtr = obstacle->AddComponent<RenderComponent>("circuit.jpg");
+	spritePtr->SetAnchor({ 0.5f, 0.5f });
+	const glm::vec2 halfSize{ spritePtr->GetTexture()->GetSize() / 2 };
+
+	BoxColliderComponent* colliderPtr = obstacle->AddComponent<BoxColliderComponent>();
+	colliderPtr->SetExtent(halfSize);
+	
+	obstacle->SetLocalPosition(glm::vec2{ screenWidth / 2 + 100, screenHeight / 2 + 100 } - halfSize);
+}
+
 GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::string& name)
 {
 	// Tank
@@ -191,7 +213,7 @@ GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::stri
 	RenderComponent* spriteCompPtr = tank->AddComponent<RenderComponent>(tankColor + "Tank.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 	tank->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
-	tank->AddComponent<BoxColliderComponent>()->SetCollision({ CollisionType::block, CollisionType::block });
+	tank->AddComponent<BoxColliderComponent>()->SetCollision({ CollisionType::block, CollisionType::overlap });
 
 	// Gun
 	GameObject* gun = scene.SpawnObject(name + "Gun");
@@ -206,10 +228,19 @@ GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::stri
 
 GameObject* LoadEnemy(Scene& scene)
 {
-	GameObject* tankPtr{ LoadTank(scene, "Blue", "Enemy") };
-	tankPtr->SetLocalPosition({ 100, 300 });
-	tankPtr->AddComponent<StateComponent>(std::make_unique<Patrolling>());
-	return tankPtr;
+	GameObject* enemyPtr{ LoadTank(scene, "Blue", "Enemy") };
+	enemyPtr->SetLocalPosition({ 100, 300 });
+
+	BoxColliderComponent* colliderPtr{ enemyPtr->GetComponent<BoxColliderComponent>() };
+
+	enemyPtr->AddComponent<MovementComponent>();
+	colliderPtr->AddObserver(enemyPtr->AddComponent<SensorComponent>());
+
+	StateComponent* statePtr = enemyPtr->AddComponent<StateComponent>("patrolling", std::make_unique<Patrolling>());
+	statePtr->AddState("targetPlayer", std::make_unique<TargetPlayer>());
+	statePtr->AddState("rotate", std::make_unique<Rotate>(90.f));
+	statePtr->AddState("moveBack", std::make_unique<MoveBackFromWall>());
+	return enemyPtr;
 }
 
 

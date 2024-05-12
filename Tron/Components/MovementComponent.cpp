@@ -56,7 +56,8 @@ void MovementComponent::Accelerate(float acceleration)
 {
 	m_Velocity += acceleration * m_DesiredDirection;
 	const float speed = std::min(GetSpeed(), m_MaxLinearSpeed);
-	m_Velocity = glm::normalize(m_Velocity) * speed;
+	if (abs(speed) > FLT_EPSILON)
+		m_Velocity = glm::normalize(m_Velocity) * speed;
 }
 
 void MovementComponent::Decelerate(float deceleration)
