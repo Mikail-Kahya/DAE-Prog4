@@ -237,7 +237,7 @@ void GameObject::UpdateWorldRotation()
 		return;
 
 	if (m_Parent == nullptr)
-		m_WorldTransform.SetRotation(m_WorldTransform.GetRotation());
+		m_WorldTransform.SetRotation(m_LocalTransform.GetRotation());
 	else
 		m_WorldTransform.SetRotation(m_Parent->GetRotation() + m_LocalTransform.GetRotation());
 
