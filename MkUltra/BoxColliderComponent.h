@@ -31,10 +31,10 @@ namespace mk
 		float distance{};
 	};
 
-	class BoxColliderComponent : public IComponent, public ISubject
+	class BoxColliderComponent final : public IComponent, public ISubject
 	{
 	public:
-		BoxColliderComponent();
+		BoxColliderComponent() = default;
 		~BoxColliderComponent() override;
 
 		BoxColliderComponent(const BoxColliderComponent& other)					= delete;
@@ -43,7 +43,6 @@ namespace mk
 		BoxColliderComponent& operator=(BoxColliderComponent&& other) noexcept	= delete;
 
 		void Start() override;
-		void FixedUpdate() override;
 
 		void Collide(const CollisionInfo& info);
 		bool IsIgnoring(GameObject* objectPtr) const noexcept;
@@ -52,19 +51,16 @@ namespace mk
 
 		CollisionSettings GetCollision() const noexcept;
 		const glm::vec2& GetBoxExtent() const noexcept;
-		glm::vec2 GetMoveDirection() const;
 
 		void SetCollision(CollisionSettings settings) noexcept;
 		void SetExtent(const glm::vec2& extent) noexcept;
 
 	private:
-		void UpdatePrevPos();
 		void HandleOverlap(const CollisionInfo& info);
 		void HandleBlock(const CollisionInfo& info);
 
 		std::set<GameObject*> m_IgnoreObjects{};
 		CollisionSettings m_CollisionSettings{};
 		glm::vec2 m_Extent{30.f, 30.f};
-		glm::vec2 m_PrevPos{};
 	};
 }

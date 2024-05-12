@@ -6,11 +6,6 @@
 
 using namespace mk;
 
-BoxColliderComponent::BoxColliderComponent()
-{
-	PhysicsSystem::GetInstance().RegisterCollider(this);
-}
-
 BoxColliderComponent::~BoxColliderComponent()
 {
 	PhysicsSystem::GetInstance().UnRegisterCollider(this);
@@ -19,13 +14,7 @@ BoxColliderComponent::~BoxColliderComponent()
 void BoxColliderComponent::Start()
 {
 	IComponent::Start();
-	UpdatePrevPos();
-}
-
-void BoxColliderComponent::FixedUpdate()
-{
-	IComponent::FixedUpdate();
-	UpdatePrevPos();
+	PhysicsSystem::GetInstance().RegisterCollider(this);
 }
 
 void BoxColliderComponent::Collide(const CollisionInfo& info)
@@ -70,11 +59,6 @@ const glm::vec2& BoxColliderComponent::GetBoxExtent() const noexcept
 	return m_Extent;
 }
 
-glm::vec2 BoxColliderComponent::GetMoveDirection() const
-{
-	return glm::normalize(GetOwner()->GetWorldPosition() - m_PrevPos);
-}
-
 void BoxColliderComponent::SetCollision(CollisionSettings settings) noexcept
 {
 	auto clampCollision = [](CollisionType type) -> CollisionType
@@ -96,11 +80,6 @@ void BoxColliderComponent::SetExtent(const glm::vec2& extent) noexcept
 	m_Extent = extent;
 }
 
-void BoxColliderComponent::UpdatePrevPos()
-{
-	m_PrevPos = GetOwner()->GetWorldPosition();
-}
-
 void BoxColliderComponent::HandleOverlap(const CollisionInfo& info)
 {
 	Event event{ EventType::OBJECT_OVERLAP };
@@ -114,11 +93,13 @@ void BoxColliderComponent::HandleBlock(const CollisionInfo& info)
 	//const float distY{ otherPtr->GetBoxExtent().y + GetBoxExtent().y };
 	//const glm::vec2 toOther{ otherPtr->GetOwner()->GetWorldPosition() - GetOwner()->GetWorldPosition() };
 
-	const glm::vec3 projDir = glm::cross(glm::vec3{ info.impactNormal, 0 }, glm::vec3{ 0, 0, 1 });
-	const glm::vec2 slideAlongDir{ glm::normalize(glm::vec2 {projDir.x, projDir.y}) };
-	const glm::vec2 moveDir{ m_PrevPos - GetOwner()->GetWorldPosition() };
-	const float projectedDist{ glm::dot(slideAlongDir, moveDir) };
-	GetOwner()->AddLocalOffset(slideAlongDir * projectedDist);
+	//const glm::vec3 projDir = glm::cross(glm::vec3{ info.impactNormal, 0 }, glm::vec3{ 0, 0, 1 });
+	//const glm::vec2 slideAlongDir{ glm::normalize(glm::vec2 {projDir.x, projDir.y}) };
+	//const glm::vec2 moveDir{ m_PrevPos - GetOwner()->GetWorldPosition() };
+	//const float projectedDist{ glm::dot(slideAlongDir, moveDir) };
+	//GetOwner()->AddLocalOffset(slideAlongDir * projectedDist);
+
+	GetOwner()->SetLocalPosition(info.intersectionPoint + info.impactNormal * (info.distance + 0.5f));
 
 	//glm::vec2 correction{};
 
