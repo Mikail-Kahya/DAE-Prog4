@@ -27,6 +27,17 @@ add_executable(${PROJECT_NAME}
   "Behavior/EnemyStates.cpp"
 )
 
+set(VLD_DIR "$ENV{ProgramFiles\(x86\)}/Visual Leak Detector")
+  IF(EXISTS ${VLD_DIR})
+    set(VLD_INCLUDE_DIR "${VLD_DIR}/include")
+    if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
+        set(VLD_LIBRARY "${VLD_DIR}/lib/Win64/vld.lib")
+    else()
+        set(VLD_LIBRARY "${VLD_DIR}/lib/Win32/vld.lib")
+    endif()
+  endif()
+
+
 target_compile_options(${PROJECT_NAME} PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
