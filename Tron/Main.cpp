@@ -5,7 +5,7 @@
 #include <windows.h>
 #endif
 
-#if _DEBUG
+#ifndef NDEBUG
 // ReSharper disable once CppUnusedIncludeDirective
 #if __has_include(<vld.h>)
 #include <vld.h>
