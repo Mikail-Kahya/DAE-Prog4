@@ -12,6 +12,7 @@ namespace mk
 	{
 		glm::vec2 position{};
 		glm::vec2 boxExtent{};
+		glm::vec2 prevPos{};
 	};
 
 	class PhysicsSystem final : public ISingleton<PhysicsSystem>
@@ -41,10 +42,11 @@ namespace mk
 
 		void HandleCollision() const;
 		void UpdateInformation();
+		void UpdatePrevPositions();
 
 		static PhysicsInfo GetPhysicsInfo(const BoxColliderComponent* colliderPtr);
 		static bool IsOverlapping(const PhysicsInfo& a, const PhysicsInfo& b);
-		static CollisionInfo GetCollisionInfo(const PhysicsInfo& a, const PhysicsInfo& b);
+		static CollisionInfo GetCollisionInfo(const Collider& a, const Collider& b);
 		static void GetVertices(const glm::vec2& position, const glm::vec2& boxExtent, std::vector<glm::vec2>& vertices);
 
 		std::vector<Collider> m_PhysicsBuffer{};

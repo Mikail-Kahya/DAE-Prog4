@@ -27,6 +27,7 @@ namespace mk
 	{
 		glm::vec2 intersectionPoint{};
 		glm::vec2 impactNormal{};
+		glm::vec2 moveDirection{};
 		BoxColliderComponent* hitCompPtr{ nullptr };
 		float distance{};
 	};

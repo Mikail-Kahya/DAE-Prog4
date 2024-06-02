@@ -33,6 +33,7 @@ void PhysicsSystem::Update()
 {
 	UpdateInformation();
 	HandleCollision();
+	UpdatePrevPositions();
 }
 
 void PhysicsSystem::RegisterCollider(BoxColliderComponent* colliderPtr)
@@ -46,7 +47,9 @@ void PhysicsSystem::RegisterCollider(BoxColliderComponent* colliderPtr)
 	if (foundIter != m_PhysicsBuffer.end())
 		return;
 
-	m_PhysicsBuffer.emplace_back(Collider{ colliderPtr, GetPhysicsInfo(colliderPtr) });
+	PhysicsInfo info{ GetPhysicsInfo(colliderPtr) };
+	info.prevPos = colliderPtr->GetOwner()->GetWorldPosition();
+	m_PhysicsBuffer.emplace_back(Collider{ colliderPtr, info });
 }
 
 void PhysicsSystem::UnRegisterCollider(BoxColliderComponent* colliderPtr)
@@ -80,18 +83,10 @@ void PhysicsSystem::HandleCollision() const
 				continue;
 
 			if (!isFirstIgnoring)
-			{
-				CollisionInfo info{ GetCollisionInfo(firstCollider.second, secondCollider.second) };
-				info.hitCompPtr = secondCollider.first;
-				firstCollider.first->Collide(info);
-			}
+				firstCollider.first->Collide(GetCollisionInfo(firstCollider, secondCollider));
 
 			if (!isSecondIgnoring)
-			{
-				CollisionInfo info{ GetCollisionInfo(secondCollider.second, firstCollider.second) };
-				info.hitCompPtr = firstCollider.first;
-				secondCollider.first->Collide(info);
-			}
+				secondCollider.first->Collide(GetCollisionInfo(secondCollider, firstCollider));
 		}
 	}
 }
@@ -99,7 +94,17 @@ void PhysicsSystem::HandleCollision() const
 void PhysicsSystem::UpdateInformation()
 {
 	for (Collider& collider : m_PhysicsBuffer)
+	{
+		const glm::vec2 prevPos{ collider.second.prevPos };
 		collider.second = GetPhysicsInfo(collider.first);
+		collider.second.prevPos = prevPos;
+	}
+}
+
+void PhysicsSystem::UpdatePrevPositions()
+{
+	for (Collider& collider : m_PhysicsBuffer)
+		collider.second.prevPos = collider.first->GetOwner()->GetWorldPosition();
 }
 
 PhysicsInfo PhysicsSystem::GetPhysicsInfo(const BoxColliderComponent* colliderPtr)
@@ -123,18 +128,20 @@ bool PhysicsSystem::IsOverlapping(const PhysicsInfo& a, const PhysicsInfo& b)
 	return true;
 }
 
-CollisionInfo PhysicsSystem::GetCollisionInfo(const PhysicsInfo& a, const PhysicsInfo& b)
+CollisionInfo PhysicsSystem::GetCollisionInfo(const Collider& a, const Collider& b)
 {
 	// Math help https://imois.in/posts/line-intersections-with-cross-products/
 	CollisionInfo result{};
 	result.distance = FLT_MAX;
+	result.hitCompPtr = b.first;
+	result.moveDirection = glm::normalize(a.first->GetOwner()->GetWorldPosition() - a.second.prevPos);
 
 	std::vector<glm::vec2> vertices{};
-	GetVertices(b.position, b.boxExtent, vertices);
+	GetVertices(b.second.position, b.second.boxExtent, vertices);
 
-	const glm::vec2 ray{ b.position - a.position };
-	const glm::vec3 pos{ a.position, 1 };
-	const glm::vec3 end{ b.position, 1 };
+	const glm::vec2 ray{ b.second.position - a.second.position };
+	const glm::vec3 pos{ a.second.position, 1 };
+	const glm::vec3 end{ b.second.position, 1 };
 	constexpr int nrVertices{ 4 };
 	for (int idx{}; idx < nrVertices; ++idx)
 	{
@@ -160,7 +167,7 @@ CollisionInfo PhysicsSystem::GetCollisionInfo(const PhysicsInfo& a, const Physic
 			continue;
 
 		result.intersectionPoint = intersection;
-		result.distance = glm::distance(a.position, result.intersectionPoint);
+		result.distance = glm::distance(a.second.position, result.intersectionPoint);
 		result.impactNormal = glm::normalize(glm::cross(glm::vec3{ edge, 0 }, glm::vec3{ 0, 0, 1 }));
 	}
 
