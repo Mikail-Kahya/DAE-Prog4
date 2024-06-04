@@ -15,6 +15,12 @@ namespace mk
 		glm::vec2 prevPos{};
 	};
 
+	struct BoxBounds
+	{
+		glm::vec2 min{};
+		glm::vec2 max{};
+	};
+
 	class PhysicsSystem final : public ISingleton<PhysicsSystem>
 	{
 		friend class ISingleton<PhysicsSystem>;
@@ -48,6 +54,7 @@ namespace mk
 		static bool IsOverlapping(const PhysicsInfo& a, const PhysicsInfo& b);
 		static CollisionInfo GetCollisionInfo(const Collider& a, const Collider& b);
 		static void GetVertices(const glm::vec2& position, const glm::vec2& boxExtent, std::vector<glm::vec2>& vertices);
+		static BoxBounds GetMinMax(const PhysicsInfo& info);
 
 		std::vector<Collider> m_PhysicsBuffer{};
 	};

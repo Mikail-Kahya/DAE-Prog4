@@ -25,11 +25,15 @@ namespace mk
 
 	struct CollisionInfo
 	{
-		glm::vec2 intersectionPoint{};
+		//glm::vec2 intersectionPoint{};
 		glm::vec2 impactNormal{};
-		glm::vec2 moveDirection{};
+		glm::vec2 preCollisionPos{};
+		glm::vec2 postCollisionPos{};
+		glm::vec2 velocity{};
 		BoxColliderComponent* hitCompPtr{ nullptr };
-		float distance{};
+		//float distance{};
+		float entryTime{};
+		float remainingTime{};
 	};
 
 	class BoxColliderComponent final : public IComponent, public ISubject

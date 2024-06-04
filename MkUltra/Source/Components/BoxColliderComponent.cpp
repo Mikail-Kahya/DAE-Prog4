@@ -91,13 +91,18 @@ void BoxColliderComponent::HandleOverlap(const CollisionInfo& info)
 
 void BoxColliderComponent::HandleBlock(const CollisionInfo& info)
 {
-	const glm::vec2 hitCompPos{ info.hitCompPtr->GetOwner()->GetWorldPosition() };
-	const glm::vec2 pos{ GetOwner()->GetWorldPosition() };
-	glm::vec2 offset{ glm::normalize(pos - hitCompPos) };
-	offset.x *= m_Extent.x;
-	offset.y *= m_Extent.y;
-	
-	GetOwner()->SetLocalPosition(info.intersectionPoint + offset);
+	// push 
+	float magnitude = glm::length(info.velocity) * info.remainingTime;
+	float dot = glm::dot(info.velocity, info.impactNormal);
+
+	if (dot > 0.0f) 
+		dot = 1.0f;
+	else if (dot < 0.0f) 
+		dot = -1.0f;
+
+	glm::vec2 velocity{ dot * info.impactNormal * magnitude };
+
+	GetOwner()->SetLocalPosition(info.preCollisionPos + velocity * info.entryTime);
 
 	Event event{ EventType::OBJECT_BLOCK };
 	event.SetData("info", info);
