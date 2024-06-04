@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <string>
 #include <memory>
 #include "ISingleton.h"
@@ -22,7 +23,7 @@ namespace mk
 		SceneManager& operator=(const SceneManager& other)		= delete;
 		SceneManager& operator=(SceneManager&& other) noexcept	= delete;
 
-		Scene& LoadScene(const std::string& name);
+		void LoadScene(const std::string& name, std::function<void(Scene&)> sceneLoader);
 		Scene& GetScene() const;
 
 		void FixedUpdate();
@@ -35,6 +36,8 @@ namespace mk
 		SceneManager() = default;
 
 		std::unique_ptr<Scene> m_Scene{};
+		std::unique_ptr<Scene> m_LoadingScreen{};
+		std::unique_ptr<Scene> m_LoadedScene{};
 		TimeManager m_TimeManager{};
 	};
 
