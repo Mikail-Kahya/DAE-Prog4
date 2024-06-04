@@ -119,13 +119,13 @@ void mk::MkUltra::RunOneFrame()
 	while (m_Lag >= FIXED_TIME_STEP)
 	{
 		SceneManager::GetInstance().FixedUpdate();
-		PhysicsSystem::GetInstance().Update();
 		m_Lag -= FIXED_TIME_STEP;
 	}
 
 	sceneManager.Update();
 	sceneManager.LateUpdate();
 
+	PhysicsSystem::GetInstance().Update();
 	renderer.Update();
 	renderer.Render();
 

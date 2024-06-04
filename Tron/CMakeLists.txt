@@ -25,7 +25,7 @@ add_executable(${PROJECT_NAME}
   "Components/SensorComponent.cpp"
 
   "Behavior/EnemyStates.cpp"
-)
+ "Levels/Levels.h" "Levels/Levels.cpp" "Components/BounceComponent.h" "Components/BounceComponent.cpp")
 
 set(VLD_DIR "$ENV{ProgramFiles\(x86\)}/Visual Leak Detector")
   IF(EXISTS ${VLD_DIR})
@@ -44,10 +44,22 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 )
 
 
+
+FetchContent_Declare(
+	json
+	GIT_REPOSITORY "https://github.com/nlohmann/json.git"
+	GIT_TAG v3.11.3 #version
+	GIT_PROGRESS TRUE
+	GIT_SHALLOW  TRUE
+)
+
+FetchContent_MakeAvailable(json)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
+
 target_link_libraries(${PROJECT_NAME} PUBLIC ${ENGINE_NAME})
 target_include_directories(${ENGINE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-#ASK ALEX HOW TO SPLIT UP EMSCRIPTEN
 
 if(WIN32)
      # add post build commands
