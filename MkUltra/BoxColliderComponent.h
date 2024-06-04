@@ -51,8 +51,8 @@ namespace mk
 
 		void Collide(const CollisionInfo& info);
 		bool IsIgnoring(GameObject* objectPtr) const noexcept;
-		void Ignore(GameObject* colliderPtr) noexcept;
-		void StopIgnoring(GameObject* colliderPtr) noexcept;
+		void Ignore(GameObject* colliderPtr, bool mutuallyIgnore = true) noexcept;
+		void StopIgnoring(GameObject* colliderPtr, bool mutuallyStopIgnore = true) noexcept;
 
 		CollisionSettings GetCollision() const noexcept;
 		const glm::vec2& GetBoxExtent() const noexcept;

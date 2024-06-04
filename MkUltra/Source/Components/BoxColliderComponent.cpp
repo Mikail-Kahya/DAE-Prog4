@@ -40,15 +40,27 @@ bool BoxColliderComponent::IsIgnoring(GameObject* objectPtr) const noexcept
 	return m_IgnoreObjects.contains(objectPtr);
 }
 
-void BoxColliderComponent::Ignore(GameObject* colliderPtr) noexcept
+void BoxColliderComponent::Ignore(GameObject* colliderPtr, bool mutuallyIgnore) noexcept
 {
 	m_IgnoreObjects.insert(colliderPtr);
+	if (mutuallyIgnore)
+	{
+		if (BoxColliderComponent* otherColliderPtr = colliderPtr->GetComponent<BoxColliderComponent>())
+			otherColliderPtr->Ignore(GetOwner(), false);
+	}
 }
 
-void BoxColliderComponent::StopIgnoring(GameObject* colliderPtr) noexcept
+void BoxColliderComponent::StopIgnoring(GameObject* colliderPtr, bool mutuallyStopIgnore) noexcept
 {
-	if (m_IgnoreObjects.contains(colliderPtr))
-		m_IgnoreObjects.erase(colliderPtr);
+	if (!m_IgnoreObjects.contains(colliderPtr))
+		return;
+
+	if (mutuallyStopIgnore)
+	{
+		if (BoxColliderComponent* otherColliderPtr = colliderPtr->GetComponent<BoxColliderComponent>())
+			otherColliderPtr->StopIgnoring(GetOwner(), false);
+	}
+	m_IgnoreObjects.erase(colliderPtr);
 }
 
 CollisionSettings BoxColliderComponent::GetCollision() const noexcept
