@@ -36,7 +36,7 @@ GameObject* LoadEnemy(Scene& scene);
 void LoadHud(Scene& scene, const std::vector<GameObject*>& players);
 void LoadInfo(Scene& scene);
 void LoadLevel(Scene& scene, int screenWidth, int screenHeight);
-void LoadLevel2(Scene& scene, int screenWidth, int screenHeight);
+void LoadWall(Scene& scene, const glm::vec2& position, const glm::vec2& boxExtent);
 
 void mk::LoadMainGame(Scene& scene)
 {
@@ -59,7 +59,6 @@ void mk::LoadMainGame(Scene& scene)
 	LoadInfo(scene);
 	LoadEnemy(scene);
 	LoadLevel(scene, screenWidth, screenHeight);
-	LoadLevel2(scene, screenWidth, screenHeight);
 }
 
 GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos)
@@ -173,32 +172,25 @@ void LoadInfo(Scene& scene)
 
 void LoadLevel(Scene& scene, int screenWidth, int screenHeight)
 {
-	GameObject* obstacle = scene.SpawnObject("");
-	obstacle->SetStatic(true);
+	GameObject* bg = scene.SpawnObject("background");
+	bg->SetStatic(true);
+	bg->SetLocalDepth(-10.f);
+	RenderComponent* spriteCompPtr = bg->AddComponent<RenderComponent>("level.png");
+	spriteCompPtr->SetWidth(static_cast<float>(screenWidth));
+	spriteCompPtr->SetHeight(static_cast<float>(screenHeight));
+	//spritePtr->SetAnchor({ 0.5f, 0.5f });
 
-	RenderComponent* spritePtr = obstacle->AddComponent<RenderComponent>("circuit.jpg");
-	spritePtr->SetAnchor({ 0.5f, 0.5f });
-	const glm::vec2 halfSize{ spritePtr->GetTexture()->GetSize() / 2 };
-
-	BoxColliderComponent* colliderPtr = obstacle->AddComponent<BoxColliderComponent>();
-	colliderPtr->SetExtent(halfSize);
-
-	obstacle->SetLocalPosition(glm::vec2{ screenWidth / 2 + 100, screenHeight / 2 + 100 } - halfSize);
 }
 
-void LoadLevel2(Scene& scene, int screenWidth, int screenHeight)
+void LoadWall(Scene& scene, const glm::vec2& position, const glm::vec2& boxExtent)
 {
-	GameObject* obstacle = scene.SpawnObject("block2");
+	GameObject* obstacle = scene.SpawnObject("");
+	obstacle->SetLocalPosition(position);
 	obstacle->SetStatic(true);
 
-	RenderComponent* spritePtr = obstacle->AddComponent<RenderComponent>("circuit.jpg");
-	spritePtr->SetAnchor({ 0.5f, 0.5f });
-	const glm::vec2 halfSize{ spritePtr->GetTexture()->GetSize() / 2 };
-
 	BoxColliderComponent* colliderPtr = obstacle->AddComponent<BoxColliderComponent>();
-	colliderPtr->SetExtent(halfSize);
+	colliderPtr->SetExtent(boxExtent);
 
-	obstacle->SetLocalPosition(glm::vec2{ screenWidth / 2 + 400, screenHeight / 2 + 100 } - halfSize);
 }
 
 GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::string& name)

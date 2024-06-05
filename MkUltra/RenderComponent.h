@@ -30,19 +30,23 @@ namespace mk
 		float GetRenderDepth() const;
 		std::pair<bool, bool> IsFlipped() const;
 		const glm::vec2& GetAnchor() const;
+		float GetWidth() const;
+		float GetHeight() const;
 
-		void SetTexture(Texture2D* texturePtr);
+		void SetTexture(Texture2D* texturePtr, bool useTextureDimensions = true);
 		void SetAnchor(const glm::vec2& anchor);
 		void SetFlipHorizontal(bool isFlipped);
 		void SetFlipVertical(bool isFlipped);
 
-	private:
-		int GetTextureWidth() const;
-		int GetTextureHeight() const;
+		void SetWidth(float width);
+		void SetHeight(float height);
 
+	private:
 		glm::vec2 m_Anchor{};
 		Texture2D* m_TexturePtr{};
 		float m_Depth{};
+		float m_Width{};
+		float m_Height{};
 		std::pair<bool, bool> m_FlipAxis{ false, false };
 	};
 }

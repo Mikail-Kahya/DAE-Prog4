@@ -48,8 +48,8 @@ Texture2D* RenderComponent::GetTexture() const
 glm::vec2 RenderComponent::GetRenderPosition() const
 {
 	glm::vec2 position{ GetOwner()->GetWorldPosition() };
-	position.x -= m_Anchor.x * static_cast<float>(GetTextureWidth());
-	position.y -= m_Anchor.y * static_cast<float>(GetTextureHeight());
+	position.x -= m_Anchor.x * m_Width;
+	position.y -= m_Anchor.y * m_Height;
 	return { position.x, position.y };
 }
 
@@ -68,9 +68,26 @@ const glm::vec2& RenderComponent::GetAnchor() const
 	return m_Anchor;
 }
 
-void RenderComponent::SetTexture(Texture2D* texturePtr)
+float RenderComponent::GetWidth() const
+{
+	return m_Width;
+}
+
+float RenderComponent::GetHeight() const
+{
+	return m_Height;
+}
+
+
+void RenderComponent::SetTexture(Texture2D* texturePtr, bool useTextureSize)
 {
 	m_TexturePtr = texturePtr;
+	if (useTextureSize)
+	{
+		const glm::vec2 size{ texturePtr->GetSize() };
+		SetWidth(size.x);
+		SetHeight(size.y);
+	}
 }
 
 void RenderComponent::SetAnchor(const glm::vec2& anchor)
@@ -88,12 +105,12 @@ void RenderComponent::SetFlipVertical(bool isFlipped)
 	m_FlipAxis.second = isFlipped;
 }
 
-int RenderComponent::GetTextureWidth() const
+void RenderComponent::SetWidth(float width)
 {
-	return m_TexturePtr->GetSize().x;
+	m_Width = width;
 }
 
-int RenderComponent::GetTextureHeight() const
+void RenderComponent::SetHeight(float height)
 {
-	return m_TexturePtr->GetSize().y;
+	m_Height = height;
 }

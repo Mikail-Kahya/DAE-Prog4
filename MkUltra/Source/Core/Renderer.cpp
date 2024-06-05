@@ -170,9 +170,16 @@ void Renderer::FlagDepthDirty()
 void Renderer::RenderTexture(const RenderComponent* renderComponentPtr) const
 {
 	const Texture2D& texture{ *renderComponentPtr->GetTexture() };
+	const int width{ static_cast<int>(renderComponentPtr->GetWidth()) };
+	const int height{ static_cast<int>(renderComponentPtr->GetHeight()) };
 	const glm::vec2& anchor{ renderComponentPtr->GetAnchor() };
 	const glm::vec2 position{ renderComponentPtr->GetRenderPosition() };
-	const auto dstRect{ GetDstRect(texture, position.x, position.y) };
+	const SDL_Rect dstRect{
+		static_cast<int>(position.x),
+		m_Height - static_cast<int>(position.y) - height, // flip Y to be at the bottom
+		width,
+		height
+	};
 	const float angle{ -renderComponentPtr->GetOwner()->GetRotation() };
 	const auto flipAxis{ renderComponentPtr->IsFlipped() };
 
