@@ -1,12 +1,14 @@
 #include "SensorComponent.h"
 
+#include "BoxColliderComponent.h"
+
 using namespace mk;
 
-void SensorComponent::OnNotify(ISubject* subjectPtr, const Event& event)
+void SensorComponent::OnNotify(ISubject* subjectPtr, IEvent* event)
 {
 	IObserver::OnNotify(subjectPtr, event);
 
-	if (event.type == EventType::OBJECT_BLOCK)
+	if (dynamic_cast<BlockEvent*>(event))
 		m_HitWall = true;
 }
 

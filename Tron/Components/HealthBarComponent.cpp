@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "TextComponent.h"
+#include "Events/Events.h"
 
 using namespace mk;
 
@@ -12,14 +13,10 @@ void HealthBarComponent::Start()
 	m_TextCompPtr = GetOwner()->AddComponent<TextComponent>("Health: 0", "Lingua.otf", 30);
 }
 
-void HealthBarComponent::OnNotify(ISubject* subjectPtr, const Event& event)
+void HealthBarComponent::OnNotify(ISubject* subjectPtr, IEvent* event)
 {
 	IObserver::OnNotify(subjectPtr, event);
 
-	if (event.type == EventType::TAKE_DAMAGE)
-	{
-		int health{};
-		if (event.GetData("health", health))
-			m_TextCompPtr->SetText("Health: " + std::to_string(health));
-	}
+	if (PlayerDamageTakenEvent* damageEvent = dynamic_cast<PlayerDamageTakenEvent*>(event))
+		m_TextCompPtr->SetText("Health: " + std::to_string(damageEvent->health));
 }

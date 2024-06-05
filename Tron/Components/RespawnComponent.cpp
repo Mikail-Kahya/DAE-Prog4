@@ -1,6 +1,7 @@
 #include "RespawnComponent.h"
 
 #include "GameObject.h"
+#include "Events/Events.h"
 
 using namespace mk;
 
@@ -9,11 +10,11 @@ RespawnComponent::RespawnComponent(const glm::vec2& respawn)
 {
 }
 
-void RespawnComponent::OnNotify(ISubject* subjectPtr, const Event& event)
+void RespawnComponent::OnNotify(ISubject* subjectPtr, IEvent* event)
 {
 	IObserver::OnNotify(subjectPtr, event);
 
-	if (event.type == EventType::OBJECT_DIED)
+	if (dynamic_cast<PlayerDiedEvent*>(event))
 		Respawn();
 }
 

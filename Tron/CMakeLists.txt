@@ -23,9 +23,11 @@ add_executable(${PROJECT_NAME}
   "Components/ExplosionComponent.cpp"
   "Components/HealthBarComponent.cpp"
   "Components/SensorComponent.cpp"
+  "Components/BounceComponent.cpp" 
 
   "Behavior/EnemyStates.cpp"
- "Levels/Levels.h" "Levels/Levels.cpp" "Components/BounceComponent.h" "Components/BounceComponent.cpp")
+ "Levels/Levels.cpp"
+ "Events/Events.h")
 
 set(VLD_DIR "$ENV{ProgramFiles\(x86\)}/Visual Leak Detector")
   IF(EXISTS ${VLD_DIR})

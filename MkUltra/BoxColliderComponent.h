@@ -36,6 +36,30 @@ namespace mk
 		float remainingTime{};
 	};
 
+	struct OverlapEvent : public IEvent
+	{
+		OverlapEvent()				= default;
+		~OverlapEvent() override	= default;
+		OverlapEvent(const OverlapEvent& other)					= delete;
+		OverlapEvent(OverlapEvent&& other) noexcept				= delete;
+		OverlapEvent& operator=(const OverlapEvent& other)		= delete;
+		OverlapEvent& operator=(OverlapEvent&& other) noexcept	= delete;
+
+		CollisionInfo info{};
+	};
+
+	struct BlockEvent : public IEvent
+	{
+		BlockEvent()			= default;
+		~BlockEvent() override	= default;
+		BlockEvent(const BlockEvent& other)					= delete;
+		BlockEvent(BlockEvent&& other) noexcept				= delete;
+		BlockEvent& operator=(const BlockEvent& other)		= delete;
+		BlockEvent& operator=(BlockEvent&& other) noexcept	= delete;
+
+		CollisionInfo info{};
+	};
+
 	class BoxColliderComponent final : public IComponent, public ISubject
 	{
 	public:

@@ -19,7 +19,7 @@ namespace mk
 
 		void Start() override;
 
-		void OnNotify(ISubject* subjectPtr, const Event& event) override;
+		void OnNotify(ISubject* subjectPtr, IEvent* event) override;
 
 	private:
 		TextComponent* m_TextCompPtr{};

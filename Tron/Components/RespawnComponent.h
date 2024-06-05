@@ -16,7 +16,7 @@ namespace mk
 		RespawnComponent& operator=(const RespawnComponent& other)		= delete;
 		RespawnComponent& operator=(RespawnComponent&& other) noexcept	= delete;
 
-		void OnNotify(ISubject* subjectPtr, const Event& event) override;
+		void OnNotify(ISubject* subjectPtr, IEvent* event) override;
 		void SetRespawn(const glm::vec2& respawn);
 
 	private:

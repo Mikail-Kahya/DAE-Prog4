@@ -1,5 +1,6 @@
 #pragma once
 #include "IComponent.h"
+#include "IEvent.h"
 #include "IObserver.h"
 
 namespace mk
@@ -16,7 +17,7 @@ namespace mk
 		HealthComponent& operator=(HealthComponent&& other)	noexcept	= delete;
 
 		void Start() override;
-		void OnNotify(ISubject* subjectPtr, const Event& event) override;
+		void OnNotify(ISubject* subjectPtr, IEvent* event) override;
 
 		int GetHealth() const;
 		bool IsDead() const;

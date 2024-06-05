@@ -96,9 +96,9 @@ void BoxColliderComponent::SetExtent(const glm::vec2& extent) noexcept
 
 void BoxColliderComponent::HandleOverlap(const CollisionInfo& info)
 {
-	Event event{ EventType::OBJECT_OVERLAP };
-	event.SetData("info", info);
-	Notify(event);
+	auto overlapEvent{ std::make_unique<OverlapEvent>() };
+	overlapEvent->info = info;
+	Notify(std::move(overlapEvent));
 }
 
 void BoxColliderComponent::HandleBlock(const CollisionInfo& info)
@@ -116,7 +116,7 @@ void BoxColliderComponent::HandleBlock(const CollisionInfo& info)
 
 	GetOwner()->SetLocalPosition(info.preCollisionPos + velocity * info.entryTime);
 
-	Event event{ EventType::OBJECT_BLOCK };
-	event.SetData("info", info);
-	Notify(event);
+	auto blockEvent{ std::make_unique<BlockEvent>() };
+	blockEvent->info = info;
+	Notify(std::move(blockEvent));
 }

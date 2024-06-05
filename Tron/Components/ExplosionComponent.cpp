@@ -1,13 +1,14 @@
 #include "ExplosionComponent.h"
 
+#include "BoxColliderComponent.h"
 #include "GameObject.h"
 
 using namespace mk;
 
-void ExplosionComponent::OnNotify(ISubject* subjectPtr, const Event& event)
+void ExplosionComponent::OnNotify(ISubject* subjectPtr, IEvent* event)
 {
 	IObserver::OnNotify(subjectPtr, event);
 
-	if (event.type == EventType::OBJECT_OVERLAP)
+	if (dynamic_cast<OverlapEvent*>(event))
 		GetOwner()->Destroy();
 }

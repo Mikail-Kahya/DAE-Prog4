@@ -4,6 +4,8 @@
 
 namespace mk
 {
+	class MovementComponent;
+
 	class BounceComponent : public IComponent, public IObserver
 	{
 	public:
@@ -15,6 +17,11 @@ namespace mk
 		BounceComponent& operator=(const BounceComponent& other)		= delete;
 		BounceComponent& operator=(BounceComponent&& other) noexcept	= delete;
 
-		void OnNotify(ISubject* subjectPtr, const Event& event) override;
+		void Start() override;
+
+		void OnNotify(ISubject* subjectPtr, IEvent* event) override;
+
+	private:
+		MovementComponent* m_MoveCompPtr{};
 	};
 }

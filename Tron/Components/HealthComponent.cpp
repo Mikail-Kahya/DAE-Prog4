@@ -4,6 +4,7 @@
 
 #include "BoxColliderComponent.h"
 #include "GameObject.h"
+#include "Events/Events.h"
 
 using namespace mk;
 
@@ -22,11 +23,11 @@ void HealthComponent::Start()
 		assert(false && "No box component in healthComponent");
 }
 
-void HealthComponent::OnNotify(ISubject* subjectPtr, const Event& event)
+void HealthComponent::OnNotify(ISubject* subjectPtr, IEvent* event)
 {
 	IObserver::OnNotify(subjectPtr, event);
 
-	if (event.type == EventType::OBJECT_OVERLAP)
+	if (dynamic_cast<OverlapEvent*>(event))
 		Hit();
 }
 
@@ -41,15 +42,11 @@ void HealthComponent::Hit()
 
 	if (IsDead())
 	{
-		Event event{ EventType::OBJECT_DIED };
-		event.SetData("score", 100);
-		Notify(event);
+		Notify(std::make_unique<PlayerDiedEvent>(100));
 		Reset();
 	}
 
-	Event event{ EventType::TAKE_DAMAGE };
-	event.SetData("health", m_Health);
-	Notify(event);
+	Notify(std::make_unique<PlayerDamageTakenEvent>(m_Health));
 }
 
 void HealthComponent::Reset()

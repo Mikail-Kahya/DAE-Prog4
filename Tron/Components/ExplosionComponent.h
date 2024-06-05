@@ -15,6 +15,6 @@ namespace mk
 		ExplosionComponent& operator=(const ExplosionComponent& other)		= delete;
 		ExplosionComponent& operator=(ExplosionComponent&& other) noexcept	= delete;
 
-		void OnNotify(ISubject* subjectPtr, const Event& event) override;
+		void OnNotify(ISubject* subjectPtr, IEvent* event) override;
 	};
 }

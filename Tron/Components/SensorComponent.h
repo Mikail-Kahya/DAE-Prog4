@@ -15,7 +15,7 @@ namespace mk
 		SensorComponent& operator=(const SensorComponent& other)		= delete;
 		SensorComponent& operator=(SensorComponent&& other)	noexcept	= delete;
 
-		void OnNotify(ISubject* subjectPtr, const Event& event) override;
+		void OnNotify(ISubject* subjectPtr, IEvent* event) override;
 
 		void FixedUpdate() override;
 
