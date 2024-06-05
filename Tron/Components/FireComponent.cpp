@@ -1,5 +1,6 @@
 #include "FireComponent.h"
 
+#include "BounceComponent.h"
 #include "BoxColliderComponent.h"
 #include "ExplosionComponent.h"
 #include "GameObject.h"
@@ -22,6 +23,7 @@ void FireComponent::Fire() const
 	const glm::vec2 pos{ GetOwner()->GetWorldPosition() };
 	const glm::vec2 forward{ GetOwner()->GetForward() };
 	constexpr float speed{ 100.f };
+	constexpr int maxBounces{ 5 };
 
 	GameObject* bulletPtr{ SceneManager::GetInstance().GetScene().SpawnObject("Bullet") };
 	bulletPtr->SetLocalPosition(pos + forward * m_BarrelLength);
@@ -39,4 +41,5 @@ void FireComponent::Fire() const
 	colliderCompPtr->SetCollision(CollisionSettings{ CollisionType::block, CollisionType::overlap });
 
 	colliderCompPtr->AddObserver(bulletPtr->AddComponent<ExplosionComponent>());
+	colliderCompPtr->AddObserver(bulletPtr->AddComponent<BounceComponent>(maxBounces));
 }

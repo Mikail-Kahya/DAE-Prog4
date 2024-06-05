@@ -4,12 +4,17 @@
 
 namespace mk
 {
+	struct BlockEvent;
+}
+
+namespace mk
+{
 	class MovementComponent;
 
 	class BounceComponent : public IComponent, public IObserver
 	{
 	public:
-		BounceComponent() = default;
+		BounceComponent(int maxNrBounces);
 		~BounceComponent() override = default;
 
 		BounceComponent(const BounceComponent& other)					= delete;
@@ -22,6 +27,10 @@ namespace mk
 		void OnNotify(ISubject* subjectPtr, IEvent* event) override;
 
 	private:
+		void Bounce(BlockEvent* event);
+
 		MovementComponent* m_MoveCompPtr{};
+		const int m_MaxNrBounces{};
+		int m_NrBounces{};
 	};
 }
