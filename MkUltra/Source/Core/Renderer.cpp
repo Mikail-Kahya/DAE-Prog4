@@ -180,6 +180,16 @@ void Renderer::RenderTexture(const RenderComponent* renderComponentPtr) const
 		width,
 		height
 	};
+
+	const glm::vec2& srcPos{ renderComponentPtr->GetSrcPosition() };
+	const glm::vec2& srcSize{ renderComponentPtr->GetSrcSize() };
+	const SDL_Rect srcRect{
+		static_cast<int>(srcPos.x),
+		static_cast<int>(srcPos.y),
+		static_cast<int>(srcSize.x),
+		static_cast<int>(srcSize.y)
+	};
+
 	const float angle{ -renderComponentPtr->GetOwner()->GetRotation() };
 	const auto flipAxis{ renderComponentPtr->IsFlipped() };
 
@@ -194,7 +204,7 @@ void Renderer::RenderTexture(const RenderComponent* renderComponentPtr) const
 	if (flipAxis.second)
 		flip = static_cast<SDL_RendererFlip>(flip | SDL_FLIP_VERTICAL);
 
-	SDL_RenderCopyEx(m_Renderer, texture.GetSDLTexture(), nullptr, &dstRect, angle, &pivot, flip);
+	SDL_RenderCopyEx(m_Renderer, texture.GetSDLTexture(), &srcRect, &dstRect, angle, &pivot, flip);
 }
 
 SDL_Rect Renderer::GetDstRect(const Texture2D& texture, float x, float y) const

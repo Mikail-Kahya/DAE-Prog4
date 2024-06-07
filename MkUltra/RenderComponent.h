@@ -33,6 +33,9 @@ namespace mk
 		float GetWidth() const;
 		float GetHeight() const;
 
+		const glm::vec2& GetSrcPosition() const;
+		const glm::vec2& GetSrcSize() const;
+
 		void SetTexture(Texture2D* texturePtr, bool useTextureDimensions = true);
 		void SetAnchor(const glm::vec2& anchor);
 		void SetFlipHorizontal(bool isFlipped);
@@ -41,8 +44,13 @@ namespace mk
 		void SetWidth(float width);
 		void SetHeight(float height);
 
+		void SetSrcPosition(const glm::vec2& position);
+		void SetSrcSize(const glm::vec2& dimensions);
+
 	private:
 		glm::vec2 m_Anchor{};
+		glm::vec2 m_SrcPos{};
+		glm::vec2 m_SrcSize{};
 		Texture2D* m_TexturePtr{};
 		float m_Depth{};
 		float m_Width{};

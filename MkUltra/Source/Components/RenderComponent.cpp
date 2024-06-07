@@ -9,13 +9,14 @@
 using namespace mk;
 
 RenderComponent::RenderComponent(Texture2D* texturePtr)
-	: m_TexturePtr{ texturePtr }
 {
+	if (texturePtr != nullptr)
+		SetTexture(texturePtr, true);
 }
 
 RenderComponent::RenderComponent(const std::string& file)
 {
-	m_TexturePtr = ResourceManager::GetInstance().LoadTexture(file);
+	SetTexture(ResourceManager::GetInstance().LoadTexture(file), true);
 }
 
 RenderComponent::~RenderComponent()
@@ -78,10 +79,23 @@ float RenderComponent::GetHeight() const
 	return m_Height;
 }
 
+const glm::vec2& RenderComponent::GetSrcPosition() const
+{
+	return m_SrcPos;
+}
+
+const glm::vec2& RenderComponent::GetSrcSize() const
+{
+	return m_SrcSize;
+}
+
 
 void RenderComponent::SetTexture(Texture2D* texturePtr, bool useTextureSize)
 {
 	m_TexturePtr = texturePtr;
+	m_SrcPos = {};
+	m_SrcSize = { m_TexturePtr->GetSize() };
+
 	if (useTextureSize)
 	{
 		const glm::vec2 size{ texturePtr->GetSize() };
@@ -113,4 +127,14 @@ void RenderComponent::SetWidth(float width)
 void RenderComponent::SetHeight(float height)
 {
 	m_Height = height;
+}
+
+void RenderComponent::SetSrcPosition(const glm::vec2& position)
+{
+	m_SrcPos = position;
+}
+
+void RenderComponent::SetSrcSize(const glm::vec2& dimensions)
+{
+	m_SrcSize = dimensions;
 }
