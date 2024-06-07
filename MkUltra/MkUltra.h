@@ -9,7 +9,7 @@ namespace mk
 	class MkUltra final
 	{
 	public:
-		explicit MkUltra(const std::filesystem::path& dataPath);
+		explicit MkUltra(const std::filesystem::path& dataPath, int width, int height);
 		~MkUltra();
 		void Run(const std::function<void()>& load);
 		void RunOneFrame();

@@ -65,14 +65,14 @@ void PrintSDLVersion()
 	LogSDLVersion("We linked against SDL_ttf version ", version);
 }
 
-mk::MkUltra::MkUltra(const std::filesystem::path &dataPath)
+mk::MkUltra::MkUltra(const std::filesystem::path &dataPath, int width, int height)
 {
 	PrintSDLVersion();
 	
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 
-	Renderer::GetInstance().Init(720, 480);
+	Renderer::GetInstance().Init(width, height);
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
