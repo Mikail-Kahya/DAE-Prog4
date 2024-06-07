@@ -73,6 +73,7 @@ void PhysicsSystem::HandleCollision() const
 		for (size_t idxSecond{ idxFirst + 1 }; idxSecond < nrColliders; ++idxSecond)
 		{
 			const Collider& firstCollider{ m_PhysicsBuffer[idxFirst] };
+
 			const Collider& secondCollider{ m_PhysicsBuffer[idxSecond] };
 			const bool isFirstIgnoring{ firstCollider.first->IsIgnoring(secondCollider.first->GetOwner()) };
 			const bool isSecondIgnoring{ secondCollider.first->IsIgnoring(firstCollider.first->GetOwner()) };
@@ -83,10 +84,10 @@ void PhysicsSystem::HandleCollision() const
 			if (!IsOverlapping(firstCollider.second, secondCollider.second))
 				continue;
 
-			if (!isFirstIgnoring)
+			if (!isFirstIgnoring && !firstCollider.first->GetOwner()->IsStatic())
 				firstCollider.first->Collide(GetCollisionInfo(firstCollider, secondCollider));
 
-			if (!isSecondIgnoring)
+			if (!isSecondIgnoring && !secondCollider.first->GetOwner()->IsStatic())
 				secondCollider.first->Collide(GetCollisionInfo(secondCollider, firstCollider));
 		}
 	}
