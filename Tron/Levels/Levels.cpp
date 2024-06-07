@@ -34,6 +34,8 @@
 
 using namespace mk;
 
+constexpr float TILE_SIZE{ 16 };
+
 GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos);
 GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::string& name);
 GameObject* LoadEnemy(Scene& scene);
@@ -178,7 +180,7 @@ void LoadLevel(Scene& scene, int, int, const glm::vec2&)
 
 	SDL_Surface* surfacePtr = IMG_Load("./Data/Level00.png");
 
-	constexpr float tileSize{ 16 };
+	
 	uint8_t* pixels = static_cast<uint8_t*>(surfacePtr->pixels);
 	// set pixels to solid white
 	for (int row{}; row < surfacePtr->h; ++row)
@@ -189,14 +191,14 @@ void LoadLevel(Scene& scene, int, int, const glm::vec2&)
 			const int pixelIdx{ ((surfacePtr->h - row) * surfacePtr->w + col) * surfacePtr->format->BytesPerPixel }; 
 			uint8_t color = pixels[pixelIdx];
 
-			if (color == 0)
+			if (color < 120)
 				continue;
 
-			const glm::vec2 pos{ tileSize / 2 + col * tileSize, tileSize / 2 + row * tileSize };
-			const glm::vec2 size{ tileSize, tileSize };
+			const glm::vec2 pos{ TILE_SIZE / 2 + col * TILE_SIZE, TILE_SIZE / 2 + row * TILE_SIZE };
+			const glm::vec2 size{ TILE_SIZE, TILE_SIZE };
 
-			const glm::vec2 srcPos{ col * tileSize, row * tileSize };
-			const glm::vec2 srcSize{ tileSize, tileSize };
+			const glm::vec2 srcPos{ col * TILE_SIZE, row * TILE_SIZE };
+			const glm::vec2 srcSize{ TILE_SIZE, TILE_SIZE };
 
 			GameObject* obstacle = scene.SpawnObject("");
 			obstacle->SetLocalDepth(-10.f);
@@ -227,8 +229,16 @@ GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::stri
 
 	RenderComponent* spriteCompPtr = tank->AddComponent<RenderComponent>(tankColor + "Tank.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
+	spriteCompPtr->SetWidth(TILE_SIZE * 2);
+	spriteCompPtr->SetHeight(TILE_SIZE * 2);
+
+	constexpr glm::vec2 tankSize{ TILE_SIZE * 0.9f, TILE_SIZE * 0.9f };
+
 	tank->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
-	tank->AddComponent<BoxColliderComponent>()->SetCollision({ CollisionType::block, CollisionType::overlap });
+
+	BoxColliderComponent* colliderCompPtr = tank->AddComponent<BoxColliderComponent>();
+	colliderCompPtr->SetCollision({ CollisionType::block, CollisionType::overlap });
+	colliderCompPtr->SetExtent(tankSize);
 
 	// Gun
 	GameObject* gun = scene.SpawnObject(name + "Gun");
