@@ -151,7 +151,7 @@ if (WIN32)
   SET(XINPUT_LIB XInput)
 
   # set all include directories
-  target_include_directories(${ENGINE_NAME} PRIVATE
+  target_include_directories(${ENGINE_NAME} PUBLIC
     ${VLD_INCLUDE_DIR}
     ${SDL2_INCLUDE_DIR} 
     ${SDL2_IMAGE_INCLUDE_DIR} 
@@ -267,6 +267,6 @@ elseif(WIN32)
         )
 
         add_custom_command(TARGET ${ENGINE_NAME} POST_BUILD
-          COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/Data" "${CMAKE_BINARY_DIR}/Data"
+          COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/Data" "${CMAKE_BINARY_DIR}/${PROJECT_FOLDER}/Data"
         )
 endif()
