@@ -45,20 +45,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
 
-
-
-FetchContent_Declare(
-	json
-	GIT_REPOSITORY "https://github.com/nlohmann/json.git"
-	GIT_TAG v3.11.3 #version
-	GIT_PROGRESS TRUE
-	GIT_SHALLOW  TRUE
-)
-
-FetchContent_MakeAvailable(json)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
-
 target_link_libraries(${PROJECT_NAME} PUBLIC ${ENGINE_NAME})
 target_include_directories(${ENGINE_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -67,6 +53,6 @@ if(WIN32)
      # add post build commands
 
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/Data" "${CMAKE_BINARY_DIR}/Data"
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_SOURCE_DIR}/Data" "${CMAKE_BINARY_DIR}/${PROJECT_FOLDER}/Data"
   )
 endif()

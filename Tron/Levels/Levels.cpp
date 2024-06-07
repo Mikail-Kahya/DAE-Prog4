@@ -1,5 +1,9 @@
 #include "Levels.h"
 
+#include <fstream>
+#include <iostream>
+#include <SDL_image.h>
+
 #include "MkUltra.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
@@ -35,8 +39,7 @@ GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::stri
 GameObject* LoadEnemy(Scene& scene);
 void LoadHud(Scene& scene, const std::vector<GameObject*>& players);
 void LoadInfo(Scene& scene);
-void LoadLevel(Scene& scene, int screenWidth, int screenHeight);
-void LoadWall(Scene& scene, const glm::vec2& position, const glm::vec2& boxExtent);
+void LoadLevel(Scene& scene, int width, int height, const glm::vec2& center);
 
 void mk::LoadMainGame(Scene& scene)
 {
@@ -58,7 +61,7 @@ void mk::LoadMainGame(Scene& scene)
 	LoadHud(scene, players);
 	LoadInfo(scene);
 	LoadEnemy(scene);
-	LoadLevel(scene, screenWidth, screenHeight);
+	LoadLevel(scene, screenWidth, screenHeight, { screenWidth / 2, screenHeight / 2 });
 }
 
 GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos)
@@ -118,7 +121,6 @@ GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& s
 	map.AddMapping(right, inputManager.AddCommand<MoveCommand>(tankPtr, glm::vec2{ 1, 0 }));
 	map.AddMapping(left, inputManager.AddCommand<MoveCommand>(tankPtr, glm::vec2{ -1, 0 }));
 
-
 	constexpr float rotateSpeed{ 50.f };
 	map.AddMapping(fire, inputManager.AddCommand<FireCommand>(gunPtr));
 	map.AddMapping(rotateLeft, inputManager.AddCommand<RotateCommand>(gunPtr, rotateSpeed, 1));
@@ -170,27 +172,52 @@ void LoadInfo(Scene& scene)
 	padKeyboardText->AddComponent<TextComponent>("Use D-PAD to move, RIGHT BUMPER to fire, X and B to turn cannon", "Lingua.otf", 20)->SetAnchor({ 0.5f,0.5f });
 }
 
-void LoadLevel(Scene& scene, int screenWidth, int screenHeight)
+void LoadLevel(Scene& scene, int, int, const glm::vec2&)
 {
-	GameObject* bg = scene.SpawnObject("background");
-	bg->SetStatic(true);
-	bg->SetLocalDepth(-10.f);
-	RenderComponent* spriteCompPtr = bg->AddComponent<RenderComponent>("level.png");
-	spriteCompPtr->SetWidth(static_cast<float>(screenWidth));
-	spriteCompPtr->SetHeight(static_cast<float>(screenHeight));
-	//spritePtr->SetAnchor({ 0.5f, 0.5f });
+	Texture2D* bgTexturePtr = ResourceManager::GetInstance().LoadTexture("MapBackground.png");
 
-}
+	SDL_Surface* surfacePtr = IMG_Load("./Data/Level00.png");
 
-void LoadWall(Scene& scene, const glm::vec2& position, const glm::vec2& boxExtent)
-{
-	GameObject* obstacle = scene.SpawnObject("");
-	obstacle->SetLocalPosition(position);
-	obstacle->SetStatic(true);
+	constexpr float tileSize{ 16 };
+	uint8_t* pixels = static_cast<uint8_t*>(surfacePtr->pixels);
+	// set pixels to solid white
+	for (int row{}; row < surfacePtr->h; ++row)
+	{
+		for (int col{}; col < surfacePtr->w; ++col) 
+		{
+			// surface height - row to read from bottom to top
+			const int pixelIdx{ ((surfacePtr->h - row) * surfacePtr->w + col) * surfacePtr->format->BytesPerPixel }; 
+			uint8_t color = pixels[pixelIdx];
 
-	BoxColliderComponent* colliderPtr = obstacle->AddComponent<BoxColliderComponent>();
-	colliderPtr->SetExtent(boxExtent);
+			if (color == 0)
+				continue;
 
+			const glm::vec2 pos{ tileSize / 2 + col * tileSize, tileSize / 2 + row * tileSize };
+			const glm::vec2 size{ tileSize, tileSize };
+
+			const glm::vec2 srcPos{ col * tileSize, row * tileSize };
+			const glm::vec2 srcSize{ tileSize, tileSize };
+
+			GameObject* obstacle = scene.SpawnObject("");
+			obstacle->SetLocalDepth(-10.f);
+			obstacle->SetLocalPosition(pos);
+			obstacle->SetStatic(true);
+
+			RenderComponent* spriteCompPtr = obstacle->AddComponent<RenderComponent>(bgTexturePtr);
+			spriteCompPtr->SetWidth(size.x);
+			spriteCompPtr->SetHeight(size.y);
+			spriteCompPtr->SetAnchor({ 0.5f, 0.5f });
+			spriteCompPtr->SetSrcPosition(srcPos);
+			spriteCompPtr->SetSrcSize(srcSize);
+
+			BoxColliderComponent* colliderPtr = obstacle->AddComponent<BoxColliderComponent>();
+			colliderPtr->SetExtent(size * 0.5f);
+		}
+
+		std::cout << std::endl;
+	}
+
+	SDL_FreeSurface(surfacePtr);
 }
 
 GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::string& name)

@@ -5,12 +5,12 @@
 #include <windows.h>
 #endif
 
-#ifndef NDEBUG
-// ReSharper disable once CppUnusedIncludeDirective
-#if __has_include(<vld.h>)
-#include <vld.h>
-#endif
-#endif
+//#ifndef NDEBUG
+//// ReSharper disable once CppUnusedIncludeDirective
+//#if __has_include(<vld.h>)
+//#include <vld.h>
+//#endif
+//#endif
 
 #include "MkUltra.h"
 #include "SceneManager.h"
@@ -36,9 +36,9 @@ int main(int, char*[]) {
 #else
 	fs::path data_location = "./Data/";
 	if(!fs::exists(data_location))
-		data_location = "../Data/";
+		data_location = "./Data/";
 #endif
-	MkUltra engine(data_location);
+	MkUltra engine(data_location, 480, 480);
 	ServiceLocator::SetDefaultDataPath(data_location.string());
 	ServiceLocator::RegisterSoundSystem<DefaultSoundSystem>();
 	engine.Run(load);
