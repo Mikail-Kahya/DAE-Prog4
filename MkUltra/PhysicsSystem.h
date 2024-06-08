@@ -42,7 +42,7 @@ namespace mk
 		void UnRegisterCollider(BoxColliderComponent* colliderPtr);
 
 	private:
-		using Collider = std::pair < BoxColliderComponent*, PhysicsInfo>;
+		using Collider = std::pair<BoxColliderComponent*, PhysicsInfo>;
 
 		PhysicsSystem() = default;
 
@@ -52,7 +52,8 @@ namespace mk
 
 		static PhysicsInfo GetPhysicsInfo(const BoxColliderComponent* colliderPtr);
 		static bool IsOverlapping(const PhysicsInfo& a, const PhysicsInfo& b);
-		static CollisionInfo GetCollisionInfo(const Collider& a, const Collider& b);
+		static CollisionInfo SweepCollider(const Collider& a, const Collider& b);
+		static CollisionInfo ResolveCollider(const Collider& a, const Collider& b);
 		static void GetVertices(const glm::vec2& position, const glm::vec2& boxExtent, std::vector<glm::vec2>& vertices);
 		static BoxBounds GetMinMax(const PhysicsInfo& info);
 

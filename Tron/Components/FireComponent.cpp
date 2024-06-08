@@ -35,7 +35,7 @@ void FireComponent::Fire() const
 	spriteCompPtr->SetAnchor({ 0.5f, 0.5f });
 
 	BoxColliderComponent* colliderCompPtr{ bulletPtr->AddComponent<BoxColliderComponent>() };
-	colliderCompPtr->SetExtent({ spriteCompPtr->GetTexture()->GetSize()  });
+	colliderCompPtr->SetExtent( spriteCompPtr->GetTexture()->GetSize() / 2);
 	colliderCompPtr->Ignore(GetOwner());
 	colliderCompPtr->Ignore(GetOwner()->GetParent());
 	colliderCompPtr->SetCollision(CollisionSettings{ CollisionType::block, CollisionType::overlap });

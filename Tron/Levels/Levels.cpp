@@ -38,10 +38,11 @@ constexpr float TILE_SIZE{ 16 };
 
 GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos);
 GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::string& name);
-GameObject* LoadEnemy(Scene& scene);
+GameObject* LoadEnemy(Scene& scene, const glm::vec2& pos);
 void LoadHud(Scene& scene, const std::vector<GameObject*>& players);
 void LoadInfo(Scene& scene);
-void LoadLevel(Scene& scene, int width, int height, const glm::vec2& center);
+void LoadLevel(Scene& scene);
+void LoadTile(Scene& scene, float width, float height, const glm::vec2& bottomLeft);
 
 void mk::LoadMainGame(Scene& scene)
 {
@@ -49,6 +50,7 @@ void mk::LoadMainGame(Scene& scene)
 	const int screenWidth{ renderer.GetWidth() };
 	const int screenHeight{ renderer.GetHeight() };
 
+	LoadLevel(scene);
 
 	GameObject* fps = scene.SpawnObject("fps");
 	fps->SetLocalPosition({ 0, 0.95f * screenHeight });
@@ -56,14 +58,12 @@ void mk::LoadMainGame(Scene& scene)
 	fpsComponent->SetUpdateDelay(0.5f);
 
 	const std::vector players{
-		LoadPlayer(scene, "Player1", { 100.f, 100.f }),
-		LoadPlayer(scene, "Player2", {  -100.f + screenWidth, 100.f })
+		LoadPlayer(scene, "Player1", { screenWidth/2, screenHeight/2 }),
+		//LoadPlayer(scene, "Player2", {  -100.f + screenWidth, 100.f })
 	};
 	//players[1]->SetStatic(true);
 	LoadHud(scene, players);
 	LoadInfo(scene);
-	LoadEnemy(scene);
-	LoadLevel(scene, screenWidth, screenHeight, { screenWidth / 2, screenHeight / 2 });
 }
 
 GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos)
@@ -174,13 +174,29 @@ void LoadInfo(Scene& scene)
 	padKeyboardText->AddComponent<TextComponent>("Use D-PAD to move, RIGHT BUMPER to fire, X and B to turn cannon", "Lingua.otf", 20)->SetAnchor({ 0.5f,0.5f });
 }
 
-void LoadLevel(Scene& scene, int, int, const glm::vec2&)
+void LoadTile(Scene& scene, float width, float height, const glm::vec2& bottomLeft)
 {
-	Texture2D* bgTexturePtr = ResourceManager::GetInstance().LoadTexture("MapBackground.png");
+	const glm::vec2 halfSize{ width * 0.5f, height * 0.5f };
 
+	GameObject* obstacle = scene.SpawnObject("");
+	obstacle->SetLocalDepth(-10.f);
+	obstacle->SetLocalPosition(bottomLeft + halfSize);
+	obstacle->SetStatic(true);
+
+	RenderComponent* spriteCompPtr = obstacle->AddComponent<RenderComponent>("MapBackground.png");
+	spriteCompPtr->SetWidth(width);
+	spriteCompPtr->SetHeight(height);
+	spriteCompPtr->SetAnchor({ 0.5f, 0.5f });
+	spriteCompPtr->SetSrcPosition(bottomLeft);
+	spriteCompPtr->SetSrcSize(glm::vec2{ width, height });
+
+	BoxColliderComponent* colliderPtr = obstacle->AddComponent<BoxColliderComponent>();
+	colliderPtr->SetExtent(halfSize);
+}
+
+void LoadLevel(Scene& scene)
+{
 	SDL_Surface* surfacePtr = IMG_Load("./Data/Level00.png");
-
-	
 	uint8_t* pixels = static_cast<uint8_t*>(surfacePtr->pixels);
 	// set pixels to solid white
 	for (int row{}; row < surfacePtr->h; ++row)
@@ -188,35 +204,19 @@ void LoadLevel(Scene& scene, int, int, const glm::vec2&)
 		for (int col{}; col < surfacePtr->w; ++col) 
 		{
 			// surface height - row to read from bottom to top
-			const int pixelIdx{ ((surfacePtr->h - row) * surfacePtr->w + col) * surfacePtr->format->BytesPerPixel }; 
-			uint8_t color = pixels[pixelIdx];
+			const int pixelIdx{ ((surfacePtr->h - row - 1) * surfacePtr->w + col) * surfacePtr->format->BytesPerPixel };
+			uint8_t r = pixels[pixelIdx];
+			uint8_t g = pixels[pixelIdx + 1];
+			//uint8_t b = pixels[pixelIdx + 2];
 
-			if (color < 120)
-				continue;
+			const glm::vec2 pos{ col * TILE_SIZE, row * TILE_SIZE };
 
-			const glm::vec2 pos{ TILE_SIZE / 2 + col * TILE_SIZE, TILE_SIZE / 2 + row * TILE_SIZE };
-			const glm::vec2 size{ TILE_SIZE, TILE_SIZE };
+			if (g == 255)
+				LoadTile(scene, TILE_SIZE, TILE_SIZE, pos);
+			if (r == 255)
+				LoadEnemy(scene, pos);
 
-			const glm::vec2 srcPos{ col * TILE_SIZE, row * TILE_SIZE };
-			const glm::vec2 srcSize{ TILE_SIZE, TILE_SIZE };
-
-			GameObject* obstacle = scene.SpawnObject("");
-			obstacle->SetLocalDepth(-10.f);
-			obstacle->SetLocalPosition(pos);
-			obstacle->SetStatic(true);
-
-			RenderComponent* spriteCompPtr = obstacle->AddComponent<RenderComponent>(bgTexturePtr);
-			spriteCompPtr->SetWidth(size.x);
-			spriteCompPtr->SetHeight(size.y);
-			spriteCompPtr->SetAnchor({ 0.5f, 0.5f });
-			spriteCompPtr->SetSrcPosition(srcPos);
-			spriteCompPtr->SetSrcSize(srcSize);
-
-			BoxColliderComponent* colliderPtr = obstacle->AddComponent<BoxColliderComponent>();
-			colliderPtr->SetExtent(size * 0.5f);
 		}
-
-		std::cout << std::endl;
 	}
 
 	SDL_FreeSurface(surfacePtr);
@@ -232,7 +232,7 @@ GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::stri
 	spriteCompPtr->SetWidth(TILE_SIZE * 2);
 	spriteCompPtr->SetHeight(TILE_SIZE * 2);
 
-	constexpr glm::vec2 tankSize{ TILE_SIZE * 0.9f, TILE_SIZE * 0.9f };
+	constexpr glm::vec2 tankSize{ TILE_SIZE * 0.8f, TILE_SIZE * 0.8f };
 
 	tank->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
 
@@ -251,10 +251,10 @@ GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::stri
 	return tank;
 }
 
-GameObject* LoadEnemy(Scene& scene)
+GameObject* LoadEnemy(Scene& scene, const glm::vec2& pos)
 {
 	GameObject* enemyPtr{ LoadTank(scene, "Blue", "Enemy") };
-	enemyPtr->SetLocalPosition({ 100, 300 });
+	enemyPtr->SetLocalPosition(pos + glm::vec2{ TILE_SIZE });
 
 	BoxColliderComponent* colliderPtr{ enemyPtr->GetComponent<BoxColliderComponent>() };
 

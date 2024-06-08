@@ -64,7 +64,9 @@ void Rotate::OnEnter()
 void Rotate::OnExit()
 {
 	GameObjectState::OnExit();
-	GetOwner()->SetRotation(std::fmod(GetOwner()->GetRotation(), 360.f));
+	float rotation{ GetOwner()->GetRotation() };
+	rotation -= std::fmod(m_Rotation, 90.f);
+	GetOwner()->SetRotation(rotation);
 }
 
 void Rotate::Update()

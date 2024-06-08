@@ -85,10 +85,10 @@ void PhysicsSystem::HandleCollision() const
 				continue;
 
 			if (!isFirstIgnoring && !firstCollider.first->GetOwner()->IsStatic())
-				firstCollider.first->Collide(GetCollisionInfo(firstCollider, secondCollider));
+				firstCollider.first->Collide(SweepCollider(firstCollider, secondCollider));
 
 			if (!isSecondIgnoring && !secondCollider.first->GetOwner()->IsStatic())
-				secondCollider.first->Collide(GetCollisionInfo(secondCollider, firstCollider));
+				secondCollider.first->Collide(SweepCollider(secondCollider, firstCollider));
 		}
 	}
 }
@@ -130,7 +130,7 @@ bool PhysicsSystem::IsOverlapping(const PhysicsInfo& a, const PhysicsInfo& b)
 	return true;
 }
 
-CollisionInfo PhysicsSystem::GetCollisionInfo(const Collider& a, const Collider& b)
+CollisionInfo PhysicsSystem::SweepCollider(const Collider& a, const Collider& b)
 {
 	const glm::vec2 displacement{ a.second.position - a.second.prevPos };
 
@@ -202,44 +202,53 @@ CollisionInfo PhysicsSystem::GetCollisionInfo(const Collider& a, const Collider&
 	result.remainingTime = Time().deltaTime - result.entryTime;
 
 	return result;
+}
+
+CollisionInfo PhysicsSystem::ResolveCollider(const Collider& a, const Collider& b)
+{
+	CollisionInfo result{};
+	//result.distance = FLT_MAX;
+	result.preCollisionPos = a.second.position;
+	result.hitCompPtr = b.first;
+	result.velocity = {};
 
 	// Math help https://imois.in/posts/line-intersections-with-cross-products/
-	//std::vector<glm::vec2> vertices{};
-	//GetVertices(b.second.position, b.second.boxExtent, vertices);
-	//
-	//const glm::vec2 ray{ b.second.position - a.second.position };
-	//const glm::vec3 pos{ a.second.position, 1 };
-	//const glm::vec3 end{ b.second.position, 1 };
-	//constexpr int nrVertices{ 4 };
-	//for (int idx{}; idx < nrVertices; ++idx)
-	//{
-	//	const glm::vec2& p1{ vertices[idx] };
-	//	const glm::vec2& p2{ vertices[(idx + 1) % nrVertices] };
-	//	const glm::vec2 edge{ p2 - p1 };
-	//
-	//	// place lines in projection space
-	//	const glm::vec3 line1{ glm::cross(glm::vec3{p1, 1}, glm::vec3{p2,1}) };
-	//	const glm::vec3 line2{ glm::cross(pos, end) };
-	//	const glm::vec3 solution{ glm::cross(line1, line2) };
-	//	const glm::vec2 intersection{ solution.x / solution.z, solution.y / solution.z };
-	//	if (solution.z < FLT_EPSILON)
-	//		continue;
-	//
-	//	// check if point isn't to out of vertices on the line
-	//	const glm::vec2 intersectToP1{ p1 - intersection };
-	//	if (glm::cross(glm::vec3{ ray, 0 }, glm::vec3{ intersectToP1, 0 }).z < 0) // < 0 is to the left of P1
-	//		continue;
-	//
-	//	const glm::vec2 intersectToP2{ p2 - intersection };
-	//	if (glm::cross(glm::vec3{ ray, 0 }, glm::vec3{ intersectToP2, 0 }).z > 0) // > 0 is to the right of P2
-	//		continue;
-	//
-	//	result.intersectionPoint = intersection;
-	//	result.distance = glm::distance(a.second.position, result.intersectionPoint);
-	//	result.impactNormal = glm::normalize(glm::cross(glm::vec3{ edge, 0 }, glm::vec3{ 0, 0, 1 }));
-	//}
-	//
-	//return result;
+	std::vector<glm::vec2> vertices{};
+	GetVertices(b.second.position, b.second.boxExtent, vertices);
+
+	glm::vec2 finalIntersection{};
+	const glm::vec2 ray{ b.second.position - a.second.position };
+	const glm::vec3 pos{ a.second.position, 1 };
+	const glm::vec3 end{ b.second.position, 1 };
+	constexpr int nrVertices{ 4 };
+	for (int idx{}; idx < nrVertices; ++idx)
+	{
+		const glm::vec2& p1{ vertices[idx] };
+		const glm::vec2& p2{ vertices[(idx + 1) % nrVertices] };
+		const glm::vec2 edge{ p2 - p1 };
+	
+		// place lines in projection space
+		const glm::vec3 line1{ glm::cross(glm::vec3{p1, 1}, glm::vec3{p2,1}) };
+		const glm::vec3 line2{ glm::cross(pos, end) };
+		const glm::vec3 solution{ glm::cross(line1, line2) };
+		const glm::vec2 intersection{ solution.x / solution.z, solution.y / solution.z };
+		if (solution.z < FLT_EPSILON)
+			continue;
+	
+		// check if point isn't to out of vertices on the line
+		const glm::vec2 intersectToP1{ p1 - intersection };
+		if (glm::cross(glm::vec3{ ray, 0 }, glm::vec3{ intersectToP1, 0 }).z < 0) // < 0 is to the left of P1
+			continue;
+	
+		const glm::vec2 intersectToP2{ p2 - intersection };
+		if (glm::cross(glm::vec3{ ray, 0 }, glm::vec3{ intersectToP2, 0 }).z > 0) // > 0 is to the right of P2
+			continue;
+	
+		finalIntersection = intersection;
+		result.impactNormal = glm::normalize(glm::cross(glm::vec3{ edge, 0 }, glm::vec3{ 0, 0, 1 }));
+	}
+	
+	return result;
 }
 
 void PhysicsSystem::GetVertices(const glm::vec2& position, const glm::vec2& boxExtent, std::vector<glm::vec2>& vertices)
