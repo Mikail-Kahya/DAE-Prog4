@@ -4,7 +4,7 @@
 
 namespace mk
 {
-	struct PlayerDiedEvent;
+	struct ObjectDiedEvent;
 	class TextComponent;
 
 	class ScoreComponent : public IComponent, public IObserver, public ISubject
@@ -23,7 +23,7 @@ namespace mk
 		void OnNotify(ISubject* subjectPtr, IEvent* event) override;
 
 	private:
-		void AddScore(const PlayerDiedEvent* event);
+		void AddScore(const ObjectDiedEvent* event);
 
 		int m_Score{};
 		TextComponent* m_TextComponentPtr{};

@@ -42,11 +42,11 @@ void HealthComponent::Hit()
 
 	if (IsDead())
 	{
-		Notify(std::make_unique<PlayerDiedEvent>(100));
+		Notify(std::make_unique<ObjectDiedEvent>(100));
 		Reset();
 	}
 
-	Notify(std::make_unique<PlayerDamageTakenEvent>(m_Health));
+	Notify(std::make_unique<DamageTakenEvent>(m_Health));
 }
 
 void HealthComponent::Reset()

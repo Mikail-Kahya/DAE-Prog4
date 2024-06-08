@@ -17,6 +17,6 @@ void HealthBarComponent::OnNotify(ISubject* subjectPtr, IEvent* event)
 {
 	IObserver::OnNotify(subjectPtr, event);
 
-	if (PlayerDamageTakenEvent* damageEvent = dynamic_cast<PlayerDamageTakenEvent*>(event))
+	if (DamageTakenEvent* damageEvent = dynamic_cast<DamageTakenEvent*>(event))
 		m_TextCompPtr->SetText("Health: " + std::to_string(damageEvent->health));
 }

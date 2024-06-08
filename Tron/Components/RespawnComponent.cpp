@@ -14,7 +14,7 @@ void RespawnComponent::OnNotify(ISubject* subjectPtr, IEvent* event)
 {
 	IObserver::OnNotify(subjectPtr, event);
 
-	if (dynamic_cast<PlayerDiedEvent*>(event))
+	if (dynamic_cast<ObjectDiedEvent*>(event))
 		Respawn();
 }
 

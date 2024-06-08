@@ -19,6 +19,7 @@
 #include "StateComponent.h"
 
 #include "Behavior/EnemyStates.h"
+#include "Components/DeathComponent.h"
 
 #include "Components/MovementComponent.h"
 #include "Components/ScoreComponent.h"
@@ -47,23 +48,16 @@ void LoadTile(Scene& scene, float width, float height, const glm::vec2& bottomLe
 void mk::LoadMainGame(Scene& scene)
 {
 	const Renderer& renderer{ Renderer::GetInstance() };
-	const int screenWidth{ renderer.GetWidth() };
 	const int screenHeight{ renderer.GetHeight() };
 
 	LoadLevel(scene);
+	LoadInfo(scene);
 
 	GameObject* fps = scene.SpawnObject("fps");
 	fps->SetLocalPosition({ 0, 0.95f * screenHeight });
 	auto fpsComponent = fps->AddComponent<FPSComponent>();
 	fpsComponent->SetUpdateDelay(0.5f);
 
-	const std::vector players{
-		LoadPlayer(scene, "Player1", { screenWidth/2, screenHeight/2 }),
-		//LoadPlayer(scene, "Player2", {  -100.f + screenWidth, 100.f })
-	};
-	//players[1]->SetStatic(true);
-	LoadHud(scene, players);
-	LoadInfo(scene);
 }
 
 GameObject* LoadPlayer(Scene& scene, const std::string& name, const glm::vec2& startPos)
@@ -198,7 +192,10 @@ void LoadLevel(Scene& scene)
 {
 	SDL_Surface* surfacePtr = IMG_Load("./Data/Level00.png");
 	uint8_t* pixels = static_cast<uint8_t*>(surfacePtr->pixels);
-	// set pixels to solid white
+
+
+	std::vector<glm::vec2> playerSpawns{};
+	std::vector<GameObject*> enemies{};
 	for (int row{}; row < surfacePtr->h; ++row)
 	{
 		for (int col{}; col < surfacePtr->w; ++col) 
@@ -207,19 +204,21 @@ void LoadLevel(Scene& scene)
 			const int pixelIdx{ ((surfacePtr->h - row - 1) * surfacePtr->w + col) * surfacePtr->format->BytesPerPixel };
 			uint8_t r = pixels[pixelIdx];
 			uint8_t g = pixels[pixelIdx + 1];
-			//uint8_t b = pixels[pixelIdx + 2];
+			uint8_t b = pixels[pixelIdx + 2];
 
 			const glm::vec2 pos{ col * TILE_SIZE, row * TILE_SIZE };
 
 			if (g == 255)
 				LoadTile(scene, TILE_SIZE, TILE_SIZE, pos);
 			if (r == 255)
-				LoadEnemy(scene, pos);
-
+				enemies.emplace_back(LoadEnemy(scene, pos));
+			if (b == 255)
+				playerSpawns.emplace_back(pos + glm::vec2{ TILE_SIZE });
 		}
 	}
-
 	SDL_FreeSurface(surfacePtr);
+
+	LoadPlayer(scene, "Player1", playerSpawns[rand() % playerSpawns.size()]);
 }
 
 GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::string& name)
@@ -232,7 +231,7 @@ GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::stri
 	spriteCompPtr->SetWidth(TILE_SIZE * 2);
 	spriteCompPtr->SetHeight(TILE_SIZE * 2);
 
-	constexpr glm::vec2 tankSize{ TILE_SIZE * 0.8f, TILE_SIZE * 0.8f };
+	constexpr glm::vec2 tankSize{ TILE_SIZE * 0.7f };
 
 	tank->AddComponent<MovementComponent>(50.f, 10.f, 50.f, 50.f);
 
@@ -247,6 +246,8 @@ GameObject* LoadTank(Scene& scene, const std::string& tankColor, const std::stri
 	spriteCompPtr = gun->AddComponent<RenderComponent>(tankColor + "TankGun.png");
 	spriteCompPtr->SetAnchor({ 0.5f,0.5f });
 	gun->AddComponent<FireComponent>(20.f);
+
+	tank->AddComponent<HealthComponent>(3, 3);
 
 	return tank;
 }
@@ -265,5 +266,9 @@ GameObject* LoadEnemy(Scene& scene, const glm::vec2& pos)
 	statePtr->AddState("targetPlayer", std::make_unique<TargetPlayer>());
 	statePtr->AddState("rotate", std::make_unique<Rotate>(90.f));
 	statePtr->AddState("moveBack", std::make_unique<MoveBackFromWall>());
+
+	HealthComponent* healthCompPtr = enemyPtr->GetComponent<HealthComponent>();
+	healthCompPtr->AddObserver(enemyPtr->AddComponent<DeathComponent>());
+
 	return enemyPtr;
 }

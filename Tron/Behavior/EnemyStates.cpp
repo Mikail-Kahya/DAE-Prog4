@@ -36,6 +36,12 @@ void MoveBackFromWall::Start()
 	m_MovementPtr = GetOwner()->GetComponent<MovementComponent>();
 }
 
+void MoveBackFromWall::OnEnter()
+{
+	GameObjectState::OnEnter();
+	m_Timer = 0;
+}
+
 void MoveBackFromWall::Update()
 {
 	GameObjectState::Update();

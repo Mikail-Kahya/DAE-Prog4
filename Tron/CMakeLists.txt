@@ -24,6 +24,7 @@ add_executable(${PROJECT_NAME}
   "Components/HealthBarComponent.cpp"
   "Components/SensorComponent.cpp"
   "Components/BounceComponent.cpp" 
+  "Components/DeathComponent.cpp" 
 
   "Behavior/EnemyStates.cpp"
  "Levels/Levels.cpp"

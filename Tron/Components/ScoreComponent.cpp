@@ -18,11 +18,11 @@ void ScoreComponent::OnNotify(ISubject* subjectPtr, IEvent* event)
 {
 	IObserver::OnNotify(subjectPtr, event);
 
-	if (PlayerDiedEvent* diedEvent = dynamic_cast<PlayerDiedEvent*>(event))
+	if (ObjectDiedEvent* diedEvent = dynamic_cast<ObjectDiedEvent*>(event))
 		AddScore(diedEvent);
 }
 
-void ScoreComponent::AddScore(const PlayerDiedEvent* event)
+void ScoreComponent::AddScore(const ObjectDiedEvent* event)
 {
 	m_Score += event->score;
 	m_TextComponentPtr->SetText("Score: " + std::to_string(m_Score));

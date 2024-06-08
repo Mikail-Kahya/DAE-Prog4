@@ -41,12 +41,13 @@ namespace mk
 
 		void Start() override;
 
+		void OnEnter() override;
 		void Update() override;
 		std::string TransitionState() override;
 
 	private:
 		MovementComponent* m_MovementPtr{};
-		inline static constexpr float m_MoveTime{ 0.5f };
+		inline static constexpr float m_MoveTime{ 0.05f };
 		float m_Timer{};
 	};
 

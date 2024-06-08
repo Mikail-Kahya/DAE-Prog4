@@ -4,26 +4,26 @@
 
 namespace mk
 {
-	struct PlayerDamageTakenEvent : public IEvent
+	struct DamageTakenEvent : public IEvent
 	{
-		PlayerDamageTakenEvent(int _health) : health{ _health } {}
-		virtual ~PlayerDamageTakenEvent()	= default;
-		PlayerDamageTakenEvent(const PlayerDamageTakenEvent& other)					= delete;
-		PlayerDamageTakenEvent(PlayerDamageTakenEvent&& other) noexcept				= delete;
-		PlayerDamageTakenEvent& operator=(const PlayerDamageTakenEvent& other)		= delete;
-		PlayerDamageTakenEvent& operator=(PlayerDamageTakenEvent&& other) noexcept	= delete;
+		DamageTakenEvent(int _health) : health{ _health } {}
+		virtual ~DamageTakenEvent()	= default;
+		DamageTakenEvent(const DamageTakenEvent& other)					= delete;
+		DamageTakenEvent(DamageTakenEvent&& other) noexcept				= delete;
+		DamageTakenEvent& operator=(const DamageTakenEvent& other)		= delete;
+		DamageTakenEvent& operator=(DamageTakenEvent&& other) noexcept	= delete;
 
 		int health{};
 	};
 
-	struct PlayerDiedEvent : public IEvent
+	struct ObjectDiedEvent : public IEvent
 	{
-		PlayerDiedEvent(int _score) : score{ _score } {}
-		virtual ~PlayerDiedEvent()	= default;
-		PlayerDiedEvent(const PlayerDiedEvent& other)					= delete;
-		PlayerDiedEvent(PlayerDiedEvent&& other) noexcept				= delete;
-		PlayerDiedEvent& operator=(const PlayerDiedEvent& other)		= delete;
-		PlayerDiedEvent& operator=(PlayerDiedEvent&& other) noexcept	= delete;
+		ObjectDiedEvent(int _score) : score{ _score } {}
+		virtual ~ObjectDiedEvent()	= default;
+		ObjectDiedEvent(const ObjectDiedEvent& other)					= delete;
+		ObjectDiedEvent(ObjectDiedEvent&& other) noexcept				= delete;
+		ObjectDiedEvent& operator=(const ObjectDiedEvent& other)		= delete;
+		ObjectDiedEvent& operator=(ObjectDiedEvent&& other) noexcept	= delete;
 
 		int score{};
 	};

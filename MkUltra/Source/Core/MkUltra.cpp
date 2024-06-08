@@ -84,6 +84,7 @@ mk::MkUltra::~MkUltra()
 
 void mk::MkUltra::Run(const std::function<void()>& load)
 {
+	std::srand(static_cast<int>(std::time(0)));
 	load();
 
 	// Setup of timing
