@@ -24,13 +24,18 @@ namespace mk
 
 		void Start() override;
 
+		void FixedUpdate() override;
+
 		void OnNotify(ISubject* subjectPtr, IEvent* event) override;
 
 	private:
 		void Bounce(BlockEvent* event);
 
+		static constexpr float BOUNCE_IMMUNITY{ 0.05f };
+
 		MovementComponent* m_MoveCompPtr{};
 		const int m_MaxNrBounces{};
 		int m_NrBounces{};
+		float m_Timer{};
 	};
 }

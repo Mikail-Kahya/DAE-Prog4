@@ -32,6 +32,9 @@ void PhysicsSystem::DrawDebug() const
 
 void PhysicsSystem::Update()
 {
+	if (m_PhysicsBuffer.empty())
+		return;
+
 	UpdateInformation();
 	HandleCollision();
 	UpdatePrevPositions();

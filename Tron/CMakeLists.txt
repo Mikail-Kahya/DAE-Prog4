@@ -28,7 +28,7 @@ add_executable(${PROJECT_NAME}
 
   "Behavior/EnemyStates.cpp"
  "Levels/Levels.cpp"
- "Events/Events.h")
+ "Events/Events.h" "Behavior/MenuStates.h" "Behavior/MenuStates.cpp")
 
 set(VLD_DIR "$ENV{ProgramFiles\(x86\)}/Visual Leak Detector")
   IF(EXISTS ${VLD_DIR})

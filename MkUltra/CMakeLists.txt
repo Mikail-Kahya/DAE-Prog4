@@ -58,7 +58,7 @@ add_library(${ENGINE_NAME} STATIC
   "ISoundSystem.h"
   "NullSoundSystem.h"
   "Source/Sound/DefaultSoundSystem.cpp"
-  )
+   )
 
 # enable c++20 features
 target_compile_features(${ENGINE_NAME} PUBLIC cxx_std_20)

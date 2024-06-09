@@ -1,7 +1,5 @@
 #include "Levels.h"
 
-#include <fstream>
-#include <iostream>
 #include <SDL_image.h>
 
 #include "MkUltra.h"
@@ -34,6 +32,52 @@
 
 
 using namespace mk;
+
+GameObject* LoadButton(Scene& scene, const std::string& buttonText, const glm::vec2& pos, float width, float height);
+
+void mk::LoadGameMenu(Scene& scene)
+{
+	const Renderer& renderer{ Renderer::GetInstance() };
+	const int screenHeight{ renderer.GetHeight() };
+	const int screenWidth{ renderer.GetWidth() };
+
+	GameObject* titlePtr{ scene.SpawnObject("Title") };
+	titlePtr->SetLocalPosition({ screenWidth / 2, screenHeight * 0.7f });
+
+	TextComponent* textPtr = titlePtr->AddComponent<TextComponent>("TRON");
+	textPtr->SetColor(Color{ 255,255,255,255 });
+	textPtr->SetAnchor(glm::vec2{ 0.5f });
+	textPtr->SetFont("Lingua.otf", 80);
+
+	constexpr float buttonWidth{ 100.f };
+	constexpr float buttonHeight{ buttonWidth * 0.5f };
+	LoadButton(scene, "Start", glm::vec2{ screenWidth / 2, screenHeight * 0.52f }, buttonWidth, buttonHeight);
+	LoadButton(scene, "Versus", glm::vec2{ screenWidth / 2, screenHeight * 0.4f }, buttonWidth, buttonHeight);
+
+	//GameObject* menuStateSwitcher{ scene.SpawnObject("Menu state") };
+	//menuStateSwitcher->AddComponent<StateComponent>();
+}
+
+GameObject* LoadButton(Scene& scene, const std::string& buttonText, const glm::vec2& pos, float width, float height)
+{
+	GameObject* buttonPtr{ scene.SpawnObject("Button") };
+	buttonPtr->SetLocalPosition(pos);
+	RenderComponent* bgCompPtr{ buttonPtr->AddComponent<RenderComponent>("Button.png") };
+	bgCompPtr->SetAnchor(glm::vec2{ 0.5f });
+	bgCompPtr->SetWidth(width);
+	bgCompPtr->SetHeight(height);
+
+	GameObject* buttonTextPtr{ scene.SpawnObject("ButtonText") };
+	buttonTextPtr->SetParent(buttonPtr);
+	TextComponent* textPtr = buttonTextPtr->AddComponent<TextComponent>(buttonText);
+	textPtr->SetColor(Color{ 255,255,255,255 });
+	textPtr->SetAnchor(glm::vec2{ 0.5f });
+	textPtr->SetFont("Lingua.otf", 20);
+
+	return buttonPtr;
+}
+
+
 
 constexpr float TILE_SIZE{ 16 };
 
@@ -157,15 +201,15 @@ void LoadHud(Scene& scene, const std::vector<GameObject*>& players)
 
 void LoadInfo(Scene& scene)
 {
-	const float screenCenter{ 0.5f * Renderer::GetInstance().GetWidth() };
+	constexpr float left{ 100 };
 
 	GameObject* controlsKeyboardText{ scene.SpawnObject("FireText") };
-	controlsKeyboardText->SetLocalPosition({ screenCenter , 370.f });
-	controlsKeyboardText->AddComponent<TextComponent>("Use WASD to move, SPACE to fire, Q and E to turn cannon", "Lingua.otf", 20)->SetAnchor({ 0.5f,0.5f });
+	controlsKeyboardText->SetLocalPosition({ left , 465.f });
+	controlsKeyboardText->AddComponent<TextComponent>("Use WASD to move, SPACE to fire, Q and E to turn cannon", "Lingua.otf", 10);
 
 	GameObject* padKeyboardText{ scene.SpawnObject("FireText") };
-	padKeyboardText->SetLocalPosition({ screenCenter, 400.f });
-	padKeyboardText->AddComponent<TextComponent>("Use D-PAD to move, RIGHT BUMPER to fire, X and B to turn cannon", "Lingua.otf", 20)->SetAnchor({ 0.5f,0.5f });
+	padKeyboardText->SetLocalPosition({ left, 455.f });
+	padKeyboardText->AddComponent<TextComponent>("Use D-PAD to move, RIGHT BUMPER to fire, X and B to turn cannon", "Lingua.otf", 10);
 }
 
 void LoadTile(Scene& scene, float width, float height, const glm::vec2& bottomLeft)
@@ -196,6 +240,7 @@ void LoadLevel(Scene& scene)
 
 	std::vector<glm::vec2> playerSpawns{};
 	std::vector<GameObject*> enemies{};
+
 	for (int row{}; row < surfacePtr->h; ++row)
 	{
 		for (int col{}; col < surfacePtr->w; ++col) 
@@ -217,6 +262,18 @@ void LoadLevel(Scene& scene)
 		}
 	}
 	SDL_FreeSurface(surfacePtr);
+
+	// Ignore each other -> fix by using layers
+	for (auto enemyPtr : enemies)
+	{
+		for (auto otherEnemyPtr : enemies)
+		{
+			if (enemyPtr == otherEnemyPtr)
+				continue;
+
+			enemyPtr->GetComponent<BoxColliderComponent>()->Ignore(otherEnemyPtr);
+		}
+	}
 
 	LoadPlayer(scene, "Player1", playerSpawns[rand() % playerSpawns.size()]);
 }
@@ -262,13 +319,16 @@ GameObject* LoadEnemy(Scene& scene, const glm::vec2& pos)
 	enemyPtr->AddComponent<MovementComponent>();
 	colliderPtr->AddObserver(enemyPtr->AddComponent<SensorComponent>());
 
+	HealthComponent* healthCompPtr = enemyPtr->GetComponent<HealthComponent>();
+	healthCompPtr->AddObserver(enemyPtr->AddComponent<DeathComponent>());
+
+	colliderPtr->AddObserver(healthCompPtr);
+
+
 	StateComponent* statePtr = enemyPtr->AddComponent<StateComponent>("patrolling", std::make_unique<Patrolling>());
 	statePtr->AddState("targetPlayer", std::make_unique<TargetPlayer>());
 	statePtr->AddState("rotate", std::make_unique<Rotate>(90.f));
 	statePtr->AddState("moveBack", std::make_unique<MoveBackFromWall>());
-
-	HealthComponent* healthCompPtr = enemyPtr->GetComponent<HealthComponent>();
-	healthCompPtr->AddObserver(enemyPtr->AddComponent<DeathComponent>());
 
 	return enemyPtr;
 }

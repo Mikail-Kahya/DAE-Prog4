@@ -4,6 +4,7 @@
 #include "GameObject.h"
 
 #include "MovementComponent.h"
+#include "SceneManager.h"
 
 using namespace mk;
 
@@ -17,6 +18,13 @@ void BounceComponent::Start()
 	IComponent::Start();
 
 	m_MoveCompPtr = GetOwner()->GetComponent<MovementComponent>();
+}
+
+void BounceComponent::FixedUpdate()
+{
+	IComponent::FixedUpdate();
+	if (m_Timer < BOUNCE_IMMUNITY)
+		m_Timer += Time().fixedDeltaTime;
 }
 
 void BounceComponent::OnNotify(ISubject* subjectPtr, IEvent* event)
@@ -33,7 +41,11 @@ void BounceComponent::OnNotify(ISubject* subjectPtr, IEvent* event)
 
 void BounceComponent::Bounce(BlockEvent* event)
 {
+	if (m_Timer < BOUNCE_IMMUNITY)
+		return;
+
 	++m_NrBounces;
+	m_Timer = 0;
 	m_MoveCompPtr->SetDirection(glm::reflect(event->info.velocity, event->info.impactNormal));
 
 }

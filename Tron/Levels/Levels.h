@@ -4,7 +4,6 @@
 
 namespace mk
 {
+	void LoadGameMenu(Scene& scene);
 	void LoadMainGame(Scene& scene);
-
-
 }
